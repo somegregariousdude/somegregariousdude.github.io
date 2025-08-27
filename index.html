@@ -1,79 +1,105 @@
-<HTML>
-<HEAD> <Title>The Gregarious Dragon</TiTLE> </HEAD>
-<BODY> <!-- Accessible, microformats2-compliant h-card -->
-<div class="h-card" lang="en" dir="ltr">
-  <!-- Primary photo -->
-  <img
-    class="u-photo"
-    src="images/avatar.png"
-    alt="Avatar for The Gregarious Dragon"
-    width="400"
-    height="400"
-    loading="lazy"
-  />
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Primary identity URL + UID + name -->
-  <a class="u-url u-uid p-name" href="https://simplygregario.us">
-    The Gregarious Dragon
-  </a>
+  <title>Personal H-Card for The Gregarious Dragon</title>
+  <meta name="description" content="Authoritative H-Card for The Gregarious Dragon" />
 
-  <!-- Location -->
-  <address class="p-adr h-adr">
-    <span class="p-locality">Burien</span>,&nbsp;
-    <span class="p-region">Washington</span>,&nbsp;
-    <span class="p-country-name">USA</span>
-  </address>
+  <!-- Keep search engines out -->
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nositelinkssearchbox, notranslate, nosnippet" />
+  <meta name="bingbot" content="noindex, nofollow, noarchive" />
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
 
-  <!-- Bio -->
-  <section aria-labelledby="bio-heading">
-    <h2 id="bio-heading">About</h2>
-    <p class="p-note">
-      Gay blind dragon in middle age, roosting in the PNW. Apple/Linux fan who
-      sometimes tinkers with tech/coding. Audiobooks, podcasts, and retro media
-      from the ’70s–2000s are my jam. Enjoy good food, drink + laughter with
-      friends, and a little cannabis to keep the flames mellow. Pronouns: he/him.
-    </p>
-  </section>
+  <!-- Minimal, accessible defaults (optional) -->
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      margin: 0;
+      padding: 2rem 1rem;
+      display: grid;
+      place-items: center;
+      background: Canvas;
+      color: CanvasText;
+    }
+    main {
+      width: min(900px, 100%);
+      padding: 1.25rem;
+      border: 1px solid color-mix(in oklab, CanvasText 20%, transparent);
+      border-radius: 16px;
+      box-shadow: 0 2px 24px color-mix(in oklab, CanvasText 12%, transparent);
+      background: color-mix(in oklab, Canvas 96%, CanvasText 4%);
+    }
+    .h-card img { border-radius: 12px; display: block; }
+    .h-card h2 { margin-block: 1.25rem .25rem; font-size: 1.125rem; }
+    .h-card p, .h-card li { font-size: 1rem; }
+    .h-card ul { padding-left: 1.25rem; }
+    a { word-break: break-word; }
+  </style>
+</head>
+<body>
+  <main aria-labelledby="page-title">
+    <h1 id="page-title" class="p-name" style="position:absolute; left:-9999px;">Personal H-Card for The Gregarious Dragon</h1>
 
-  <!-- Contact info -->
-  <section aria-labelledby="contact-heading">
-    <h2 id="contact-heading">Contact</h2>
-    <p>Email: <a class="u-email" href="mailto:greglopez@simplygregario.us">greglopez [at] simplygregario.us</a></p>
-    <p>PGP key: <a class="u-key" href="keys/thegregariousdragon.asc">Download PGP Key</a></p>
-  </section>
+    <!-- H-Card starts -->
+    <div class="h-card" lang="en" dir="ltr">
+      <img class="u-photo" src="images/avatar.png" alt="Profile Photo for The Gregarious Dragon" width="400" height="400" />
 
-  <!-- Messaging apps -->
-  <section aria-labelledby="messaging-heading">
-    <h2 id="messaging-heading">Messaging</h2>
-    <ul>
-      <li><a class="u-url" target="_blank" rel="noopener noreferrer"
-        href="https://matrix.to/#/@gregarious:4d2.org">Matrix</a></li>
-      <li><a class="u-url" target="_blank" rel="noopener noreferrer"
-        href="https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT">Signal</a></li>
-      <li><a class="u-url" target="_blank" rel="noopener noreferrer"
-        href="https://smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc">Simplex Chat</a></li>
-      <li><a class="u-url" target="_blank" rel="noopener noreferrer"
-        href="https://threema.id/V424N2C4">Threema</a></li>
-    </ul>
-  </section>
+      <a class="u-url u-uid p-name" rel="me" href="https://simplygregario.us" aria-label="Homepage for The Gregarious Dragon">
+        The Gregarious Dragon
+      </a>
 
-  <!-- Social links -->
-  <section aria-labelledby="social-heading">
-    <h2 id="social-heading">Social links</h2>
-    <ul>
-      <li><a class="u-url" target="_blank" rel="me noopener noreferrer"
-        href="https://bsky.app/profile/somegregariousdude.bsky.social">BlueSky</a></li>
-      <li><a class="u-url" target="_blank" rel="me noopener noreferrer"
-        href="https://social.trom.tf/profile/thegregariousdragon">Friendica</a></li>
-      <li><a class="u-url" target="_blank" rel="me noopener noreferrer"
-        href="https://github.com/somegregariousdude">GitHub</a></li>
-      <li><a class="u-url" target="_blank" rel="me noopener noreferrer"
-        href="https://dragonscave.space/@somegregariousdude">Mastodon</a></li>
-      <li><a class="u-url" target="_blank" rel="me noopener noreferrer"
-        href="https://reddit.com/u/somegregariousdude">Reddit</a></li>
-      <li><a class="u-url" target="_blank" rel="me noopener noreferrer"
-        href="https://youtube.com/@somegregariousdude">YouTube</a></li>
-    </ul>
-  </section>
-</div> </BODY>
-</HTML>
+      <div class="p-adr h-adr" aria-label="Location">
+        <span class="p-locality">Burien</span>,&nbsp;
+        <span class="p-region">Washington</span>,&nbsp;
+        <span class="p-country-name">USA</span>
+      </div>
+
+      <section aria-labelledby="about-heading">
+        <h2 id="about-heading">About</h2>
+        <p class="p-note" aria-label="Biography">
+          Gay blind dragon in middle age, roosting in the Pacific Northwest. Apple/Linux fan who sometimes tinkers with tech/coding. Audiobooks, podcasts, and retro media from the 1970s to the 2000s are my jam. Enjoy good food, drink plus laughter with friends, and a little cannabis to keep the flames mellow. Pronouns: he/him.
+        </p>
+      </section>
+
+      <section aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Contact</h2>
+        <p aria-label="Email address">
+          Email: <a class="u-email" href="mailto:greglopez@simplygregario.us">greglopez@simplygregario.us</a>
+        </p>
+        <p aria-label="PGP Key">
+          PGP key: <a class="u-key" href="keys/thegregariousdragon.asc">Download PGP Key</a>
+        </p>
+      </section>
+
+      <section aria-labelledby="messaging-heading">
+        <h2 id="messaging-heading">Instant Messaging Profiles</h2>
+        <ul aria-label="Instant Messaging Profiles">
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://matrix.to/#/@gregarious:4d2.org" aria-label="Matrix profile">@gregarious:4d2.org</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT" aria-label="Signal profile">Signal</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc" aria-label="Simplex Chat profile">Simplex Chat</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://threema.id/V424N2C4" aria-label="Threema Profile">Threema</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="social-heading">
+        <h2 id="social-heading">Social Media Profiles</h2>
+        <ul aria-label="Social Media Profiles">
+          <li><a class="u-url" target="_blank" rel="noopener noreferrer" href="https://bsky.app/profile/somegregariousdude.bsky.social" aria-label="BlueSky profile">BlueSky</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://social.trom.tf/profile/thegregariousdragon" aria-label="Friendica profile">Friendica</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://github.com/somegregariousdude" aria-label="GitHub profile">GitHub</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://dragonscave.space/@somegregariousdude" aria-label="Mastodon profile">Mastodon</a></li>
+          <li><a class="u-url" target="_blank" rel="noopener noreferrer" href="https://reddit.com/u/somegregariousdude" aria-label="Reddit profile">Reddit</a></li>
+          <li><a class="u-url" target="_blank" rel="noopener noreferrer" href="https://youtube.com/@somegregariousdude" aria-label="YouTube channel">YouTube</a></li>
+        </ul>
+      </section>
+    </div>
+    <!-- H-Card ends -->
+  </main>
+</body>
+</html>
+
