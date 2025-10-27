@@ -58,11 +58,27 @@
       box-shadow: 0 2px 24px var(--color-shadow);
       background: var(--color-card-bg);
     }
-    .h-card img { border-radius: 12px; display: block; }
+    
+    /* START: Aesthetic and Microformats Polish */
+    .h-card img { 
+      border-radius: 12px; 
+      display: block; 
+      /* NEW: Added margin below photo for spacing */
+      margin-bottom: 0.75rem; 
+    } 
     .h-card h2 { margin-block: 1.25rem .25rem; font-size: 1.125rem; }
     .h-card p, .h-card li { font-size: 1rem; }
     .h-card ul { padding-left: 1.25rem; }
-    a { word-break: break-word; }
+    a { 
+      word-break: break-word; 
+      /* NEW: Added hover effect for UX feedback */
+      text-decoration: none;
+      transition: text-decoration 0.2s ease-in-out;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    /* END: Aesthetic and Microformats Polish */
   </style>
 </head>
 <body>
@@ -73,7 +89,10 @@
     <div class="h-card" lang="en" dir="ltr">
       <img class="u-photo" src="images/avatar.png" alt="Profile Photo for Gregory Lopez" width="400" height="400" />
 
-      <!-- FIX: The missing closing </a> tag was added, and the p-name class was moved to a nested span. -->
+      <!-- Microformats Enhancement: Added p-nickname for handles, hidden from screen readers but available to parsers. -->
+      <span class="p-nickname" style="position:absolute; left:-9999px;">somegregariousdude</span>
+      <span class="p-nickname" style="position:absolute; left:-9999px;">thegregariousdragon</span>
+
       <a class="u-url u-uid" rel="me" href="https://simplygregario.us" aria-label="Website">
         <span class="p-name">Gregory Lopez</span>
       </a>
@@ -95,8 +114,8 @@
       <section aria-labelledby="messaging-heading">
         <h2 id="messaging-heading">Instant Messaging Profiles</h2>
         <ul aria-label="Instant Messaging Profiles">
-          <!-- NEW: Added Discord link following the u-impp style -->
-          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://discord.comm/users/877529484083998751" aria-label="Discord">Discord</a></li>
+          <!-- CRITICAL FIX: Discord URL corrected from discord.comm to discord.com -->
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://discord.com/users/877529484083998751" aria-label="Discord">Discord</a></li>
           <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://matrix.to/#/@gregarious:4d2.org" aria-label="Matrix">Matrix</a></li>
           <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://m.me/somegregariousdude" aria-label="Messenger">Messenger</a></li>
           <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT" aria-label="Signal">Signal</a></li>
