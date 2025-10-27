@@ -63,7 +63,7 @@
     .h-card img { 
       border-radius: 12px; 
       display: block; 
-      /* NEW: Added margin below photo for spacing */
+      /* Margin below photo for spacing */
       margin-bottom: 0.75rem; 
     } 
     .h-card h2 { margin-block: 1.25rem .25rem; font-size: 1.125rem; }
@@ -71,12 +71,19 @@
     .h-card ul { padding-left: 1.25rem; }
     a { 
       word-break: break-word; 
-      /* NEW: Added hover effect for UX feedback */
+      /* Hover effect for UX feedback */
       text-decoration: none;
       transition: text-decoration 0.2s ease-in-out;
     }
     a:hover {
       text-decoration: underline;
+    }
+
+    /* NEW: Style for the visible handles block */
+    .h-card-handles { 
+      margin-block: 0.5rem 1.25rem; 
+      font-size: 0.95rem; 
+      opacity: 0.8; 
     }
     /* END: Aesthetic and Microformats Polish */
   </style>
@@ -89,9 +96,7 @@
     <div class="h-card" lang="en" dir="ltr">
       <img class="u-photo" src="images/avatar.png" alt="Profile Photo for Gregory Lopez" width="400" height="400" />
 
-      <!-- Microformats Enhancement: Added p-nickname for handles, hidden from screen readers but available to parsers. -->
-      <span class="p-nickname" style="position:absolute; left:-9999px;">somegregariousdude</span>
-      <span class="p-nickname" style="position:absolute; left:-9999px;">thegregariousdragon</span>
+      <!-- Microformats Enhancement: Nicknames are now visible below -->
 
       <a class="u-url u-uid" rel="me" href="https://simplygregario.us" aria-label="Website">
         <span class="p-name">Gregory Lopez</span>
@@ -106,6 +111,14 @@
 
       <section aria-labelledby="about-heading">
         <h2 id="about-heading">About</h2>
+        
+        <!-- NEW: Labeled Nicknames/Handles for better visibility and accessibility -->
+        <p class="h-card-handles" aria-label="Common Handles">
+          <strong aria-hidden="true">Handles:</strong> 
+          <span class="p-nickname">somegregariousdude</span>, 
+          <span class="p-nickname">thegregariousdragon</span>
+        </p>
+
         <p class="p-note" aria-label="Biography">
           Gay blind dude in middle age, hailing from the Pacific Northwest. Apple/Linux fan who sometimes tinkers with tech/coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. Enjoy good food, drink plus laughter with friends, and a little cannabis to keep things mellow. Pronouns: he/him.
         </p>
@@ -114,7 +127,7 @@
       <section aria-labelledby="messaging-heading">
         <h2 id="messaging-heading">Instant Messaging Profiles</h2>
         <ul aria-label="Instant Messaging Profiles">
-          <!-- CRITICAL FIX: Discord URL corrected from discord.comm to discord.com -->
+          <!-- Discord URL corrected from discord.comm to discord.com -->
           <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://discord.com/users/877529484083998751" aria-label="Discord">Discord</a></li>
           <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://matrix.to/#/@gregarious:4d2.org" aria-label="Matrix">Matrix</a></li>
           <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://m.me/somegregariousdude" aria-label="Messenger">Messenger</a></li>
