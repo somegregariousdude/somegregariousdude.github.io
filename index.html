@@ -1,129 +1,131 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Page title updated -->
-  <title>The Personal H-Card of Gregory Lopez</title>
-  <meta name="description" content="Authoritative H-Card for Gregory Lopez" />
+  <!-- Page title updated -->
+  <title>The Personal H-Card of Gregory Lopez</title>
+  <meta name="description" content="Authoritative H-Card for Gregory Lopez" />
 
-  <!-- Keep search engines out -->
-  <meta name="robots" content="noindex, nofollow, noarchive" />
-  <meta name="googlebot" content="noindex, nofollow, noarchive, nositelinkssearchbox, notranslate, nosnippet" />
-  <meta name="bingbot" content="noindex, nofollow, noarchive" />
-  <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
+  <!-- Keep search engines out -->
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nositelinkssearchbox, notranslate, nosnippet" />
+  <meta name="bingbot" content="noindex, nofollow, noarchive" />
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
 
-  <!-- Minimal, accessible defaults (updated colors) -->
-  <style>
-    /* Define accessible colors using CSS variables for light and dark modes */
-    :root {
-      color-scheme: light dark;
-      /* Light Mode Defaults */
-      --color-bg: #f9fafb; /* Very light background */
-      --color-text: #1f2937; /* Dark text */
-      --color-card-bg: #ffffff; /* White card */
-      --color-border: rgba(31, 41, 55, 0.2); /* Subtle border based on dark text */
-      --color-shadow: rgba(31, 41, 55, 0.12); /* Subtle shadow based on dark text */
-    }
+  <!-- Minimal, accessible defaults (updated colors) -->
+  <style>
+    /* Define accessible colors using CSS variables for light and dark modes */
+    :root {
+      color-scheme: light dark;
+      /* Light Mode Defaults */
+      --color-bg: #f9fafb; /* Very light background */
+      --color-text: #1f2937; /* Dark text */
+      --color-card-bg: #ffffff; /* White card */
+      --color-border: rgba(31, 41, 55, 0.2); /* Subtle border based on dark text */
+      --color-shadow: rgba(31, 41, 55, 0.12); /* Subtle shadow based on dark text */
+    }
 
-    /* Dark Mode Overrides */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --color-bg: #111827; /* Dark background */
-        --color-text: #f3f4f6; /* Light text */
-        --color-card-bg: #1f2937; /* Slightly lighter dark card */
-        --color-border: rgba(243, 244, 246, 0.2); /* Subtle border based on light text */
-        --color-shadow: rgba(243, 244, 246, 0.12); /* Subtle shadow based on light text */
-      }
-    }
-    
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.5;
-      margin: 0;
-      padding: 2rem 1rem;
-      display: grid;
-      place-items: center;
-      /* Using standard colors for accessibility */
-      background: var(--color-bg);
-      color: var(--color-text);
-    }
-    main {
-      width: min(900px, 100%);
-      padding: 1.25rem;
-      /* Using standard colors for accessibility */
-      border: 1px solid var(--color-border);
-      border-radius: 16px;
-      box-shadow: 0 2px 24px var(--color-shadow);
-      background: var(--color-card-bg);
-    }
-    .h-card img { border-radius: 12px; display: block; }
-    .h-card h2 { margin-block: 1.25rem .25rem; font-size: 1.125rem; }
-    .h-card p, .h-card li { font-size: 1rem; }
-    .h-card ul { padding-left: 1.25rem; }
-    a { word-break: break-word; }
-  </style>
+    /* Dark Mode Overrides */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #111827; /* Dark background */
+        --color-text: #f3f4f6; /* Light text */
+        --color-card-bg: #1f2937; /* Slightly lighter dark card */
+        --color-border: rgba(243, 244, 246, 0.2); /* Subtle border based on light text */
+        --color-shadow: rgba(243, 244, 246, 0.12); /* Subtle shadow based on light text */
+      }
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      margin: 0;
+      padding: 2rem 1rem;
+      display: grid;
+      place-items: center;
+      /* Using standard colors for accessibility */
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+    main {
+      width: min(900px, 100%);
+      padding: 1.25rem;
+      /* Using standard colors for accessibility */
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      box-shadow: 0 2px 24px var(--color-shadow);
+      background: var(--color-card-bg);
+    }
+    .h-card img { border-radius: 12px; display: block; }
+    .h-card h2 { margin-block: 1.25rem .25rem; font-size: 1.125rem; }
+    .h-card p, .h-card li { font-size: 1rem; }
+    .h-card ul { padding-left: 1.25rem; }
+    a { word-break: break-word; }
+  </style>
 </head>
 <body>
-  <main aria-labelledby="page-title">
-    <h1 id="page-title" style="position:absolute; left:-9999px;">The Personal H-Card of Gregory Lopez</h1>
+  <main aria-labelledby="page-title">
+    <h1 id="page-title" style="position:absolute; left:-9999px;">The Personal H-Card of Gregory Lopez</h1>
 
-    <!-- H-Card starts -->
-    <div class="h-card" lang="en" dir="ltr">
-      <img class="u-photo" src="images/avatar.png" alt="Profile Photo for Gregory Lopez" width="400" height="400" />
+    <!-- H-Card starts -->
+    <div class="h-card" lang="en" dir="ltr">
+      <img class="u-photo" src="images/avatar.png" alt="Profile Photo for Gregory Lopez" width="400" height="400" />
 
-      <!-- FIX: The missing closing </a> tag was added, and the p-name class was moved to a nested span. -->
-      <a class="u-url u-uid" rel="me" href="https://simplygregario.us" aria-label="Website">
-        <span class="p-name">Gregory Lopez</span>
-      </a>
+      <!-- FIX: The missing closing </a> tag was added, and the p-name class was moved to a nested span. -->
+      <a class="u-url u-uid" rel="me" href="https://simplygregario.us" aria-label="Website">
+        <span class="p-name">Gregory Lopez</span>
+      </a>
 
-      <div class="p-adr h-adr" aria-label="Location">
-        <!-- FIX: Replaced &nbsp; with regular spaces. -->
-        <span class="p-locality">Burien</span>,
-        <span class="p-region">Washington</span>,
-        <span class="p-country-name">USA</span>
-      </div>
+      <div class="p-adr h-adr" aria-label="Location">
+        <!-- FIX: Replaced &nbsp; with regular spaces. -->
+        <span class="p-locality">Burien</span>,
+        <span class="p-region">Washington</span>,
+        <span class="p-country-name">USA</span>
+      </div>
 
-      <section aria-labelledby="about-heading">
-        <h2 id="about-heading">About</h2>
-        <p class="p-note" aria-label="Biography">
-          Gay blind dude in middle age, hailing from the Pacific Northwest. Apple/Linux fan who sometimes tinkers with tech/coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. Enjoy good food, drink plus laughter with friends, and a little cannabis to keep things mellow. Pronouns: he/him.
-        </p>
-      </section>
+      <section aria-labelledby="about-heading">
+        <h2 id="about-heading">About</h2>
+        <p class="p-note" aria-label="Biography">
+          Gay blind dude in middle age, hailing from the Pacific Northwest. Apple/Linux fan who sometimes tinkers with tech/coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. Enjoy good food, drink plus laughter with friends, and a little cannabis to keep things mellow. Pronouns: he/him.
+        </p>
+      </section>
 
-      <section aria-labelledby="messaging-heading">
-        <h2 id="messaging-heading">Instant Messaging Profiles</h2>
-        <ul aria-label="Instant Messaging Profiles">
-          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://matrix.to/#/@gregarious:4d2.org" aria-label="Matrix">Matrix</a></li>
-          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://m.me/somegregariousdude" aria-label="Messenger">Messenger</a></li>
-          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT" aria-label="Signal">Signal</a></li>
-          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc" aria-label="Simplex Chat">Simplex Chat</a></li>
-          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://t.me/somegregariousdude" aria-label="Telegram">Telegram</a></li>
-          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://threema.id/V424N2C4" aria-label="Threema">Threema</a></li>
-          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://wa.me/+12064882148" aria-label="WhatsApp">WhatsApp</a></li>
-        </ul>
-      </section>
+      <section aria-labelledby="messaging-heading">
+        <h2 id="messaging-heading">Instant Messaging Profiles</h2>
+        <ul aria-label="Instant Messaging Profiles">
+          <!-- NEW: Added Discord link following the u-impp style -->
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://discord.comm/users/877529484083998751" aria-label="Discord">Discord</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://matrix.to/#/@gregarious:4d2.org" aria-label="Matrix">Matrix</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://m.me/somegregariousdude" aria-label="Messenger">Messenger</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT" aria-label="Signal">Signal</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc" aria-label="Simplex Chat">Simplex Chat</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://t.me/somegregariousdude" aria-label="Telegram">Telegram</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://threema.id/V424N2C4" aria-label="Threema">Threema</a></li>
+          <li><a class="u-impp" target="_blank" rel="noopener noreferrer" href="https://wa.me/+12064882148" aria-label="WhatsApp">WhatsApp</a></li>
+        </ul>
+      </section>
 
-      <section aria-labelledby="social-heading">
-        <h2 id="social-heading">Social Media Profiles</h2>
-        <ul aria-label="Social Media Profiles">
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://bsky.app/profile/somegregariousdude.bsky.social" aria-label="BlueSky">BlueSky</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://www.facebook.com/somegregariousdude" aria-label="Facebook">Facebook</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://social.trom.tf/profile/thegregariousdragon" aria-label="Friendica">Friendica</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://github.com/somegregariousdude" aria-label="GitHub">GitHub</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://www.instagram.com/somegregariousdude" aria-label="Instagram">Instagram</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://dragonscave.space/@somegregariousdude" aria-label="Mastodon">Mastodon</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://ramblio.com/user/thegregariousdragon" aria-label="Ramblio">Ramblio</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://reddit.com/u/somegregariousdude" aria-label="Reddit">Reddit</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://www.threads.com/@somegregariousdude" aria-label="Threads">Threads</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://twitch.tv/somegregariousdude" aria-label="Twitch">Twitch</a></li>
-          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://youtube.com/@somegregariousdude" aria-label="YouTube">YouTube</a></li>
-        </ul>
-      </section>
-    </div>
-    <!-- H-Card ends -->
-  </main>
+      <section aria-labelledby="social-heading">
+        <h2 id="social-heading">Social Media Profiles</h2>
+        <ul aria-label="Social Media Profiles">
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://bsky.app/profile/somegregariousdude.bsky.social" aria-label="BlueSky">BlueSky</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://www.facebook.com/somegregariousdude" aria-label="Facebook">Facebook</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://social.trom.tf/profile/thegregariousdragon" aria-label="Friendica">Friendica</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://github.com/somegregariousdude" aria-label="GitHub">GitHub</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://www.instagram.com/somegregariousdude" aria-label="Instagram">Instagram</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://dragonscave.space/@somegregariousdude" aria-label="Mastodon">Mastodon</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://ramblio.com/user/thegregariousdragon" aria-label="Ramblio">Ramblio</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://reddit.com/u/somegregariousdude" aria-label="Reddit">Reddit</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://www.threads.com/@somegregariousdude" aria-label="Threads">Threads</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://twitch.tv/somegregariousdude" aria-label="Twitch">Twitch</a></li>
+          <li><a class="u-url" target="_blank" rel="me noopener noreferrer" href="https://youtube.com/@somegregariousdude" aria-label="YouTube">YouTube</a></li>
+        </ul>
+      </section>
+    </div>
+    <!-- H-Card ends -->
+  </main>
 </body>
 </html>
 
