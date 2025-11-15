@@ -3,7 +3,7 @@
 # ---
 baseURL = "https://simplygregario.us"
 languageCode = "en-us"
-title = "Gregory's Personal Website"
+title = "Greg's Place"
 theme = "accessible-material-design"
 
 # --- All Author info is now under [params.author] ---
@@ -50,10 +50,10 @@ theme = "accessible-material-design"
   name = "Simplex Chat"
   url = "https://smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
   icon = "simplex"
-[[params.impp]]
-  name = "Telegram"
-  url = "https://t.me/somegregariousdude"
-  icon = "telegram"
+# [[params.impp]]
+#  name = "Telegram"
+#  url = "https://t.me/somegregariousdude"
+#  icon = "telegram"
 [[params.impp]]
   name = "Threema"
   url = "https://threema.id/V424N2C4"
