@@ -15,8 +15,7 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -37,25 +36,40 @@ jobs:
         run: |
           wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
           && sudo dpkg -i ${{ runner.temp }}/hugo.deb
-      - name: Install Dart Sass
-        run: sudo snap install dart-sass
+      
+      # --- [ADDED] Step to install Node.js 24.x ---
+      # This is required for npx and Pagefind
+      # [Ref: Project Context, source 11]
+      - name: Set up Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
-      - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
-      - name: Build with Hugo
+        
+      - name: Build with Hugo and Index with Pagefind
         env:
           HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
           HUGO_ENVIRONMENT: production
         run: |
+          # 1. Build the site with Hugo
+          echo "Building site with Hugo..."
           hugo \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
+            
+          # --- [ADDED] Step to index the site with Pagefind ---
+          # [Ref: User Request]
+          echo "Indexing site with Pagefind..."
+          npx pagefind --site public
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
