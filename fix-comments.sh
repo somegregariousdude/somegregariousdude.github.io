@@ -1,8 +1,8 @@
 #!/bin/bash
 # ---
 # This script fixes the "bad character U+002D"
-# parsing bug in the comments.html partial by
-# refactoring the logic to use a nested with/else.
+# parsing bug for good by removing *all* 'else if'
+# statements and replacing them with separate 'if' blocks.
 # ---
 
 # --- 0. Make Script Portable ---
@@ -10,14 +10,14 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR"
 THEME_DIR="themes/accessible-material-design"
 
-echo "--- 1. Overwriting comments.html partial with fix ---"
+echo "--- 1. Overwriting comments.html partial with final fix ---"
 # This REPLACES the comments partial
 cat <<'EOT' > "$THEME_DIR/layouts/partials/comments.html"
 {{/*
   This template renders all Webmentions (comments, likes, etc.)
   that have been fetched at build-time into /data/comments.json.
   
-  (v3 - Fixes 'bad character' parse error)
+  (v4 - Final fix for 'bad character' parse error)
 */}}
 
 {{ $allComments := .Site.Data.comments.children }}
@@ -46,21 +46,25 @@ cat <<'EOT' > "$THEME_DIR/layouts/partials/comments.html"
       </header>
       
       <div class="e-content p-content">
-        {{/* --- [FIXED] Use with/else to avoid 'else if' bug --- */}}
+        {{/* --- [FINAL FIX] Use 'with' and separate 'if' statements --- */}}
         {{ with .content.text }}
-          {{/* This is a comment with text */}}
+          {{/* This is a text comment */}}
           {{ $safeText := . | plainify }}
           {{ $urlRegex := "(https?://[^\\s<]+)" }}
           {{ $link := "<a href=\"$1\" target=\"_blank\" rel=\"nofollow noopener noreferrer\" class=\"comment-link\">$1</a>" }}
           {{ $linkedText := $safeText | replaceRE $urlRegex $link }}
           <p>{{ $linkedText | safeHTML }}</p>
         {{ else }}
-          {{/* This is a like, repost, or mention */}}
+          {{/* This is a like, repost, or mention. 
+               Use separate 'if' blocks to avoid 'else if' parser bug.
+          */}}
           {{ if eq .wm-property "like-of" }}
             <p><em>Liked this post.</em></p>
-          {{ else if eq .wm-property "repost-of" }}
+          {{ end }}
+          {{ if eq .wm-property "repost-of" }}
             <p><em>Reposted this post.</em></p>
-          {{ else }}
+          {{ end }}
+          {{ if or (eq .wm-property "mention-of") (not .wm-property) }}
             <p><em>Mentioned this post.</em></p>
           {{ end }}
         {{ end }}
@@ -79,4 +83,4 @@ cat <<'EOT' > "$THEME_DIR/layouts/partials/comments.html"
 EOT
 echo "✅ layouts/partials/comments.html updated."
 echo "---"
-echo "✅✅✅ Comment template fixed. Please commit and try the GitHub Action again. ✅✅✅"
+echo "✅✅✅ Comment template fixed. Please commit this new version. ✅✅✅"
