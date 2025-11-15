@@ -1,8 +1,8 @@
 #!/bin/bash
 # ---
-# This script fixes the "bad character U+002D"
-# parsing bug for good by removing *all* 'else if'
-# statements and replacing them with separate 'if' blocks.
+# This script fixes the "bad character U+002D" parsing bug
+# for the final time. The error was using '.wm-property'
+# (invalid) instead of '(index . "wm-property")' (valid).
 # ---
 
 # --- 0. Make Script Portable ---
@@ -10,14 +10,14 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR"
 THEME_DIR="themes/accessible-material-design"
 
-echo "--- 1. Overwriting comments.html partial with final fix ---"
+echo "--- 1. Overwriting comments.html partial with correct syntax ---"
 # This REPLACES the comments partial
 cat <<'EOT' > "$THEME_DIR/layouts/partials/comments.html"
 {{/*
   This template renders all Webmentions (comments, likes, etc.)
   that have been fetched at build-time into /data/comments.json.
   
-  (v4 - Final fix for 'bad character' parse error)
+  (v5 - Corrects '.wm-property' to '(index . "wm-property")')
 */}}
 
 {{ $allComments := .Site.Data.comments.children }}
@@ -46,7 +46,11 @@ cat <<'EOT' > "$THEME_DIR/layouts/partials/comments.html"
       </header>
       
       <div class="e-content p-content">
-        {{/* --- [FINAL FIX] Use 'with' and separate 'if' statements --- */}}
+        {{/* --- [FINAL FIX] Use 'index' function for hyphenated field --- */}}
+        
+        {{/* Get the property *safely* */}}
+        {{ $property := (index . "wm-property") }}
+
         {{ with .content.text }}
           {{/* This is a text comment */}}
           {{ $safeText := . | plainify }}
@@ -55,16 +59,14 @@ cat <<'EOT' > "$THEME_DIR/layouts/partials/comments.html"
           {{ $linkedText := $safeText | replaceRE $urlRegex $link }}
           <p>{{ $linkedText | safeHTML }}</p>
         {{ else }}
-          {{/* This is a like, repost, or mention. 
-               Use separate 'if' blocks to avoid 'else if' parser bug.
-          */}}
-          {{ if eq .wm-property "like-of" }}
+          {{/* This is a like, repost, or mention */}}
+          {{ if eq $property "like-of" }}
             <p><em>Liked this post.</em></p>
           {{ end }}
-          {{ if eq .wm-property "repost-of" }}
+          {{ if eq $property "repost-of" }}
             <p><em>Reposted this post.</em></p>
           {{ end }}
-          {{ if or (eq .wm-property "mention-of") (not .wm-property) }}
+          {{ if or (eq $property "mention-of") (not $property) }}
             <p><em>Mentioned this post.</em></p>
           {{ end }}
         {{ end }}
@@ -83,4 +85,4 @@ cat <<'EOT' > "$THEME_DIR/layouts/partials/comments.html"
 EOT
 echo "✅ layouts/partials/comments.html updated."
 echo "---"
-echo "✅✅✅ Comment template fixed. Please commit this new version. ✅✅✅"
+echo "✅✅✅ Comment template fixed. This *is* the correct solution. ✅✅✅"
