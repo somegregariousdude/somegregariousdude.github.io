@@ -1,3 +1,18 @@
+#!/bin/bash
+# ---
+# This script fixes the "bad character U+002D"
+# parsing bug in the comments.html partial by
+# refactoring the logic to use a nested with/else.
+# ---
+
+# --- 0. Make Script Portable ---
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR"
+THEME_DIR="themes/accessible-material-design"
+
+echo "--- 1. Overwriting comments.html partial with fix ---"
+# This REPLACES the comments partial
+cat <<'EOT' > "$THEME_DIR/layouts/partials/comments.html"
 {{/*
   This template renders all Webmentions (comments, likes, etc.)
   that have been fetched at build-time into /data/comments.json.
@@ -61,3 +76,7 @@
   </ul>
 </section>
 {{ end }}
+EOT
+echo "✅ layouts/partials/comments.html updated."
+echo "---"
+echo "✅✅✅ Comment template fixed. Please commit and try the GitHub Action again. ✅✅✅"
