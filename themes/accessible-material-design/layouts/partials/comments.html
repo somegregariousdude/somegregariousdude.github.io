@@ -1,0 +1,64 @@
+{{/*
+  This template renders all Webmentions (comments, likes, etc.)
+  that have been fetched at build-time into /data/comments.json.
+*/}}
+
+{{ $allComments := .Site.Data.comments.children }}
+{{ $pageComments := where $allComments "wm-target" .Permalink }}
+
+{{ if $pageComments }}
+<section class="comments card" aria-labelledby="comments-heading">
+  <h2 id="comments-heading">Webmentions</h2>
+  
+  <ul class="comment-list">
+    {{ range $pageComments }}
+    <li class="comment h-cite">
+      
+      <header class="comment-header">
+        <div class="comment-author p-author h-card">
+          {{ with .author.photo }}
+          <img class="u-photo" src="{{ . }}" alt="">
+          {{ end }}
+          <a class="p-name u-url" href="{{ .author.url | default .url }}" target="_blank" rel="noopener noreferrer">
+            {{ .author.name | default "Anonymous" }}
+          </a>
+        </div>
+        <time class="dt-published" datetime="{{ .published }}">
+          {{ (time .published).Format "Jan 2, 2006 at 3:04 PM" }}
+        </time>
+      </header>
+      
+      <div class="e-content p-content">
+        {{ if .content.text }}
+          {{/*
+            --- [UPDATED] Auto-linker logic ---
+            1. 'plainify' the text to strip all HTML (Security).
+            2. Use 'replaceRE' to find URLs and wrap them
+               in safe <a> tags with security attributes.
+            3. Use 'safeHTML' to render the <a> tags we just created.
+            [Ref: Project Context, 14]
+          */}}
+          {{ $safeText := .content.text | plainify }}
+          {{ $urlRegex := "(https?://[^\\s<]+)" }}
+          {{ $link := "<a href=\"$1\" target=\"_blank\" rel=\"nofollow noopener noreferrer\" class=\"comment-link\">$1</a>" }}
+          {{ $linkedText := $safeText | replaceRE $urlRegex $link }}
+          <p>{{ $linkedText | safeHTML }}</p>
+          
+        {{ else if eq .wm-property "like-of" }}
+          <p><em>Liked this post.</em></p>
+        {{ else if eq .wm-property "repost-of" }}
+          <p><em>Reposted this post.</em></p>
+        {{ else }}
+          <p><em>Mentioned this post.</em></p>
+        {{ end }}
+      </div>
+      
+      <a class="comment-source u-url" href="{{ .url }}" target="_blank" rel="noopener noreferrer" aria-label="View original comment">
+        (Source)
+      </a>
+      
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
