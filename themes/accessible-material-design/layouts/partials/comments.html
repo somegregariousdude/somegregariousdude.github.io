@@ -2,18 +2,21 @@
   This template renders all Webmentions (comments, likes, etc.)
   that have been fetched at build-time into /data/comments.json.
   
-  (v3 - Fixes 'bad character' parse error)
+  (v6 - Reverts to a "plain-text-only" version for stability)
 */}}
 
 {{ $allComments := .Site.Data.comments.children }}
 {{ $pageComments := where $allComments "wm-target" .Permalink }}
 
-{{ if $pageComments }}
+{{/* [FIX] Only render comments that have text content */}}
+{{ $textComments := where $pageComments ".content.text" "!=" "" }}
+
+{{ if $textComments }}
 <section class="comments card" aria-labelledby="comments-heading">
   <h2 id="comments-heading">Webmentions</h2>
   
   <ul class="comment-list">
-    {{ range $pageComments }}
+    {{ range $textComments }}
     <li class="comment h-cite">
       
       <header class="comment-header">
@@ -31,25 +34,11 @@
       </header>
       
       <div class="e-content p-content">
-        {{/* --- [FIXED] Use with/else to avoid 'else if' bug --- */}}
-        {{ with .content.text }}
-          {{/* This is a comment with text */}}
-          {{ $safeText := . | plainify }}
-          {{ $urlRegex := "(https?://[^\\s<]+)" }}
-          {{ $link := "<a href=\"$1\" target=\"_blank\" rel=\"nofollow noopener noreferrer\" class=\"comment-link\">$1</a>" }}
-          {{ $linkedText := $safeText | replaceRE $urlRegex $link }}
-          <p>{{ $linkedText | safeHTML }}</p>
-        {{ else }}
-          {{/* This is a like, repost, or mention */}}
-          {{ if eq .wm-property "like-of" }}
-            <p><em>Liked this post.</em></p>
-          {{ else if eq .wm-property "repost-of" }}
-            <p><em>Reposted this post.</em></p>
-          {{ else }}
-            <p><em>Mentioned this post.</em></p>
-          {{ end }}
-        {{ end }}
-        {{/* --- End of fix --- */}}
+        {{/*
+          This renders *only* the plain text.
+          This is the most secure and stable method.
+        */}}
+        <p>{{ .content.text | plainify }}</p>
       </div>
       
       <a class="comment-source u-url" href="{{ .url }}" target="_blank" rel="noopener noreferrer" aria-label="View original comment">
