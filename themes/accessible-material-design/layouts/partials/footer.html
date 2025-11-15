@@ -1,0 +1,4 @@
+<footer role="contentinfo">
+    {{/* FIXED: Changed .Site.Author.name to .Site.Params.author.name */}}
+    <p>&copy; {{ now.Year }} {{ .Site.Params.author.name | default "Your Name" }}. All rights reserved.</p>
+</footer>

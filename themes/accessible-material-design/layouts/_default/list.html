@@ -1,0 +1,74 @@
+{{ define "main" }}
+  <header>
+    <h1>{{ .Title }}</h1>
+    <div class="e-content">
+      {{ .Content }}
+    </div>
+  </header>
+
+  <section aria-label="Content list">
+    {{ $params := .Site.Params.taxonomy }}
+    {{ range .Pages }}
+      <article class="h-entry" role="article">
+        
+        <h2 class="p-name">
+          <a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a>
+        </h2>
+
+        <div class="entry-meta">
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "January 2, 2006" }}
+          </time>
+          <a class="p-author h-card u-url" href="{{ .Site.BaseURL }}" style="display:none;">
+            {{ .Site.Params.author.name }}
+          </a>
+        </div>
+        
+        <div class="p-summary">
+          {{ .Summary }}
+          <p>
+            <a href="{{ .Permalink }}" aria-label="Read more about {{ .Title }}">
+              Read more...
+            </a>
+          </p>
+        </div>
+
+        {{/* --- [NEW] Taxonomy Section --- */}}
+        {{ if or (and $params.showCategoriesOnList .Params.categories) (and $params.showTagsOnList .Params.tags) }}
+        <footer class="taxonomy-footer-list">
+          
+          {{ if and $params.showCategoriesOnList .Params.categories }}
+          <div class="taxonomy-list" aria-label="Categories">
+            <strong>Categories:</strong>
+            <ul>
+              {{ range .Params.categories }}
+              <li>
+                <a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category">{{ . }}</a>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+          {{ end }}
+
+          {{ if and $params.showTagsOnList .Params.tags }}
+          <div class="taxonomy-list" aria-label="Tags">
+            <strong>Tags:</strong>
+            <ul>
+              {{ range .Params.tags }}
+              <li>
+                <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">{{ . }}</a>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+          {{ end }}
+
+        </footer>
+        {{ end }}
+        {{/* --- End of Taxonomy Section --- */}}
+
+      </article>
+      <hr>
+    {{ end }}
+  </section>
+{{ end }}

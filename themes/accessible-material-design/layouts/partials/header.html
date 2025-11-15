@@ -1,0 +1,28 @@
+{{/* [Ref: User Request]
+  This is the "Skip to Main Content" link.
+  It MUST be the first focusable element.
+*/}}
+<a href="#main-content" class="skip-link">Skip to Main Content</a>
+
+<header role="banner">
+    {{ if .IsHome }}
+        <h1>{{ .Site.Title }}</h1>
+    {{ else }}
+        <p><a href="/">{{ .Site.Title }}</a></p>
+    {{ end }}
+
+    {{/* [Ref: User Request]
+      This builds the accessible navigation menu.
+      It uses a semantic <nav> element and loops
+      over the [[menu.main]] entries from hugo.toml.
+    */}}
+    <nav role="navigation" aria-label="Main Navigation">
+        <ul>
+            {{ range .Site.Menus.main }}
+                <li>
+                    <a href="{{ .URL }}">{{ .Name }}</a>
+                </li>
+            {{ end }}
+        </ul>
+    </nav>
+</header>

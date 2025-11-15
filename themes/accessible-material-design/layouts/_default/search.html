@@ -1,0 +1,15 @@
+{{ define "main" }}
+  <article class="h-entry card" role="article">
+    <header>
+      <h1 class="p-name">{{ .Title }}</h1>
+    </header>
+    
+    <div class="e-content">
+      <p>Search all content on the site.</p>
+      
+      {{/* This is the anchor Pagefind will use */}}
+      <div id="search"></div>
+
+    </div>
+  </article>
+{{ end }}

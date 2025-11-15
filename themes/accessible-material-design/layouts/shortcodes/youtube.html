@@ -1,0 +1,43 @@
+{{/*
+  Privacy-First YouTube Embed Shortcode
+  Usage: {{< youtube "VIDEO_ID" "Video Title" >}}
+
+  It requires two parameters:
+  1. The YouTube Video ID.
+  2. The accessible title of the video for the play button.
+*/}}
+
+{{ $videoID := .Get 0 }}
+{{ $videoTitle := .Get 1 }}
+
+{{ if not $videoID }}
+  {{ errorf "youtube shortcode: Missing Video ID. Usage: {{< youtube \"ID\" \"Title\" >}}" }}
+{{ end }}
+{{ if not $videoTitle }}
+  {{ errorf "youtube shortcode: Missing Video Title. Usage: {{< youtube \"ID\" \"Title\" >}}" }}
+{{ end }}
+
+{{/*
+  This is the "fake player" wrapper.
+  The JS script will look for this class.
+  The 'data-youtube-id' holds the ID for the JS.
+*/}}
+<div class="lite-youtube" data-youtube-id="{{ $videoID }}">
+  
+  {{/* Load the high-quality thumbnail */}}
+  <img src="https://i.ytimg.com/vi/{{ $videoID }}/hqdefault.jpg"
+       alt="Thumbnail for {{ $videoTitle }}"
+       class="lite-youtube-thumbnail" />
+  
+  {{/*
+    This is the accessible, keyboard-navigable play button.
+    The aria-label provides context.
+  */}}
+  <button class="lite-youtube-play" aria-label="Play video: {{ $videoTitle }}">
+    {{/* This is the SVG for the play icon */}}
+    <svg width="68" height="48" viewBox="0 0 68 48"
+         fill="currentColor" aria-hidden="true" focusable="false">
+      <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.0 34.00.0 34.00.0S12.21.0 6.90 1.55c-2.93.78-4.64 3.26-5.42 6.19C.0 13.25.0 24.00.0 24.00s.0 10.75 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 48.0 34.00 48.0 34.00 48.0s21.79.0 27.10-1.55c2.93-.78 4.64-3.26 5.42-6.19C68.0 34.75 68.0 24.00 68.0 24.00s.0-10.75-1.48-16.26zM27.0 34.0l18.0-10.0L27.0 14.0v20.0z"></path>
+    </svg>
+  </button>
+</div>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+{{ partial "head.html" . }}
+<body>
+    {{ partial "header.html" . }}
+    
+    <main role="main" id="main-content">
+        {{ block "main" . }}{{ end }}
+    </main>
+    
+    {{ partial "footer.html" . }}
+
+    {{/* --- ADDED SCRIPT ---
+      Loads our new YouTube JS.
+      'defer' makes it load after the HTML is parsed.
+    */}}
+    <script src="/js/youtube.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+{{ define "main" }}
+
+<section class="recent-posts" aria-labelledby="recent-posts-heading">
+    <h2 id="recent-posts-heading">Recent Posts</h2>
+    
+    <ul>
+        {{ $pages := where .Site.RegularPages "Section" "blog" }}
+        
+        {{/* --- [UPDATED] Added .ByDate.Reverse to guarantee sort order --- */}}
+        {{ range first 10 $pages.ByDate.Reverse }}
+            <li>
+                <a href="{{ .Permalink }}">{{ .Title }}</a>
+                <time datetime="{{ .Date.Format "2006-01-02" }}">
+                  ({{ .Date.Format "Jan 2, 2006" }})
+                </time>
+            </li>
+        {{ else }}
+            <li><p>No recent posts to show.</p></li>
+        {{ end }}
+    </ul>
+</section>
+
+<hr>
+
+{{/* ... h-card and other sections remain unchanged ... */}}
+<div class="h-card" lang="en" dir="ltr">
+    {{ with .Site.Params.author.photo }}
+    <img class="u-photo" src="{{ . | relURL }}" alt="Profile Photo for {{ $.Site.Params.author.name }}" width="400" height="400" />
+    {{ end }}
+    <a class="u-url" rel="me" href="{{ .Site.BaseURL }}" aria-label="Website">
+        <span class="p-name">{{ .Site.Params.author.name }}</span>
+    </a>
+    <data class="u-uid" value="{{ .Site.BaseURL }}" style="display:none;"></data>
+    {{ with .Site.Params.author.address }}
+    <div class="p-adr h-adr" aria-label="Location">
+        <span class="p-locality">{{ .locality }}</span>,
+        <span class="p-region">{{ .region }}</span>,
+        <span class="p-country-name">{{ .country }}</span>
+    </div>
+    {{ end }}
+    <section aria-labelledby="about-heading">
+        <h2 id="about-heading">About</h2>
+        {{ with .Site.Params.author.nicknames }}
+        <p class="h-card-handles" aria-label="Common Handles">
+            <strong aria-hidden="true">Handles:</strong>
+            {{ range $i, $e := . }}
+              {{ if $i }}, {{ end }}
+              <span class="p-nickname">{{ . }}</span>
+            {{ end }}
+        </p>
+        {{ end }}
+        {{ with .Site.Params.author.bio }}
+        <p class="p-note" aria-label="Biography">
+            {{ . | markdownify }}
+        </p>
+        {{ end }}
+    </section>
+    {{ with .Site.Params.impp }}
+    <section aria-labelledby="messaging-heading">
+        <h2 id="messaging-heading">Instant Messaging Profiles</h2>
+        <ul aria-label="Instant Messaging Profiles" class="icon-list">
+            {{ range . }}
+            <li>
+                <a class="u-impp" target="_blank" rel="noopener noreferrer" href="{{ .url }}" aria-label="{{ .name }}">
+                    {{ if .icon }}
+                      {{ partial (printf "icons/%s.html" .icon) . }}
+                    {{ end }}
+                    <span>{{ .name }}</span>
+                </a>
+            </li>
+            {{ end }}
+        </ul>
+    </section>
+    {{ end }}
+    {{ with .Site.Params.socials }}
+    <section aria-labelledby="social-heading">
+        <h2 id="social-heading">Social Media Profiles</h2>
+        <ul aria-label="Social Media Profiles" class="icon-list">
+            {{ range . }}
+            <li>
+                <a class="u-url" target="_blank" rel="{{ .rel }} noopener noreferrer" href="{{ .url }}" aria-label="{{ .name }}">
+                    {{ if .icon }}
+                      {{ partial (printf "icons/%s.html" .icon) . }}
+                    {{ end }}
+                    <span>{{ .name }}</span>
+                </a>
+            </li>
+            {{ end }}
+        </ul>
+    </section>
+    {{ end }}
+</div>
+{{ end }}

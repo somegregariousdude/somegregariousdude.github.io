@@ -1,0 +1,12 @@
+name = "Accessible Material Design"
+license = "MIT" # You can change this
+licenselink = "https://github.com/your-username/your-repo/blob/main/LICENSE"
+description = "An accessible, IndieWeb-ready Hugo theme [cite: 1, 4] with a Material Design aesthetic and 'zero-JS' target[cite: 7]."
+homepage = "https://github.com/your-username/your-repo"
+tags = ["blog", "personal", "accessible", "material", "indieweb", "zero-js", "dark-mode"]
+features = ["accessible", "indieweb", "dark-mode", "blog"]
+min_version = "0.120.0" # Good to set a min version
+
+[author]
+  name = "Greg"
+  homepage = "https://your-site-url.com"

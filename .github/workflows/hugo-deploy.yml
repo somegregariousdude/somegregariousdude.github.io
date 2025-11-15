@@ -1,0 +1,78 @@
+# This file is a GitHub Actions workflow.
+# It will automatically build and deploy your Hugo site to GitHub Pages
+# every time you push to your 'main' branch.
+
+name: Deploy to GitHub Pages
+
+# Run this workflow on pushes to the 'main' branch
+# and also allow manual runs from the Actions tab
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Grant permissions for the workflow to write to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Use 'concurrency' to ensure only one deployment runs at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Check out your repository
+      - name: Check out code
+        uses: actions/checkout@v4
+        # 'recursive' is good practice for Hugo themes,
+        # even if you aren't using submodules yet.
+        with:
+          submodules: recursive
+
+      # 2. Set up Node.js for 'npx pagefind'
+      # [Ref: Project Context, source 11]
+      - name: Set up Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # 3. Set up Hugo
+      # [Ref: Project Context, source 11]
+      - name: Set up Hugo Extended 0.152.2
+        uses: peaceiris/actions-hugo@v3
+        with:
+          # This must be the *exact* version you use locally
+          version: "0.152.2"
+          # 'extended: true' is required for Dart-Sass
+          extended: true
+
+      # 4. Build & Index
+      # This runs the logic from your 'build.sh' script.
+      # We add '--minify' for a smaller production site.
+      - name: Build with Hugo and Index with Pagefind
+        run: |
+          echo "Building site with Hugo..."
+          hugo --minify -D -F
+          
+          echo "Indexing site with Pagefind..."
+          npx pagefind --site public
+
+      # 5. Upload the 'public' folder as an artifact
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+      # 6. Deploy the artifact to GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

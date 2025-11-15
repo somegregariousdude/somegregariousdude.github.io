@@ -1,0 +1,133 @@
+# ---
+# This is the main configuration file for your PERSONAL site.
+# ---
+baseURL = "https://simplygregario.us"
+languageCode = "en-us"
+title = "Gregory's Personal Website"
+theme = "accessible-material-design"
+
+# --- All Author info is now under [params.author] ---
+[params.author]
+  name = "Gregory Lopez" 
+  bio = "Gay blind dude in middle age, hailing from the Pacific Northwest. Apple/Linux fan who sometimes tinkers with tech/coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. Enjoy good food, drink plus laughter with friends, and a little cannabis to keep things mellow. Pronouns: he/him."
+  photo = "images/avatar.png" 
+  
+  [params.author.address]
+    locality = "Burien"
+    region = "Washington"
+    country = "USA"
+  
+  nicknames = [
+    "somegregariousdude",
+    "thegregariousdragon"
+  ]
+
+# --- Taxonomy Display Parameters ---
+[params.taxonomy]
+  showCategoriesOnPost = true
+  showTagsOnPost = true
+  showCategoriesOnList = true
+  showTagsOnList = false
+
+# --- Instant Messaging Profiles ---
+[[params.impp]]
+  name = "Discord"
+  url = "https://discord.com/users/877529484083998751"
+  icon = "discord"
+[[params.impp]]
+  name = "Matrix"
+  url = "https://matrix.to/#/@gregarious:4d2.org"
+  icon = "matrix"
+[[params.impp]]
+  name = "Messenger"
+  url = "https://m.me/somegregariousdude"
+  icon = "messenger"
+[[params.impp]]
+  name = "Signal"
+  url = "https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT"
+  icon = "signal"
+[[params.impp]]
+  name = "Simplex Chat"
+  url = "https://smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
+  icon = "simplex"
+[[params.impp]]
+  name = "Telegram"
+  url = "https://t.me/somegregariousdude"
+  icon = "telegram"
+[[params.impp]]
+  name = "Threema"
+  url = "https://threema.id/V424N2C4"
+  icon = "threema"
+[[params.impp]]
+  name = "WhatsApp"
+  url = "https://wa.me/+12064882148"
+  icon = "whatsapp"
+
+# --- Social Media Profiles ---
+[[params.socials]]
+  name = "BlueSky"
+  url = "https://bsky.app/profile/somegregariousdude.bsky.social"
+  rel = ""
+  icon = "bluesky"
+[[params.socials]]
+  name = "Facebook"
+  url = "https://www.facebook.com/somegregariousdude"
+  rel = ""
+  icon = "facebook"
+[[params.socials]]
+  name = "Friendica"
+  url = "https://social.trom.tf/profile/thegregariousdragon"
+  rel = "me"
+  icon = "friendica"
+[[params.socials]]
+  name = "GitHub"
+  url = "https://github.com/somegregariousdude"
+  rel = "me"
+  icon = "github"
+[[params.socials]]
+  name = "Mastodon"
+  url = "https://dragonscave.space/@somegregariousdude"
+  rel = "me"
+  icon = "mastodon"
+[[params.socials]]
+  name = "Ramblio"
+  url = "https://ramblio.com/user/thegregariousdragon"
+  rel = ""
+  icon = "ramblio"
+[[params.socials]]
+  name = "Reddit"
+  url = "https://reddit.com/u/somegregariousdude"
+  rel = ""
+  icon = "reddit"
+[[params.socials]]
+  name = "Twitch"
+  url = "https://twitch.tv/somegregariousdude"
+  rel = ""
+  icon = "twitch"
+[[params.socials]]
+  name = "YouTube"
+  url = "https://youtube.com/@somegregariousdude"
+  rel = ""
+  icon = "youtube"
+
+# --- Main Navigation Menu (UPDATED) ---
+[[menu.main]]
+  name = "Home"
+  url = "/"
+  weight = 10
+[[menu.main]]
+  name = "Blog"
+  url = "/blog/"
+  weight = 20
+[[menu.main]]
+  name = "Categories"
+  url = "/categories/"
+  weight = 30
+[[menu.main]]
+  name = "Tags"
+  url = "/tags/"
+  weight = 40
+[[menu.main]]
+  name = "Search"
+  url = "/search/"
+  weight = 50
