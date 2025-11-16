@@ -1,50 +1,27 @@
 /* ---
- * ACCESSIBLE MATERIAL DESIGN STYLESHEET (v1)
- *
- * Principles:
- * 1. Noto Sans for typography.
- * 2. High-contrast "Deep Indigo" palette.
- * 3. Automatic "prefers-color-scheme" dark mode [Ref: 11].
- * 4. "Card" metaphor for semantic hierarchy [Ref: 8, 9].
- * 5. Zero-JS [Ref: 13].
+ * ACCESSIBLE MATERIAL DESIGN STYLESHEET (FINAL v3)
+ * Replaces Webmention styles with Cactus styles
 --- */
 /* --- 1. Material Color Palette (Deep Indigo) --- */
 :root {
-  /* Font */
   --font-sans: "Noto Sans", sans-serif;
-  /* Light Mode Palette */
   --color-primary: #303F9F;
-  /* Deep Indigo (for links/pop) */
   --color-background: #F5F5F5;
-  /* Light Gray (desk) */
   --color-surface: #FFFFFF;
-  /* White (paper) */
   --color-on-background: #212121;
-  /* Dark Gray (text on desk) */
   --color-on-surface: #212121;
-  /* Dark Gray (text on paper) */
   --color-border: #E0E0E0;
-  /* Light border for cards */
-  /* Elevation (Shadows) */
   --shadow-elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   --shadow-elevation-2: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark Mode Palette */
     --color-primary: #7986CB;
-    /* Light Indigo (for links/pop) */
     --color-background: #121212;
-    /* Very Dark Gray (desk) */
     --color-surface: #1E1E1E;
-    /* Dark Gray (paper) */
     --color-on-background: #E0E0E0;
-    /* Light Gray (text on desk) */
     --color-on-surface: #E0E0E0;
-    /* Light Gray (text on paper) */
     --color-border: #2C2C2C;
-    /* Dark border for cards */
-    /* Shadows are subtle in dark mode */
     --shadow-elevation-1: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.5);
     --shadow-elevation-2: 0 3px 6px rgba(0,0,0,0.5), 0 3px 6px rgba(0,0,0,0.6); } }
 
@@ -72,7 +49,6 @@ a {
 a:hover, a:focus {
   text-decoration: underline; }
 
-/* Accessible Focus (Material Style) */
 a:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px; }
@@ -83,9 +59,7 @@ hr {
   margin: 2em 0; }
 
 /* --- 3. Material "Card" Component --- */
-/* We'll apply this to our h-card, posts, etc.
-   This creates the "sheet of paper" effect. */
-.card, .h-entry[role="article"], .h-card,
+.card, .comments, .h-entry[role="article"], .h-card,
 .recent-posts {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
@@ -96,26 +70,22 @@ hr {
   box-shadow: var(--shadow-elevation-1);
   transition: box-shadow 0.2s ease-in-out; }
 
-/* Add a subtle "lift" on hover/focus */
-.card:hover, .h-entry[role="article"]:hover, .h-card:hover,
+.card:hover, .comments:hover, .h-entry[role="article"]:hover, .h-card:hover,
 .recent-posts:hover,
 .card:focus-within,
+.comments:focus-within,
 .h-entry[role="article"]:focus-within,
 .h-card:focus-within,
 .recent-posts:focus-within {
   box-shadow: var(--shadow-elevation-2); }
 
 /* --- 4. Component-Specific Styles --- */
-/* Header & Footer (On the "Desk") */
 [role="banner"],
 [role="contentinfo"] {
   max-width: 800px;
   margin: 0 auto;
   padding: 1em; }
 
-/* Apply Card style to h-card & Recent Posts */
-/* Apply Card style to Blog Posts */
-/* h-card specific styles */
 .u-photo {
   max-width: 150px;
   border-radius: 50%;
@@ -168,36 +138,23 @@ nav[role="navigation"] ul {
   font-size: 0.9em; }
 
 /* --- 7. Icon List Styles --- */
-/* This styles the <ul> for socials and IM */
 .icon-list {
   list-style: none;
   padding-left: 0; }
 
-/* This is the <a> tag */
 .icon-list a {
   display: inline-flex;
-  /* Aligns icon and text */
   align-items: center;
-  /* Vertically centers them */
   gap: 0.75em;
-  /* Space between icon and text */
   padding: 0.25em;
-  /* Adds a bit of space */
-  border-radius: 4px;
-  /* Rounded corners for focus */ }
+  border-radius: 4px; }
 
-/* This is the <svg> icon */
 .icon-list svg {
   width: 1.25em;
-  /* Set a consistent icon size */
   height: 1.25em;
-  /* Set a consistent icon size */
   flex-shrink: 0;
-  /* Prevents icon from shrinking */
-  /* The icon color will be the link color */
   fill: var(--color-primary); }
 
-/* Change icon color on hover/focus too */
 .icon-list a:hover svg,
 .icon-list a:focus svg {
   fill: var(--color-primary); }
@@ -209,11 +166,9 @@ nav[role="navigation"] ul {
   max-width: 100%;
   background-color: #000;
   border-radius: 8px;
-  /* Match card radius */
   overflow: hidden;
   cursor: pointer;
   box-shadow: var(--shadow-elevation-1);
-  /* 16:9 Aspect Ratio */
   padding-top: 56.25%; }
 
 .lite-youtube-thumbnail {
@@ -247,7 +202,6 @@ nav[role="navigation"] ul {
 .lite-youtube:hover .lite-youtube-play {
   opacity: 1; }
 
-/* Focus style for accessibility */
 .lite-youtube-play:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 4px;
@@ -255,13 +209,10 @@ nav[role="navigation"] ul {
 
 .lite-youtube-play svg {
   fill: #FFF;
-  /* White play button */
   filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5)); }
 
-/* When the iframe is loaded */
 .lite-youtube-loaded {
-  padding-top: 0;
-  /* Unset aspect ratio */ }
+  padding-top: 0; }
 
 .lite-youtube iframe {
   position: absolute;
@@ -291,7 +242,6 @@ nav[role="navigation"] ul {
   margin-right: 0.5em;
   margin-top: 0.5em; }
 
-/* This is the Material Design "Chip" style */
 .taxonomy-list a.p-category {
   display: inline-block;
   padding: 0.25em 0.75em;
@@ -309,10 +259,6 @@ nav[role="navigation"] ul {
   text-decoration: none; }
 
 /* --- 10. Pagefind Search Styles --- */
-/*
- * This overrides Pagefind's default variables
- * to match our Material Design theme.
- */
 :root {
   --pagefind-ui-primary: var(--color-primary);
   --pagefind-ui-text: var(--color-on-surface);
@@ -323,7 +269,6 @@ nav[role="navigation"] ul {
   --pagefind-ui-border-radius: 8px;
   --pagefind-ui-modal-box-shadow: var(--shadow-elevation-2); }
 
-/* Make the search input look "Material" */
 .pagefind-ui__search-input {
   border-radius: 8px !important;
   border: 2px solid var(--color-border) !important;
@@ -334,7 +279,9 @@ nav[role="navigation"] ul {
   border-color: var(--color-primary) !important;
   box-shadow: none !important; }
 
-/* Style the modal results */
 .pagefind-ui__result-link:hover,
 .pagefind-ui__result-link:focus {
   background-color: var(--color-background) !important; }
+
+/* --- 11. [NEW] Cactus Comment Styles --- */
+/* This ensures the 'comments' card looks like other cards */

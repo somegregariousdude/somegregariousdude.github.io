@@ -1,0 +1,28 @@
+{{/*
+  This partial loads the Cactus Comments iframe.
+  It is privacy-first, secure, and accessible.
+  [Ref: Project Context, 7, 8, 14]
+*/}}
+
+{{/*
+  Use the page's permalink as the unique ID.
+  Default to 'auto' theme to respect prefers-color-scheme.
+*/}}
+{{ with .Site.Params.cactus.siteName }}
+  <section id="comments" class="comments card" aria-labelledby="comments-heading">
+    <h2 id="comments-heading">Comments</h2>
+    <div id="cactus-comments-main">
+      <script type="text/javascript" src="https://latest.cactus.chat/cactus.js" defer></script>
+      <link rel="stylesheet" href="https://latest.cactus.chat/style.css" type="text/css" media="all">
+      <script>
+        initComments({
+          node: document.getElementById("cactus-comments-main"),
+          defaultHomeserverUrl: "https://matrix.cactus.chat:8448",
+          siteName: "{{ . }}",
+          commentSectionId: "{{ $.Permalink }}",
+          theme: "auto"
+        });
+      </script>
+    </div>
+  </section>
+{{ end }}

@@ -1,9 +1,10 @@
 # ---
 # This is the main configuration file for your PERSONAL site.
+# (Cactus/Webmention params have been removed)
 # ---
 baseURL = "https://simplygregario.us"
 languageCode = "en-us"
-title = "Greg's Place"
+title = "Gregory's Personal Website"
 theme = "accessible-material-design"
 
 # --- All Author info is now under [params.author] ---
@@ -26,7 +27,7 @@ theme = "accessible-material-design"
 [params.taxonomy]
   showCategoriesOnPost = true
   showTagsOnPost = true
-  showCategoriesOnList = false
+  showCategoriesOnList = true
   showTagsOnList = false
 
 # --- Instant Messaging Profiles ---
@@ -36,7 +37,7 @@ theme = "accessible-material-design"
   icon = "discord"
 [[params.impp]]
   name = "Matrix"
-  url = "https://matrix.to/#/@gregarious:4d2.org"
+  url = "https.matrix.to#@gregarious:4d2.org"
   icon = "matrix"
 [[params.impp]]
   name = "Messenger"
@@ -50,10 +51,10 @@ theme = "accessible-material-design"
   name = "Simplex Chat"
   url = "https://smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
   icon = "simplex"
-# [[params.impp]]
-#  name = "Telegram"
-#  url = "https://t.me/somegregariousdude"
-#  icon = "telegram"
+[[params.impp]]
+  name = "Telegram"
+  url = "https://t.me/somegregariousdude"
+  icon = "telegram"
 [[params.impp]]
   name = "Threema"
   url = "https://threema.id/V424N2C4"
@@ -110,7 +111,7 @@ theme = "accessible-material-design"
   rel = ""
   icon = "youtube"
 
-# --- Main Navigation Menu (UPDATED) ---
+# --- Main Navigation Menu ---
 [[menu.main]]
   name = "Home"
   url = "/"
