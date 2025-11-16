@@ -26,7 +26,7 @@ theme = "accessible-material-design"
 [params.taxonomy]
   showCategoriesOnPost = true
   showTagsOnPost = true
-  showCategoriesOnList = true
+  showCategoriesOnList = false
   showTagsOnList = false
 
 # --- Instant Messaging Profiles ---
