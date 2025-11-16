@@ -13,11 +13,11 @@ tags: ["1stPost", "Introduction"]
 
 Hello, my name is Greg, and I'd like to welcome you to my little corner of the web. It isn't much right now, considering I've only spent a single day working on getting things up and running. My goal with this little project is to create a personal home on the web that  meets the following requirements:
 
-	- The site has to be light on resources and fast to load.
-		- The site has to use open web design and accessibility standards.
-			- The site has to support microformats and webmentions from the word go.
-				- The site has to use as little JavaScript or other external dependencies as possible.
-					- The site has to use Material Design principles in its theming.
+- The site has to be light on resources and fast to load.
+- The site has to use open web design and accessibility standards.
+- The site has to support microformats and webmentions from the word go.
+- The site has to use as little JavaScript or other external dependencies as possible.
+- The site has to use Material Design principles in its theming.
 					
 					I think I've managed to meet all those requirements... I've even managed to make the site search private by default, plus I did my best to make any embedded media players (YouTube so far) reasonably private. The only possible tracking cookie you'll potentially run across on my site is related to YouTube, but only if you click on the play button to watch a video that I've shared. Of course, I imagine someone out there is bound to find other issues, but privacy and security was taken into account when I coded my website.
 					
