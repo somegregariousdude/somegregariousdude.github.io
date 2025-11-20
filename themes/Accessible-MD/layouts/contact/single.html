@@ -1,0 +1,45 @@
+{{ define "main" }}
+<div class="single-container">
+  
+  <article class="h-entry">
+    <header class="post-header">
+      <h1 class="p-name post-title">{{ .Title }}</h1>
+    </header>
+
+    <div class="e-content post-content">
+      <p class="lead">{{ .Site.Params.contact.intro }}</p>
+      {{ .Content }}
+
+      <form class="contact-form" action="{{ .Site.Params.contact.formAction }}" method="POST">
+        
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required aria-required="true" placeholder="Your Name">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required aria-required="true" placeholder="name@example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required aria-required="true" placeholder="Type your message here..."></textarea>
+        </div>
+
+        <input type="text" name="_gotcha" style="display:none">
+
+        <button type="submit" class="button primary">Send Message</button>
+      </form>
+      
+      {{ if eq .Site.Params.contact.formAction "" }}
+      <div class="alert warning" style="margin-top: 2rem; padding: 1rem; background: #fff3cd; color: #856404; border-radius: 4px;">
+        <strong>Configuration Required:</strong> Please set the <code>formAction</code> URL in <code>config/_default/params.toml</code> to enable submissions.
+      </div>
+      {{ end }}
+
+    </div>
+  </article>
+
+</div>
+{{ end }}

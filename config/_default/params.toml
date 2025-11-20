@@ -138,3 +138,15 @@
   
   # Sort Order: "desc" (Newest to Oldest) or "asc" (Oldest to Newest).
   recentOrder = "desc"
+
+# -----------------------------------------------------------------------------
+# Contact Form Configuration
+# Source: [159]
+# -----------------------------------------------------------------------------
+[contact]
+  # The API endpoint for the form (e.g., https://formspree.io/f/YOUR_ID)
+  # Leave empty to disable the form or use a placeholder for now.
+  formAction = "" 
+  
+  # Intro text displayed above the form
+  intro = "Have a question or just want to say hi? Send me a message!"

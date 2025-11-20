@@ -1,0 +1,91 @@
+/* Webmention Components */
+
+/* The Container */
+.webmentions-container {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.webmention-explainer {
+  font-size: 0.9rem;
+  color: var(--color-on-surface);
+  opacity: 0.8;
+  margin-bottom: var(--spacing-md);
+  font-style: italic;
+}
+
+/* The List */
+.mention-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Individual Mention Item (Card) */
+.mention-item {
+  background: var(--color-background); /* Slightly distinct from surface */
+  border: 1px solid rgba(0,0,0,0.05);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  
+  /* Material Shadow 1 */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Author Block */
+.mention-author {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+
+  img.u-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-surface);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+}
+
+/* Interaction Type (liked, replied) */
+.mention-meta {
+  font-size: 0.8rem;
+  color: var(--color-primary-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 50px; /* Indent to align with text, not avatar */
+  margin-top: -15px; /* Tuck it closer to author */
+}
+
+/* Comment Content */
+.mention-content {
+  margin-left: 50px; /* Indent to clear avatar */
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-on-surface);
+  
+  /* Truncate long text visuals handled by JS, but ensure wrap here */
+  word-wrap: break-word;
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .mention-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+}

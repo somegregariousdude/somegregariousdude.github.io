@@ -1,0 +1,83 @@
+/* Contact Form & Button Styling */
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary-variant);
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 4px; /* Slightly rounded, Material style */
+  background: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  /* Visible Focus State [98] */
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.1);
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.3s, transform 0.1s;
+  text-decoration: none; /* Ensure links looking like buttons don't underline */
+
+  &.primary {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    
+    &:hover {
+      background-color: var(--color-primary-variant);
+      text-decoration: none;
+      box-shadow: var(--shadow-1);
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    border: 2px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    
+    &:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.1);
+    }
+  }
+}
