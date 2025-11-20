@@ -2,7 +2,6 @@
 <div class="single-container">
   
   <article class="h-entry">
-    
     <header class="post-header">
       {{ if .Title }}
       <h1 class="p-name post-title">{{ .Title }}</h1>
@@ -14,7 +13,6 @@
             {{ .Date.Format "January 02, 2006" }}
           </time>
         </a>
-        
         <span class="reading-time">• {{ .ReadingTime }} min read</span>
       </div>
     </header>
@@ -40,27 +38,22 @@
       <a class="u-url p-name" href="{{ .Site.BaseURL }}" rel="author">{{ .Site.Params.author.name }}</a>
       <img class="u-photo" src="{{ .Site.Params.author.photo }}" alt="{{ .Site.Params.author.name }}">
     </div>
-
   </article>
 
   {{ if not .Params.disableComments }}
   <section id="webmentions" class="webmentions-container">
     <h2>Webmentions</h2>
-    
     <div class="webmention-explainer">
-      <p>
-        Depending on the type of post, I welcome your thoughts! 
-        You can reply to this post by writing a response on your own site and sending a 
-        <a href="https://indieweb.org/Webmention" target="_blank" rel="noopener noreferrer">Webmention</a> 
-        to this URL.
-      </p>
+      <p>Reply via <a href="https://indieweb.org/Webmention" target="_blank" rel="noopener noreferrer">Webmention</a>.</p>
     </div>
 
-    <div id="webmention-list" class="webmention-list">
-      <p class="placeholder-text"><em>(Webmentions are currently loading...)</em></p>
+    <div id="webmention-list" class="webmention-list" data-target="{{ .Permalink }}">
+      <p class="placeholder-text"><em>Loading Webmentions...</em></p>
     </div>
+    
+    {{ $js := resources.Get "js/webmentions.js" | resources.Minify | resources.Fingerprint }}
+    <script src="{{ $js.Permalink }}" defer></script>
   </section>
   {{ end }}
-
 </div>
 {{ end }}
