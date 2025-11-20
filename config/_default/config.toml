@@ -1,0 +1,31 @@
+# -----------------------------------------------------------------------------
+# Core Site Configuration
+# [cite_start]Source: Project Context [cite: 3, 4, 5]
+# -----------------------------------------------------------------------------
+
+# The base URL for the production site.
+baseURL = 'https://simplygregario.us'
+
+# The title of the site, appearing in the browser tab and header.
+title = "Greg's Place"
+
+# The language code.
+languageCode = 'en-us'
+
+# The custom theme name.
+theme = 'Accessible-MD'
+
+# -----------------------------------------------------------------------------
+# Pagination (Modern Syntax)
+# -----------------------------------------------------------------------------
+[pagination]
+  pagerSize = 10
+
+# -----------------------------------------------------------------------------
+# Output Formats
+# [cite_start]Source: Project Context [cite: 146]
+# -----------------------------------------------------------------------------
+[outputs]
+  # Generates HTML, standard RSS, and a JSON Feed for syndication.
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]

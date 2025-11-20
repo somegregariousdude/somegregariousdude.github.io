@@ -1,0 +1,21 @@
+# -----------------------------------------------------------------------------
+# Markdown Configuration (Goldmark)
+# Source: Accessibility & Tech requirements [11, 49]
+# -----------------------------------------------------------------------------
+
+[goldmark]
+  [goldmark.renderer]
+    # Allows safe HTML rendering.
+    # Kept false by default for security, but can be enabled if custom HTML widgets are needed.
+    unsafe = false
+
+  [goldmark.extensions]
+    # Enables smart typography (quotes, dashes).
+    typographer = true
+
+[highlight]
+  # Code Block Syntax Highlighting
+  # Supports your interest in "tinkering with tech and coding" [11].
+  style = "monokai"
+  lineNos = false
+  noClasses = false

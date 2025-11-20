@@ -1,0 +1,30 @@
+{{ define "main" }}
+<div class="error-container">
+  
+  <h1 class="error-title">404: Page Not Found</h1>
+  
+  <p class="error-message">
+    Sorry, we couldn't find the page you were looking for. 
+    It might have been moved, deleted, or the URL was typed incorrectly.
+  </p>
+
+  <div class="search-wrapper">
+    <p class="search-explainer">
+      You can try searching the archives to find what you're looking for:
+    </p>
+    
+    <div id="search"></div>
+  </div>
+
+  <div class="error-nav">
+    <a href="{{ .Site.BaseURL }}" class="button primary">Go back to Homepage</a>
+  </div>
+
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+  <script src="/pagefind/pagefind-ui.js"></script>
+  
+  {{ $js := resources.Get "js/init-search.js" | resources.Minify | resources.Fingerprint }}
+  <script src="{{ $js.Permalink }}"></script>
+
+</div>
+{{ end }}

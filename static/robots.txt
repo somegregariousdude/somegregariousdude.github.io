@@ -1,0 +1,8 @@
+# Robots.txt for Greg's Place
+# Compliance: Project Context [46]
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://simplygregario.us/sitemap.xml

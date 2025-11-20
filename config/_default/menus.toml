@@ -1,0 +1,39 @@
+# -----------------------------------------------------------------------------
+# Site Navigation
+# Source: Project Context [137, 142]
+# -----------------------------------------------------------------------------
+
+[[main]]
+  name = "Home"
+  url = "/"
+  weight = 10
+
+[[main]]
+  name = "Blog"
+  url = "/posts/"
+  weight = 20
+
+[[main]]
+  name = "Notes"
+  url = "/notes/"
+  weight = 30
+
+[[main]]
+  name = "Guestbook"
+  url = "/guestbook/"
+  weight = 40
+
+[[main]]
+  name = "Categories"
+  url = "/categories/"
+  weight = 50
+
+[[main]]
+  name = "Tags"
+  url = "/tags/"
+  weight = 60
+
+[[main]]
+  name = "Search"
+  url = "/search/"
+  weight = 70

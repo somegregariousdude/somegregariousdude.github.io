@@ -1,0 +1,27 @@
+/* Structural Layout */
+
+/* Centered Container */
+.header-container,
+.footer-container,
+#main-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Header */
+header {
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Footer */
+footer {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}

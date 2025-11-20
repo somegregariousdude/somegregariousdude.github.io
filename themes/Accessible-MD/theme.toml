@@ -1,0 +1,13 @@
+# Theme Metadata
+# Source: Project Context [128]
+
+name = "Accessible-MD"
+description = "A custom accessible, privacy-focused theme built for Greg's Place."
+license = "CC BY-SA 4.0"
+homepage = "https://simplygregario.us"
+tags = ["accessibility", "blog", "clean", "responsive", "material-design"]
+min_version = "0.110.0"
+
+[author]
+  name = "Gregory Lopez"
+  homepage = "https://simplygregario.us"

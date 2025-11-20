@@ -1,0 +1,44 @@
+/* Typography & Base Elements */
+body {
+  font-family: var(--font-body);
+  color: var(--color-on-background);
+  background-color: var(--color-background);
+  transition: background-color 0.3s, color 0.3s; /* Smooth dark mode transition */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 700;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+
+  /* Visible Focus State [98] */
+  &:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+}
+
+/* Skip Link [97] */
+.skip-link {
+  position: absolute;
+  top: -999px;
+  left: 0;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  padding: var(--spacing-md);
+  z-index: 1000;
+  
+  &:focus {
+    top: 0;
+  }
+}

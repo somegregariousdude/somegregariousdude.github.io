@@ -1,0 +1,72 @@
+{{ define "main" }}
+<div class="list-container h-feed">
+  
+  <header class="list-header">
+    <h1 class="p-name">{{ .Title }}</h1>
+    {{ with .Content }}
+    <div class="list-description p-summary">
+      {{ . }}
+    </div>
+    {{ end }}
+  </header>
+
+  <ul class="post-list archive-list">
+    {{ range .Paginator.Pages }}
+    <li class="post-item">
+      <article class="entry-summary h-entry">
+        
+        <div class="entry-meta">
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
+        </div>
+
+        <h2 class="entry-title">
+          <a class="u-url p-name" href="{{ .RelPermalink }}">
+            {{ if .Title }}
+              {{ .Title }}
+            {{ else }}
+              Note posted on {{ .Date.Format "January 2, 2006" }}
+            {{ end }}
+          </a>
+        </h2>
+
+        {{ if .Summary }}
+        <div class="entry-excerpt p-summary">
+          <p>{{ .Summary | truncate 150 }}</p>
+        </div>
+        {{ end }}
+
+      </article>
+    </li>
+    {{ end }}
+  </ul>
+
+  {{ if gt .Paginator.TotalPages 1 }}
+  <nav class="pagination" role="navigation" aria-label="Pagination">
+    
+    {{ if .Paginator.HasPrev }}
+    <a class="page-link prev" href="{{ .Paginator.Prev.URL }}" aria-label="Previous Page">
+      &larr; Newer Posts
+    </a>
+    {{ else }}
+    <span class="page-link disabled" aria-hidden="true">&larr; Newer Posts</span>
+    {{ end }}
+
+    <span class="page-number">
+      Page {{ .Paginator.PageNumber }} of {{ .Paginator.TotalPages }}
+    </span>
+
+    {{ if .Paginator.HasNext }}
+    <a class="page-link next" href="{{ .Paginator.Next.URL }}" aria-label="Next Page">
+      Older Posts &rarr;
+    </a>
+    {{ else }}
+    <span class="page-link disabled" aria-hidden="true">Older Posts &rarr;</span>
+    {{ end }}
+
+  </nav>
+  {{ end }}
+
+</div>
+{{ end }}

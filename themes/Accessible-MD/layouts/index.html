@@ -1,0 +1,95 @@
+{{ define "main" }}
+<section class="homepage-container">
+  
+  <div class="h-card profile-card">
+    
+    <div class="profile-image">
+      <img class="u-photo" src="{{ .Site.Params.author.photo }}" alt="{{ .Site.Params.author.name }}">
+    </div>
+
+    <h1 class="p-name profile-name">
+      <a class="u-url" href="{{ .Site.BaseURL }}">{{ .Site.Params.author.name }}</a>
+    </h1>
+
+    <div class="profile-location">
+      <span class="p-locality">{{ .Site.Params.author.location.city }}</span>, 
+      <span class="p-region">{{ .Site.Params.author.location.state }}</span>, 
+      <span class="p-country-name">{{ .Site.Params.author.location.country }}</span>
+    </div>
+
+    <div class="profile-section">
+      <h2>Bio</h2>
+      <div class="p-note profile-bio">
+        <p>{{ .Site.Params.author.bio }}</p>
+      </div>
+    </div>
+
+    <div class="profile-socials">
+      <h2>Social Media</h2>
+      <ul class="social-list">
+        {{ range .Site.Params.social }}
+        <li>
+          <a href="{{ .url }}" rel="{{ .rel }}" class="u-url social-link">
+            {{ .name }}
+          </a>
+        </li>
+        {{ end }}
+      </ul>
+    </div>
+
+    <div class="profile-im">
+      <h2>Messaging Services</h2>
+      <ul class="im-list">
+        {{ range .Site.Params.im }}
+        <li>
+          <a href="{{ .url }}" rel="{{ .rel }}" class="im-link">
+            {{ .name }}
+          </a>
+        </li>
+        {{ end }}
+      </ul>
+    </div>
+
+  </div>
+  
+  {{ if .Site.Params.home.showRecent }}
+  <section class="recent-posts">
+    <h2>Recent Updates</h2>
+    
+    <ul class="post-list h-feed">
+      
+      {{/* 1. Gather Pages */}}
+      {{ $pages := where .Site.RegularPages "Type" "in" (slice "posts" "notes") }}
+      
+      {{/* 2. Sort Pages */}}
+      {{ if eq .Site.Params.home.recentOrder "asc" }}
+        {{ $pages = $pages.ByDate }}
+      {{ else }}
+        {{ $pages = $pages.ByDate.Reverse }}
+      {{ end }}
+
+      {{/* 3. Limit and Loop */}}
+      {{ $limit := .Site.Params.home.recentLimit | default 5 }}
+      {{ range first $limit $pages }}
+      <li class="post-item">
+        <article class="h-entry">
+          <span class="post-date">
+            <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+              {{ .Date.Format "Jan 02, 2006" }}
+            </time>
+          </span>
+          <a class="post-link u-url p-name" href="{{ .RelPermalink }}">
+            {{ .Title | default "Note" }}
+          </a>
+        </article>
+      </li>
+      {{ end }}
+    </ul>
+    <div class="archive-link">
+      <a href="/posts/">View all posts →</a>
+    </div>
+  </section>
+  {{ end }}
+
+</section>
+{{ end }}

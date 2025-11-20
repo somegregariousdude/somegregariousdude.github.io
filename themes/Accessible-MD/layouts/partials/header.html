@@ -1,0 +1,17 @@
+<div class="header-container">
+  <div class="site-branding">
+    <a href="{{ .Site.BaseURL }}" rel="home">{{ .Site.Title }}</a>
+  </div>
+
+  <ul class="nav-menu">
+    {{ range .Site.Menus.main }}
+      <li class="nav-item">
+        <a href="{{ .URL }}"
+           {{ if or (eq $.RelPermalink .URL) (and (ne .URL "/") (in $.RelPermalink .URL)) }}aria-current="page"{{ end }}
+        >
+          {{ .Name }}
+        </a>
+      </li>
+    {{ end }}
+  </ul>
+</div>

@@ -1,0 +1,18 @@
+{{ define "main" }}
+<div class="search-page-container">
+  <header class="page-header">
+    <h1>{{ .Title }}</h1>
+    <div class="page-description">
+      {{ .Content }}
+    </div>
+  </header>
+
+  <div id="search" class="search-ui"></div>
+
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+  <script src="/pagefind/pagefind-ui.js"></script>
+  
+  {{ $js := resources.Get "js/init-search.js" | resources.Minify | resources.Fingerprint }}
+  <script src="{{ $js.Permalink }}"></script>
+</div>
+{{ end }}
