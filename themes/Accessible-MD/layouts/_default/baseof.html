@@ -4,18 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+  
+  {{/* SEO Description */}}
   {{ with .Description }}<meta name="description" content="{{ . }}">{{ else }}<meta name="description" content="{{ .Summary | default .Site.Params.author.bio }}">{{ end }}
+  
+  {{/* JSON-LD Schema */}}
+  {{ partial "seo-schema.html" . }}
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+
   <link rel="webmention" href="https://webmention.io/simplygregario.us/webmention" />
   <link rel="pingback" href="https://webmention.io/simplygregario.us/xmlrpc" />
   
-  {{/* 1. Load Base CSS (Layouts, Components) */}}
+  {{/* CSS Pipeline */}}
   {{ $styles := resources.Get "scss/main.scss" | css.Sass | resources.Minify | resources.Fingerprint }}
   <link rel="stylesheet" href="{{ $styles.Permalink }}">
 
-  {{/* 2. Load Dynamic Theme Overrides (Colors) */}}
+  {{/* Dynamic Theme Engine */}}
   {{ partial "theme-colors.html" . }}
 
   {{ template "_internal/opengraph.html" . }}

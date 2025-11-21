@@ -1,0 +1,24 @@
+{{/* JSON-LD Schema for Greg's Place */}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ .Site.Params.author.name }}",
+  "url": "{{ .Site.BaseURL }}",
+  "image": "{{ .Site.Params.author.photo | absURL }}",
+  "description": "{{ .Site.Params.author.bio }}",
+  "jobTitle": "Blogger & Tech Enthusiast",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "{{ .Site.Params.author.location.city }}",
+    "addressRegion": "{{ .Site.Params.author.location.state }}",
+    "addressCountry": "{{ .Site.Params.author.location.country }}"
+  },
+  "sameAs": [
+    {{ range $index, $e := .Site.Params.social }}
+    {{ if $index }},{{ end }}
+    "{{ .url }}"
+    {{ end }}
+  ]
+}
+</script>
