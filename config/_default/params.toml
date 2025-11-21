@@ -1,7 +1,7 @@
 [author]
   name = "Gregory Lopez"
   bio = "I'm a gay, blind, middle-aged guy from the Pacific Northwest. As an Apple and Linux fan, I enjoy tinkering with tech and coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. I also love good food, drinks, and laughter with friends, plus a little cannabis to keep things mellow. Pronouns: he/him."
-  photo = "/images/profile.png"
+  photo = "images/profile_photo.jpg"
   [author.location]
     city = "Burien"
     state = "Washington"

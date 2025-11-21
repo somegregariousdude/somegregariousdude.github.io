@@ -1,13 +1,43 @@
+#!/bin/bash
+
+# setup_profile_photo_processing.sh
+# Description: Configures Hugo to crop/convert the profile photo via Assets.
+# Compliance:
+# - User placed file: assets/images/profile_photo.jpg
+# - Target: 500x500 Center Crop, WebP format.
+
+set -e
+
+echo "📸 Configuring Profile Photo Processing..."
+
+CONFIG_FILE="config/_default/params.toml"
+LAYOUT_FILE="themes/Accessible-MD/layouts/index.html"
+
+# 1. Update params.toml to point to the Asset file
+# We use sed to replace the old photo line with the new filename.
+echo "-> Updating author photo path in config..."
+if grep -q "photo =" "$CONFIG_FILE"; then
+    sed -i 's|photo = .*|photo = "images/profile_photo.jpg"|' "$CONFIG_FILE"
+else
+    echo "⚠️  Warning: 'photo =' not found in params.toml. Please check manually."
+fi
+
+# 2. Update the H-Card Layout to use Hugo Pipes
+echo "-> Injecting Image Processing Logic into Homepage..."
+
+# We are rewriting index.html to include the image processing block.
+# This maintains the specific H-Card structure (Bio/Socials) we established.
+cat <<EOF > "$LAYOUT_FILE"
 {{ define "main" }}
 <section class="homepage-container">
   
   <div class="h-card profile-card">
     <div class="profile-image">
-      {{ $img := resources.Get .Site.Params.author.photo }}
-      {{ if $img }}
+      {{ \$img := resources.Get .Site.Params.author.photo }}
+      {{ if \$img }}
         {{/* Crop to 500x500 Center and convert to WebP */}}
-        {{ $processed := $img.Fill "500x500 Center webp" }}
-        <img class="u-photo" src="{{ $processed.RelPermalink }}" width="{{ $processed.Width }}" height="{{ $processed.Height }}" alt="{{ .Site.Params.author.name }}">
+        {{ \$processed := \$img.Fill "500x500 Center webp" }}
+        <img class="u-photo" src="{{ \$processed.RelPermalink }}" width="{{ \$processed.Width }}" height="{{ \$processed.Height }}" alt="{{ .Site.Params.author.name }}">
       {{ else }}
         {{/* Fallback if file is missing or not found in assets */}}
         <img class="u-photo" src="{{ .Site.Params.author.photo | relURL }}" alt="{{ .Site.Params.author.name }} (Unprocessed)">
@@ -37,9 +67,9 @@
         {{ range .Site.Params.social }}
         <li>
           <a href="{{ .url }}" rel="{{ .rel }}" class="u-url brand-chip" aria-label="{{ .name }}: {{ .handle }}">
-            {{ $icon := printf "icons/brands/%s.svg" .name }}
-            {{ if templates.Exists (printf "partials/%s" $icon) }}
-              <span class="brand-icon">{{ partial $icon . }}</span>
+            {{ \$icon := printf "icons/brands/%s.svg" .name }}
+            {{ if templates.Exists (printf "partials/%s" \$icon) }}
+              <span class="brand-icon">{{ partial \$icon . }}</span>
             {{ end }}
             <span class="brand-text">{{ .handle }}</span>
           </a>
@@ -54,9 +84,9 @@
         {{ range .Site.Params.im }}
         <li>
           <a href="{{ .url }}" rel="{{ .rel }}" class="brand-chip" aria-label="{{ .name }}: {{ .handle }}">
-            {{ $icon := printf "icons/brands/%s.svg" .name }}
-            {{ if templates.Exists (printf "partials/%s" $icon) }}
-              <span class="brand-icon">{{ partial $icon . }}</span>
+            {{ \$icon := printf "icons/brands/%s.svg" .name }}
+            {{ if templates.Exists (printf "partials/%s" \$icon) }}
+              <span class="brand-icon">{{ partial \$icon . }}</span>
             {{ end }}
             <span class="brand-text">{{ .handle }}</span>
           </a>
@@ -71,9 +101,9 @@
   <section class="recent-posts">
     <h2>Recent Updates</h2>
     <ul class="post-list h-feed">
-      {{ $pages := where .Site.RegularPages "Type" "in" (slice "posts" "notes") }}
-      {{ if eq .Site.Params.home.recentOrder "asc" }}{{ $pages = $pages.ByDate }}{{ else }}{{ $pages = $pages.ByDate.Reverse }}{{ end }}
-      {{ range first (.Site.Params.home.recentLimit | default 5) $pages }}
+      {{ \$pages := where .Site.RegularPages "Type" "in" (slice "posts" "notes") }}
+      {{ if eq .Site.Params.home.recentOrder "asc" }}{{ \$pages = \$pages.ByDate }}{{ else }}{{ \$pages = \$pages.ByDate.Reverse }}{{ end }}
+      {{ range first (.Site.Params.home.recentLimit | default 5) \$pages }}
       <li class="post-item">
         <article class="h-entry">
           <div class="post-meta" style="margin-bottom: 0.5rem; font-size: 0.8rem;">
@@ -82,10 +112,10 @@
             </span>
             {{ if .Params.categories }}
               {{ range .Params.categories }}
-              {{ $icon := printf "icons/%s.svg" . }}
-              {{ $hasIcon := templates.Exists (printf "partials/%s" $icon) }}
+              {{ \$icon := printf "icons/%s.svg" . }}
+              {{ \$hasIcon := templates.Exists (printf "partials/%s" \$icon) }}
               <a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category category-chip" style="font-size: 0.7rem; padding: 1px 6px;">
-                {{ if $hasIcon }}<span class="chip-icon" style="width: 12px; height: 12px; display: inline-block; vertical-align: -2px;">{{ partial $icon . }}</span>{{ end }}
+                {{ if \$hasIcon }}<span class="chip-icon" style="width: 12px; height: 12px; display: inline-block; vertical-align: -2px;">{{ partial \$icon . }}</span>{{ end }}
                 <span class="chip-text">{{ . }}</span>
               </a>
               {{ end }}
@@ -105,3 +135,6 @@
 
 </section>
 {{ end }}
+EOF
+
+echo "✅ Profile Photo pipeline configured (500x500 Center WebP)."
