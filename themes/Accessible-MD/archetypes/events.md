@@ -1,9 +1,8 @@
 ---
 date: {{ .Date }}
 draft: true
-kind: "reply"
-categories: ["Reply"]
+categories: ["Event"]
+rsvp: "yes"
 reply_to: ""
 disableComments: false
-type: "notes"
 ---

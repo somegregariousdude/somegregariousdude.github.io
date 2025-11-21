@@ -1,38 +1,28 @@
-# Workflow for building and deploying Greg's Place to GitHub Pages
-# Compliance: Project Context [172-180]
 name: Deploy Hugo site to Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
-# Default to bash
 defaults:
   run:
     shell: bash
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     env:
-      # Using a recent version of Hugo Extended to support css.Sass
-      HUGO_VERSION: 0.152.2
+      HUGO_VERSION: 0.139.0
     steps:
       - name: Install Hugo CLI
         run: |
@@ -40,7 +30,6 @@ jobs:
           && sudo dpkg -i ${{ runner.temp }}/hugo.deb
 
       - name: Install Node.js
-        # Required for Pagefind [177]
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
@@ -55,23 +44,16 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install Dependencies
-        # Clean install of any npm packages if package-lock exists
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
 
       - name: Build with Hugo
         env:
-          # For maximum production optimization
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
-        run: |
-          hugo \
-            --minify \
-            --gc
-          # Note: We removed the dynamic baseURL override. 
-          # We strictly rely on config.toml (https://simplygregario.us) [4].
+        # FIX APPLIED: Added --cleanDestinationDir
+        run: hugo --minify --gc --cleanDestinationDir
 
       - name: Index Search (Pagefind)
-        # Source: [179] - Must run AFTER Hugo build but BEFORE upload
         run: npx pagefind --site public
 
       - name: Upload artifact
@@ -79,7 +61,6 @@ jobs:
         with:
           path: ./public
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages

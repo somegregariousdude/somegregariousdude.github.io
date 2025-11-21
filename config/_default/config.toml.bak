@@ -34,17 +34,14 @@ theme = 'Accessible-MD'
 # Permalinks Configuration
 # Source: User Request (ISO Date Format)
 # -----------------------------------------------------------------------------
+[permalinks]
+  # Format: /posts/2025-11-20/my-title/
+  posts = "/posts/:year-:month-:day/:slug/"
+  
+  # Format: /notes/2025-11-20/my-note/
+  notes = "/notes/:year-:month-:day/:contentbasename/"
 
 [taxonomies]
   tag = "tags"
   category = "categories"
-  # Removed 'stream'/'kind' - No longer needed!
-
-[permalinks]
-  longform = "/longform/:year-:month-:day/:slug/"
-  status = "/status/:year-:month-:day/:contentbasename/"
-  replies = "/replies/:year-:month-:day/:contentbasename/"
-  reposts = "/reposts/:year-:month-:day/:contentbasename/"
-  likes = "/likes/:year-:month-:day/:contentbasename/"
-  bookmarks = "/bookmarks/:year-:month-:day/:contentbasename/"
-  events = "/events/:year-:month-:day/:contentbasename/"
+  stream = "streams"

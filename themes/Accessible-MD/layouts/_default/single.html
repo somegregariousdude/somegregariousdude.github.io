@@ -9,13 +9,35 @@
         <span class="reading-time">• {{ .ReadingTime }} min read</span>
       </div>
     </header>
+
+    <div class="post-context" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px; font-size: 0.95rem;">
+      {{ if .Params.reply_to }}
+        <p>↪️ <strong>Replying to:</strong> <a href="{{ .Params.reply_to }}" class="u-in-reply-to" target="_blank" rel="noopener noreferrer">{{ .Params.reply_to | truncate 50 }}</a></p>
+      {{ end }}
+      {{ if .Params.like_of }}
+        <p>❤️ <strong>Liked:</strong> <a href="{{ .Params.like_of }}" class="u-like-of" target="_blank" rel="noopener noreferrer">{{ .Params.like_of | truncate 50 }}</a></p>
+      {{ end }}
+      {{ if .Params.repost_of }}
+        <p>🔄 <strong>Reposted:</strong> <a href="{{ .Params.repost_of }}" class="u-repost-of" target="_blank" rel="noopener noreferrer">{{ .Params.repost_of | truncate 50 }}</a></p>
+      {{ end }}
+      {{ if .Params.bookmark_of }}
+        <p>🔖 <strong>Bookmarked:</strong> <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of" target="_blank" rel="noopener noreferrer">{{ .Params.title | default .Params.bookmark_of }}</a></p>
+      {{ end }}
+      {{ if .Params.rsvp }}
+        <p>📅 <strong>RSVP:</strong> <span class="p-rsvp">{{ .Params.rsvp | title }}</span> to <a href="{{ .Params.reply_to }}" class="u-in-reply-to" target="_blank" rel="noopener noreferrer">this event</a>.</p>
+      {{ end }}
+    </div>
+
     <div class="e-content post-content">{{ .Content }}</div>
+    
     {{ if .Params.tags }}<footer class="post-footer"><div class="post-tags"><span>Tags:</span><ul>{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">{{ . }}</a></li>{{ end }}</ul></div></footer>{{ end }}
+    
     <div class="p-author h-card" style="display:none;">
       <a class="u-url p-name" href="{{ .Site.BaseURL }}" rel="author">{{ .Site.Params.author.name }}</a>
       <img class="u-photo" src="{{ .Site.Params.author.photo }}" alt="{{ .Site.Params.author.name }}">
     </div>
   </article>
+
   {{ if and (ne .Params.disableComments true) (ne .Site.Params.webmentions.enable false) }}
   <section id="webmentions" class="webmentions-container">
     <h2>Webmentions</h2>

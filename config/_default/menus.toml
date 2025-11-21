@@ -1,7 +1,3 @@
-# -----------------------------------------------------------------------------
-# Site Navigation (Complete)
-# -----------------------------------------------------------------------------
-
 [[main]]
   name = "Home"
   url = "/"
@@ -9,37 +5,37 @@
 
 [[main]]
   name = "Longform"
-  url = "/posts/"
+  url = "/longform/"
   weight = 20
 
 [[main]]
   name = "Status"
-  url = "/kinds/status/"
+  url = "/status/"
   weight = 30
 
 [[main]]
   name = "Replies"
-  url = "/kinds/reply/"
+  url = "/replies/"
   weight = 40
 
 [[main]]
   name = "Reposts"
-  url = "/kinds/repost/"
+  url = "/reposts/"
   weight = 50
 
 [[main]]
   name = "Likes"
-  url = "/kinds/like/"
+  url = "/likes/"
   weight = 60
 
 [[main]]
   name = "Bookmarks"
-  url = "/kinds/bookmark/"
+  url = "/bookmarks/"
   weight = 70
 
 [[main]]
   name = "Events"
-  url = "/kinds/rsvp/"
+  url = "/events/"
   weight = 80
 
 [[main]]
