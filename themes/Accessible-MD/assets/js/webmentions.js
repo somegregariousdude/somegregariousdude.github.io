@@ -1,23 +1,33 @@
 /**
- * Webmention.js
- * Fetches and renders mentions from webmention.io
- * Logic: Uses 'data-target' attribute if present to determine query URL.
+ * Webmention.js (Normalized)
+ * Fetches mentions for both Slash and No-Slash URL variations.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('webmention-list');
   if (!container) return;
 
-  // Routing Logic:
-  // 1. Check for explicit data-target (used by Guestbook to fetch Root URL mentions)
-  // 2. Fallback to current window location (used by standard posts)
-  let targetUrl = container.getAttribute('data-target');
-  
-  if (!targetUrl) {
-    targetUrl = window.location.href.replace('localhost:1313', 'simplygregario.us');
+  // 1. Determine the Primary Target
+  let rawTarget = container.getAttribute('data-target');
+  if (!rawTarget) {
+    // Fallback to current URL if no data-target is set
+    rawTarget = window.location.href.replace('localhost:1313', 'simplygregario.us');
   }
 
-  const apiUrl = 'https://webmention.io/api/mentions.jf2?target=' + encodeURIComponent(targetUrl);
+  // 2. Generate Variations (The "Slash Trap" Fix)
+  // We strip the slash from the raw target, then create both versions.
+  const cleanTarget = rawTarget.replace(/\/$/, ""); 
+  const targetNoSlash = cleanTarget;
+  const targetSlash = cleanTarget + "/";
+
+  // 3. Build API Query
+  // We use the array syntax 'target[]' to ask for both at once.
+  const apiUrl = 'https://webmention.io/api/mentions.jf2' + 
+                 '?target[]=' + encodeURIComponent(targetNoSlash) + 
+                 '&target[]=' + encodeURIComponent(targetSlash) +
+                 '&sort-by=published&sort-dir=down'; // Newest first
+
+  console.log("Fetching Webmentions for:", targetNoSlash, "and", targetSlash);
 
   fetch(apiUrl)
     .then(response => response.json())
@@ -66,19 +76,18 @@ document.addEventListener('DOMContentLoaded', () => {
           authorDiv.appendChild(span);
         }
         
-        // Content (Strict Sanitization)
+        // Content
         const contentDiv = document.createElement('div');
         contentDiv.className = 'mention-content p-content';
         const safeText = entry.content ? (entry.content.text || entry.content.html || '').replace(/<[^>]*>?/gm, '') : '';
-        const maxLength = 280;
-        contentDiv.textContent = safeText.length > maxLength ? safeText.substring(0, maxLength) + '...' : safeText;
+        // Limit length
+        contentDiv.textContent = safeText.length > 280 ? safeText.substring(0, 280) + '...' : safeText;
 
-        // Interaction Type
+        // Meta
         const metaDiv = document.createElement('div');
         metaDiv.className = 'mention-meta';
-        const typeLabel = entry['wm-property'] === 'like-of' ? 'liked this' : 
-                          entry['wm-property'] === 'repost-of' ? 'reposted this' : 'replied';
-        metaDiv.textContent = typeLabel;
+        metaDiv.textContent = entry['wm-property'] === 'like-of' ? 'liked this' : 
+                              entry['wm-property'] === 'repost-of' ? 'reposted this' : 'replied';
 
         li.appendChild(authorDiv);
         li.appendChild(metaDiv);
@@ -90,6 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(err => {
       console.error('Error fetching webmentions:', err);
-      container.innerHTML = '<p class="error-text">Unable to load mentions at this time.</p>';
+      container.innerHTML = '<p class="error-text">Unable to load mentions.</p>';
     });
 });
