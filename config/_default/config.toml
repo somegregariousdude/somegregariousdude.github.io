@@ -39,4 +39,4 @@ theme = 'Accessible-MD'
   posts = "/posts/:year-:month-:day/:slug/"
   
   # Format: /notes/2025-11-20/my-note/
-  notes = "/notes/:year-:month-:day/:slug/"
+  notes = "/notes/:year-:month-:day/:filename/"
