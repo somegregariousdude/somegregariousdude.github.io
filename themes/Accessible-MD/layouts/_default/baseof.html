@@ -8,8 +8,6 @@
   {{/* SEO Description */}}
   {{ with .Description }}<meta name="description" content="{{ . }}">{{ else }}<meta name="description" content="{{ .Summary | default .Site.Params.author.bio }}">{{ end }}
   
-  {{/* JSON-LD Schema */}}
-  {{ partial "seo-schema.html" . }}
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

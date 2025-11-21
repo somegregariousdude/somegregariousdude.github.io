@@ -4,7 +4,7 @@
     "home_page_url": "{{ .Site.BaseURL }}",
     "feed_url": "{{ .Permalink }}",
     "items": [
-        {{ range $index, $element := where .Site.RegularPages "Type" "in" (slice "posts" "notes") }}
+        {{ range $index, $element := where .Site.RegularPages "Type" "in" (slice "longform" "status" "replies" "reposts" "likes" "bookmarks" "events") }}
         {{ if $index }},{{ end }}
         {
             "id": "{{ .Permalink }}",
