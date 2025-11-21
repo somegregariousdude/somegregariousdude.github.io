@@ -35,8 +35,10 @@
       <p>
         <strong>Want to sign the Guestbook?</strong> Write a post on your own site that links to the URL below, then send a <a href="https://indieweb.org/Webmention">Webmention</a>.
       </p>
-      <label for="guestbook-url" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem;">Target URL (Copy this):</label>
-      <input type="text" id="guestbook-url" readonly value="{{ .Site.BaseURL }}" style="width: 100%; background: rgba(0,0,0,0.05); font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem;">
+      <label for="guestbook-url" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem; color: var(--color-primary-variant);">
+        Link to this URL in your post:
+      </label>
+      <input type="text" id="guestbook-url" readonly value="{{ .Site.BaseURL }}" onclick="this.select();" style="width: 100%; padding: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; background: rgba(0,0,0,0.05); font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem;">
     </div>
 
     <div id="webmention-list" class="webmention-list" data-target="{{ .Site.BaseURL }}">
