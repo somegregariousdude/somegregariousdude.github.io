@@ -28,4 +28,4 @@ theme = 'Accessible-MD'
 [outputs]
   # Generates HTML, standard RSS, and a JSON Feed for syndication.
   home = ["HTML", "RSS", "JSON"]
-  section = ["HTML", "RSS"]
+  section = ["HTML", "RSS", "JSON"]
