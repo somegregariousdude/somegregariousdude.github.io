@@ -1,3 +1,17 @@
+#!/bin/bash
+
+# revert_workflow.sh
+# Description: Reverts GitHub Action to the standard, stable configuration.
+# Fixes: Removes --cleanDestinationDir which caused build failures.
+
+set -e
+
+echo "U-Turn! Reverting GitHub Workflow to stable state..."
+
+WORKFLOW_DIR=".github/workflows"
+mkdir -p "$WORKFLOW_DIR"
+
+cat <<EOF > "$WORKFLOW_DIR/hugo.yml"
 name: Deploy Hugo site to Pages
 
 on:
@@ -26,8 +40,8 @@ jobs:
     steps:
       - name: Install Hugo CLI
         run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+          wget -O \${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v\${HUGO_VERSION}/hugo_extended_\${HUGO_VERSION}_linux-amd64.deb \\
+          && sudo dpkg -i \${{ runner.temp }}/hugo.deb
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -64,10 +78,13 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: \${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+EOF
+
+echo "✅ Workflow reverted. Ready to push."
