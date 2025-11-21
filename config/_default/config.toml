@@ -29,3 +29,14 @@ theme = 'Accessible-MD'
   # Generates HTML, standard RSS, and a JSON Feed for syndication.
   home = ["HTML", "RSS", "JSON"]
   section = ["HTML", "RSS", "JSON"]
+
+# -----------------------------------------------------------------------------
+# Permalinks Configuration
+# Source: User Request (ISO Date Format)
+# -----------------------------------------------------------------------------
+[permalinks]
+  # Format: /posts/2025-11-20/my-title/
+  posts = "/posts/:year-:month-:day/:slug/"
+  
+  # Format: /notes/2025-11-20/my-note/
+  notes = "/notes/:year-:month-:day/:slug/"
