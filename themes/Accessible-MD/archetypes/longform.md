@@ -3,7 +3,7 @@ title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 draft: true
 summary: ""
-categories: ["Longform"]
+categories: ["Articles"]
 tags: []
 disableComments: false
 ---

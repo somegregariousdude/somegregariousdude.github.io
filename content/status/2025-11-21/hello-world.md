@@ -4,7 +4,7 @@ date: 2025-11-21T09:16:19-08:00
 draft: false
 summary: "This status update introduces Greg's Place to the world, explains a bit about the site's philosophy and encourages feedback from visitors."
 tags: ["1stPost", "Introduction", "HelloWorld"]
-categories: ["Status"]
+categories: ["Status Updates"]
 stream: "status"
 type: "notes"
 disableComments: false

@@ -4,12 +4,12 @@
   weight = 10
 
 [[main]]
-  name = "Longform"
+  name = "Articles"
   url = "/longform/"
   weight = 20
 
 [[main]]
-  name = "Status"
+  name = "Status Updates"
   url = "/status/"
   weight = 30
 

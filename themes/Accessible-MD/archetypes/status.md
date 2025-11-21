@@ -1,7 +1,7 @@
 ---
 date: {{ .Date }}
 draft: true
-categories: ["Status"]
+categories: ["Status Updates"]
 tags: []
 disableComments: false
 ---
