@@ -1,5 +1,6 @@
 {{ define "main" }}
 <section class="homepage-container">
+  
   <div class="h-card profile-card">
     <div class="profile-image"><img class="u-photo" src="{{ .Site.Params.author.photo }}" alt="{{ .Site.Params.author.name }}"></div>
     <h1 class="p-name profile-name"><a class="u-url" href="{{ .Site.BaseURL }}">{{ .Site.Params.author.name }}</a></h1>
@@ -14,20 +15,31 @@
   </div>
   
   {{ if .Site.Params.home.showRecent }}
-  <section class="recent-posts">
-    <h2>Recent Updates</h2>
+  <section class="recent-posts" id="feed">
+    <h2>Latest Activity</h2>
     <ul class="post-list h-feed">
-      {{/* QUERY FIX: Look in all new sections */}}
-      {{ $pages := where .Site.RegularPages "Type" "in" (slice "longform" "status" "replies" "reposts" "likes" "bookmarks" "events") }}
       
-      {{ if eq .Site.Params.home.recentOrder "asc" }}{{ $pages = $pages.ByDate }}{{ else }}{{ $pages = $pages.ByDate.Reverse }}{{ end }}
-      {{ range first (.Site.Params.home.recentLimit | default 5) $pages }}
+      {{/* 1. Define the Content Set: All valid sections */}}
+      {{ $mainSections := where .Site.RegularPages "Type" "in" (slice "longform" "status" "replies" "reposts" "likes" "bookmarks" "events") }}
+      
+      {{/* 2. Sort (Desc is standard for feeds) */}}
+      {{ $sorted := $mainSections.ByDate.Reverse }}
+
+      {{/* 3. Activate Pagination (Global PagerSize applies) */}}
+      {{ $paginator := .Paginate $sorted }}
+
+      {{/* 4. Loop through the *Current Page's* posts */}}
+      {{ range $paginator.Pages }}
       <li class="post-item">
         <article class="h-entry">
+          
           <div class="post-meta" style="margin-bottom: 0.5rem; font-size: 0.8rem;">
             <span class="post-date" style="display: inline-block; margin-right: 0.5rem;">
-              <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 02, 2006" }}</time>
+              <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                {{ .Date.Format "Jan 02, 2006" }}
+              </time>
             </span>
+            
             {{ if .Params.categories }}
               {{ range .Params.categories }}
               {{ $icon := printf "icons/%s.svg" . }}
@@ -39,16 +51,52 @@
               {{ end }}
             {{ end }}
           </div>
+
           <h3 class="entry-title" style="margin-bottom: 0.5rem; font-size: 1.2rem;">
-            <a class="post-link u-url p-name" href="{{ .RelPermalink }}">{{ .Title | default "Status Update" }}</a>
+            <a class="post-link u-url p-name" href="{{ .RelPermalink }}">
+              {{ .Title | default "Status Update" }}
+            </a>
           </h3>
-          {{ if $.Site.Params.home.showRecentSummary }}<div class="entry-summary p-summary" style="font-size: 0.9rem; opacity: 0.9;"><p>{{ .Summary | truncate 200 }}</p></div>{{ end }}
+
+          {{ if $.Site.Params.home.showRecentSummary }}
+          <div class="entry-summary p-summary" style="font-size: 0.9rem; opacity: 0.9;">
+            <p>{{ .Summary | truncate 280 }}</p>
+          </div>
+          {{ end }}
+
         </article>
       </li>
       {{ end }}
     </ul>
-    <div class="archive-link"><a href="/longform/">View all articles →</a></div>
+
+    {{ if gt $paginator.TotalPages 1 }}
+    <nav class="pagination" role="navigation" aria-label="Pagination" style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
+      
+      {{ if $paginator.HasPrev }}
+      <a class="page-link prev button" href="{{ $paginator.Prev.URL }}" aria-label="Newer Posts" style="font-size: 0.9rem;">
+        &larr; Newer
+      </a>
+      {{ else }}
+      <span class="page-link disabled button" aria-hidden="true" style="opacity: 0.5; cursor: default; font-size: 0.9rem;">&larr; Newer</span>
+      {{ end }}
+
+      <span class="page-number" style="font-size: 0.9rem; font-weight: 600;">
+        Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}
+      </span>
+
+      {{ if $paginator.HasNext }}
+      <a class="page-link next button" href="{{ $paginator.Next.URL }}" aria-label="Older Posts" style="font-size: 0.9rem;">
+        Older &rarr;
+      </a>
+      {{ else }}
+      <span class="page-link disabled button" aria-hidden="true" style="opacity: 0.5; cursor: default; font-size: 0.9rem;">Older &rarr;</span>
+      {{ end }}
+
+    </nav>
+    {{ end }}
+
   </section>
   {{ end }}
+
 </section>
 {{ end }}
