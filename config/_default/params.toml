@@ -123,3 +123,10 @@
   handle = "Gregory Lopez"
   url = "https://wa.me/+12064882148"
   rel = "noopener noreferrer"
+
+# -----------------------------------------------------------------------------
+# Visual Theme Configuration
+# Options: "sound" (Default), "market" (Warm), "mountain" (Cool)
+# -----------------------------------------------------------------------------
+[theme]
+  colorScheme = "sound"

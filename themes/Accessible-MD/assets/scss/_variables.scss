@@ -1,57 +1,40 @@
-/* * Design System Variables 
- * Source: Project Context [105, 106]
- */
-
+/* Theme: The Sound (Puget Sound Inspired) */
 :root {
-  /* Typography [96] */
   --font-body: 'Noto Sans', sans-serif;
   --font-heading: 'Noto Serif', serif;
-
-  /* Spacing & Layout */
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
   --border-radius: 8px;
-  
-  /* Material Design Elevation (Shadows) [104] */
   --shadow-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   --shadow-2: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  
-  /* Light Mode Colors (Default) */
-  --color-primary: #6200ee;
-  --color-primary-variant: #3700b3;
-  --color-secondary: #03dac6;
-  --color-background: #ffffff;
-  --color-surface: #ffffff;
-  --color-error: #b00020;
-  
-  --color-on-primary: #ffffff;
+
+  /* Light Mode */
+  --color-primary: #2C3E50;         /* Puget Slate (Text/Headers) */
+  --color-primary-variant: #1A252F; /* Darker Slate */
+  --color-secondary: #FF6B6B;       /* Salmon (Buttons/Highlights) */
+  --color-background: #F4F7F6;      /* Misty White */
+  --color-surface: #FFFFFF;
+  --color-on-primary: #FFFFFF;
   --color-on-secondary: #000000;
-  --color-on-background: #000000;
-  --color-on-surface: #000000;
-  --color-on-error: #ffffff;
+  --color-on-background: #2C3E50;
+  --color-on-surface: #2C3E50;
 }
 
-/* Automatic Dark Mode [106] */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-primary: #bb86fc;
-    --color-primary-variant: #3700b3;
-    --color-secondary: #03dac6;
+    /* Dark Mode */
+    --color-primary: #FF6B6B;       /* Salmon (Pop on Dark) */
+    --color-primary-variant: #E05656;
+    --color-secondary: #16A085;     /* Evergreen/Teal */
     
-    /* Darkened Surfaces */
-    --color-background: #121212;
-    --color-surface: #1e1e1e;
-    --color-error: #cf6679;
+    --color-background: #1A252F;    /* Deep Slate */
+    --color-surface: #2C3E50;       /* Lighter Slate */
     
-    /* Light Text on Dark Backgrounds */
     --color-on-primary: #000000;
-    --color-on-secondary: #000000;
-    --color-on-background: #ffffff;
-    --color-on-surface: #ffffff;
-    --color-on-error: #000000;
+    --color-on-background: #ECF0F1; /* Cloud White */
+    --color-on-surface: #ECF0F1;
     
-    /* Adjust shadows for dark mode visibility */
-    --shadow-1: 0 1px 3px rgba(255,255,255,0.12), 0 1px 2px rgba(255,255,255,0.24);
+    --shadow-1: 0 1px 3px rgba(0,0,0,0.3);
   }
 }

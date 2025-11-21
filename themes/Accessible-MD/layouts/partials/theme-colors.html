@@ -1,0 +1,86 @@
+<style>
+{{/* THEME ENGINE: Checks params.toml for 'colorScheme' */}}
+
+{{ $scheme := .Site.Params.theme.colorScheme | default "sound" }}
+
+{{ if eq $scheme "market" }}
+  /* Theme: The Market (Pike Place Inspired) */
+  :root {
+    --color-primary: #C0392B;         /* Brick Red */
+    --color-primary-variant: #A93226;
+    --color-secondary: #D35400;       /* Pumpkin */
+    --color-background: #FDFBF7;      /* Cream / Paper */
+    --color-surface: #FFFFFF;
+    --color-on-primary: #FFFFFF;
+    --color-on-background: #4B3621;   /* Espresso Brown (Text) */
+    --color-on-surface: #4B3621;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-primary: #E74C3C;       /* Lighter Red */
+      --color-primary-variant: #C0392B;
+      --color-secondary: #E67E22;     /* Orange */
+      --color-background: #222222;    /* Dark Charcoal */
+      --color-surface: #333333;       /* Lighter Charcoal */
+      --color-on-primary: #FFFFFF;
+      --color-on-background: #FDFBF7;
+      --color-on-surface: #FDFBF7;
+      --shadow-1: 0 1px 3px rgba(0,0,0,0.5);
+    }
+  }
+
+{{ else if eq $scheme "mountain" }}
+  /* Theme: The Mountain (Mt. Rainier Inspired) */
+  :root {
+    --color-primary: #6C5CE7;         /* Lupine Purple */
+    --color-primary-variant: #5849BE;
+    --color-secondary: #00B894;       /* Alpine Meadow Green */
+    --color-background: #FFFFFF;      /* Snow White */
+    --color-surface: #F5F6FA;         /* Ice White */
+    --color-on-primary: #FFFFFF;
+    --color-on-background: #2D3436;   /* Basalt Grey (Text) */
+    --color-on-surface: #2D3436;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-primary: #A29BFE;       /* Light Lupine */
+      --color-primary-variant: #6C5CE7;
+      --color-secondary: #55EFC4;     /* Glacier Cyan */
+      --color-background: #091D36;    /* Midnight Blue */
+      --color-surface: #122540;       /* Deep Blue */
+      --color-on-primary: #000000;
+      --color-on-background: #DFE6E9; /* Cloud Grey */
+      --color-on-surface: #DFE6E9;
+      --shadow-1: 0 1px 3px rgba(0,0,0,0.4);
+    }
+  }
+
+{{ else }}
+  /* Theme: The Sound (Puget Sound - Default) */
+  /* Fallback if 'sound' is selected or no option is found */
+  :root {
+    --color-primary: #2C3E50;         /* Puget Slate */
+    --color-primary-variant: #1A252F;
+    --color-secondary: #FF6B6B;       /* Salmon */
+    --color-background: #F4F7F6;      /* Misty White */
+    --color-surface: #FFFFFF;
+    --color-on-primary: #FFFFFF;
+    --color-on-secondary: #000000;
+    --color-on-background: #2C3E50;
+    --color-on-surface: #2C3E50;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-primary: #FF6B6B;       /* Salmon */
+      --color-primary-variant: #E05656;
+      --color-secondary: #16A085;     /* Evergreen */
+      --color-background: #1A252F;    /* Deep Slate */
+      --color-surface: #2C3E50;       /* Lighter Slate */
+      --color-on-primary: #000000;
+      --color-on-background: #ECF0F1;
+      --color-on-surface: #ECF0F1;
+      --shadow-1: 0 1px 3px rgba(0,0,0,0.3);
+    }
+  }
+{{ end }}
+</style>
