@@ -6,7 +6,6 @@ summary: "This status update introduces Greg's Place to the world, explains a bi
 tags: ["1stPost", "Introduction", "HelloWorld"]
 categories: ["Status Updates"]
 stream: "status"
-type: "notes"
 disableComments: false
 ---
 Hey, there... I'm Greg and welcome to my little corner of the web called Greg's Place. For those curious amongst you, I built this website to be my digital home after experimenting with other solutions and not finding any satisfaction. Lots of HTML 5, some CSS magic, a sprinkle of JavaScript and what you see before you is the end result. I wanted something accessible, modern and responsive that stays secure from the word go, plus it had to be easy to maintain. Integrating IndieWeb functionality from the beginning just feels like the icing on the cake to me, as I don't have to rely on big tech platforms anymore.
