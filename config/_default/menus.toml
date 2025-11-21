@@ -1,6 +1,5 @@
 # -----------------------------------------------------------------------------
-# Site Navigation
-# Source: Project Context [137, 142]
+# Site Navigation (Complete)
 # -----------------------------------------------------------------------------
 
 [[main]]
@@ -9,36 +8,51 @@
   weight = 10
 
 [[main]]
-  name = "Blog"
+  name = "Longform"
   url = "/posts/"
   weight = 20
 
 [[main]]
-  name = "Notes"
-  url = "/notes/"
+  name = "Status"
+  url = "/kinds/status/"
   weight = 30
+
+[[main]]
+  name = "Replies"
+  url = "/kinds/reply/"
+  weight = 40
+
+[[main]]
+  name = "Reposts"
+  url = "/kinds/repost/"
+  weight = 50
+
+[[main]]
+  name = "Likes"
+  url = "/kinds/like/"
+  weight = 60
+
+[[main]]
+  name = "Bookmarks"
+  url = "/kinds/bookmark/"
+  weight = 70
+
+[[main]]
+  name = "Events"
+  url = "/kinds/rsvp/"
+  weight = 80
 
 [[main]]
   name = "Guestbook"
   url = "/guestbook/"
-  weight = 40
-
-[[main]]
-  name = "Categories"
-  url = "/categories/"
-  weight = 50
-
-[[main]]
-  name = "Tags"
-  url = "/tags/"
-  weight = 60
+  weight = 90
 
 [[main]]
   name = "Contact"
   url = "/contact/"
-  weight = 70
-  
+  weight = 100
+
 [[main]]
   name = "Search"
   url = "/search/"
-  weight = 80
+  weight = 110

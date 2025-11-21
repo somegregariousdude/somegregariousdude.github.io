@@ -2,7 +2,6 @@
 <section class="homepage-container">
   
   <div class="h-card profile-card">
-    
     <div class="profile-image">
       <img class="u-photo" src="{{ .Site.Params.author.photo }}" alt="{{ .Site.Params.author.name }}">
     </div>
@@ -49,7 +48,6 @@
         {{ end }}
       </ul>
     </div>
-
   </div>
   
   {{ if .Site.Params.home.showRecent }}
@@ -57,34 +55,51 @@
     <h2>Recent Updates</h2>
     
     <ul class="post-list h-feed">
-      
-      {{/* 1. Gather Pages */}}
       {{ $pages := where .Site.RegularPages "Type" "in" (slice "posts" "notes") }}
       
-      {{/* 2. Sort Pages */}}
+      {{/* Sort Logic */}}
       {{ if eq .Site.Params.home.recentOrder "asc" }}
         {{ $pages = $pages.ByDate }}
       {{ else }}
         {{ $pages = $pages.ByDate.Reverse }}
       {{ end }}
 
-      {{/* 3. Limit and Loop */}}
-      {{ $limit := .Site.Params.home.recentLimit | default 5 }}
-      {{ range first $limit $pages }}
+      {{/* Limit Logic */}}
+      {{ range first (.Site.Params.home.recentLimit | default 5) $pages }}
       <li class="post-item">
         <article class="h-entry">
-          <span class="post-date">
-            <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-              {{ .Date.Format "Jan 02, 2006" }}
-            </time>
-          </span>
-          <a class="post-link u-url p-name" href="{{ .RelPermalink }}">
-            {{ .Title | default "Note" }}
-          </a>
+          
+          <div class="post-meta" style="margin-bottom: 0.5rem; font-size: 0.8rem;">
+            <span class="post-date" style="display: inline-block; margin-right: 0.5rem;">
+              <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                {{ .Date.Format "Jan 02, 2006" }}
+              </time>
+            </span>
+            
+            {{ if .Params.categories }}
+              {{ range .Params.categories }}
+              <a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category category-chip" style="font-size: 0.7rem; padding: 1px 6px;">{{ . }}</a>
+              {{ end }}
+            {{ end }}
+          </div>
+
+          <h3 class="entry-title" style="margin-bottom: 0.5rem; font-size: 1.2rem;">
+            <a class="post-link u-url p-name" href="{{ .RelPermalink }}">
+              {{ .Title | default "Status Update" }}
+            </a>
+          </h3>
+
+          {{ if $.Site.Params.home.showRecentSummary }}
+          <div class="entry-summary p-summary" style="font-size: 0.9rem; opacity: 0.9;">
+            <p>{{ .Summary | truncate 200 }}</p>
+          </div>
+          {{ end }}
+
         </article>
       </li>
       {{ end }}
     </ul>
+    
     <div class="archive-link">
       <a href="/posts/">View all posts →</a>
     </div>

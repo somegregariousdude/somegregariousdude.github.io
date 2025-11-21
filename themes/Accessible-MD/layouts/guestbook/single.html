@@ -1,50 +1,31 @@
 {{ define "main" }}
 <div class="single-container">
-  
   <article class="h-entry">
     <header class="post-header">
       <h1 class="p-name post-title">{{ .Title }}</h1>
-      
       <div class="post-meta">
-        <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-          {{ .Date.Format "January 02, 2006" }}
-        </time>
-        <time class="dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" style="display:none;">
-          {{ .Lastmod.Format "January 02, 2006" }}
-        </time>
-        <a class="p-category" href="/categories/guestbook/" style="display:none;">Guestbook</a>
+        {{ if .Params.categories }}<div class="category-list">{{ range .Params.categories }}<a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category category-chip">{{ . }}</a>{{ end }}</div>{{ end }}
+        <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 02, 2006" }}</time>
+        <time class="dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" style="display:none;">{{ .Lastmod.Format "January 02, 2006" }}</time>
       </div>
     </header>
-
     <div class="e-content post-content">
-      <p class="guestbook-intro lead">
-        {{ .Site.Params.webmentions.guestbookIntro | default "Welcome to the Guestbook!" }}
-      </p>
+      <p class="guestbook-intro lead">{{ .Site.Params.webmentions.guestbookIntro | default "Welcome to the Guestbook!" }}</p>
       {{ .Content }}
     </div>
-    
     <div class="p-author h-card" style="display:none;">
       <a class="u-url p-name" href="{{ .Site.BaseURL }}" rel="author">{{ .Site.Params.author.name }}</a>
       <img class="u-photo" src="{{ .Site.Params.author.photo }}" alt="{{ .Site.Params.author.name }}">
     </div>
   </article>
-
   <section id="webmentions" class="webmentions-container">
     <h2>Sign the Guestbook</h2>
     <div class="webmention-explainer">
-      <p>
-        <strong>Want to sign the Guestbook?</strong> Write a post on your own site that links to the URL below, then send a <a href="https://indieweb.org/Webmention">Webmention</a>.
-      </p>
-      <label for="guestbook-url" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem; color: var(--color-primary-variant);">
-        Link to this URL in your post:
-      </label>
+      <p><strong>Want to sign the Guestbook?</strong> Write a post on your site linking to the URL below, then send a <a href="https://indieweb.org/Webmention">Webmention</a>.</p>
+      <label for="guestbook-url" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem; color: var(--color-primary-variant);">Link to this URL in your post:</label>
       <input type="text" id="guestbook-url" readonly value="{{ .Site.BaseURL }}" onclick="this.select();" style="width: 100%; padding: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; background: rgba(0,0,0,0.05); font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem;">
     </div>
-
-    <div id="webmention-list" class="webmention-list" data-target="{{ .Site.BaseURL }}">
-      <p class="placeholder-text"><em>Loading messages...</em></p>
-    </div>
-    
+    <div id="webmention-list" class="webmention-list" data-target="{{ .Site.BaseURL }}"><p class="placeholder-text"><em>Loading messages...</em></p></div>
     {{ $js := resources.Get "js/webmentions.js" | resources.Minify | resources.Fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   </section>

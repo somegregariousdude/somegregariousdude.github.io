@@ -39,4 +39,9 @@ theme = 'Accessible-MD'
   posts = "/posts/:year-:month-:day/:slug/"
   
   # Format: /notes/2025-11-20/my-note/
-  notes = "/notes/:year-:month-:day/:filename/"
+  notes = "/notes/:year-:month-:day/:contentbasename/"
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+  kind = "kinds"

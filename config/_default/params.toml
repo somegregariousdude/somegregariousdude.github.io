@@ -130,6 +130,7 @@
 # Source: User Request (2025-11-20)
 # -----------------------------------------------------------------------------
 [home]
+  showRecentSummary = true
   # Toggle the "Recent Updates" section on/off.
   showRecent = true
   

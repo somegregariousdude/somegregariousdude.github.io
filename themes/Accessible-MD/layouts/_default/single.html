@@ -1,67 +1,33 @@
 {{ define "main" }}
 <div class="single-container">
-  
   <article class="h-entry">
     <header class="post-header">
-      {{ if .Title }}
-      <h1 class="p-name post-title">{{ .Title }}</h1>
-      {{ end }}
-      
+      {{ if .Title }}<h1 class="p-name post-title">{{ .Title }}</h1>{{ end }}
       <div class="post-meta">
-        <a class="u-url" href="{{ .RelPermalink }}">
-          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-            {{ .Date.Format "January 02, 2006" }}
-          </time>
-        </a>
+        {{ if .Params.categories }}<div class="category-list">{{ range .Params.categories }}<a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category category-chip">{{ . }}</a>{{ end }}</div>{{ end }}
+        <a class="u-url" href="{{ .RelPermalink }}"><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 02, 2006" }}</time></a>
         <span class="reading-time">• {{ .ReadingTime }} min read</span>
       </div>
     </header>
-
-    <div class="e-content post-content">
-      {{ .Content }}
-    </div>
-
-    {{ if .Params.tags }}
-    <footer class="post-footer">
-      <div class="post-tags">
-        <span>Tags:</span>
-        <ul>
-          {{ range .Params.tags }}
-          <li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">{{ . }}</a></li>
-          {{ end }}
-        </ul>
-      </div>
-    </footer>
-    {{ end }}
-
+    <div class="e-content post-content">{{ .Content }}</div>
+    {{ if .Params.tags }}<footer class="post-footer"><div class="post-tags"><span>Tags:</span><ul>{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">{{ . }}</a></li>{{ end }}</ul></div></footer>{{ end }}
     <div class="p-author h-card" style="display:none;">
       <a class="u-url p-name" href="{{ .Site.BaseURL }}" rel="author">{{ .Site.Params.author.name }}</a>
       <img class="u-photo" src="{{ .Site.Params.author.photo }}" alt="{{ .Site.Params.author.name }}">
     </div>
   </article>
-
   {{ if and (ne .Params.disableComments true) (ne .Site.Params.webmentions.enable false) }}
   <section id="webmentions" class="webmentions-container">
     <h2>Webmentions</h2>
-    
     <div class="webmention-explainer">
-      <p>
-        <strong>Have something to say?</strong> Write a reply on your own site that links to this post, then send a <a href="https://indieweb.org/Webmention" target="_blank" rel="noopener noreferrer">Webmention</a>.
-      </p>
-      <label for="target-url" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem; color: var(--color-primary-variant);">
-        Link to this URL in your post:
-      </label>
+      <p><strong>Have something to say?</strong> Write a reply on your own site linking to this post, then send a <a href="https://indieweb.org/Webmention" target="_blank">Webmention</a>.</p>
+      <label for="target-url" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem; color: var(--color-primary-variant);">Link to this URL in your post:</label>
       <input type="text" id="target-url" readonly value="{{ .Permalink }}" onclick="this.select();" style="width: 100%; padding: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; background: rgba(0,0,0,0.05); font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem;">
     </div>
-
-    <div id="webmention-list" class="webmention-list" data-target="{{ .Permalink }}">
-      <p class="placeholder-text"><em>Loading Webmentions...</em></p>
-    </div>
-    
+    <div id="webmention-list" class="webmention-list" data-target="{{ .Permalink }}"><p class="placeholder-text"><em>Loading Webmentions...</em></p></div>
     {{ $js := resources.Get "js/webmentions.js" | resources.Minify | resources.Fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   </section>
   {{ end }}
-
 </div>
 {{ end }}

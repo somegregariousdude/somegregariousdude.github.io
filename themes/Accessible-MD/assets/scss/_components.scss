@@ -87,3 +87,41 @@
   --pagefind-ui-background: var(--color-surface);
   --pagefind-ui-border: rgba(0,0,0,0.1);
 }
+
+/* Category Chips */
+.category-list {
+  display: inline-flex;
+  gap: var(--spacing-sm);
+  margin-right: var(--spacing-sm);
+  vertical-align: middle;
+}
+
+.category-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  
+  &:hover {
+    opacity: 0.8;
+    text-decoration: none;
+  }
+}
+
+/* Adjust post-meta to align items */
+.post-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  font-size: 0.9rem;
+  color: var(--color-on-surface);
+  opacity: 0.8;
+  margin-bottom: var(--spacing-lg);
+}

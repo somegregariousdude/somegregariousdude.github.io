@@ -4,7 +4,7 @@ date: {{ .Date }}
 lastmod: {{ .Date }}
 draft: true
 summary: ""
-categories: []
+categories: ["Longform"]
 tags: []
 disableComments: false
 ---

@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Using a recent version of Hugo Extended to support css.Sass
-      HUGO_VERSION: 0.139.0
+      HUGO_VERSION: 0.152.2
     steps:
       - name: Install Hugo CLI
         run: |

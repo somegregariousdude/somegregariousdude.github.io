@@ -1,8 +1,9 @@
 ---
 date: {{ .Date }}
 draft: true
-tags: []
-categories: ["Status"]
-kind: "status"
+kind: "like"
+categories: ["Like"]
+like_of: ""
 disableComments: false
+type: "notes"
 ---

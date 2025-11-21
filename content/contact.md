@@ -1,8 +1,8 @@
 ---
 title: "Contact"
-date: 2025-11-20T16:29:18-0800
+date: 2025-11-20T21:15:35-0800
 layout: "contact"
 type: "contact"
+categories: ["Contact"]
 disableComments: true
-categories: ["Contact Form"]
 ---
