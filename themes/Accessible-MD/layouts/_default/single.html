@@ -40,11 +40,16 @@
     </div>
   </article>
 
-  {{ if not .Params.disableComments }}
+  {{ if and (ne .Params.disableComments true) (ne .Site.Params.webmentions.enable false) }}
   <section id="webmentions" class="webmentions-container">
     <h2>Webmentions</h2>
+    
     <div class="webmention-explainer">
-      <p>Reply via <a href="https://indieweb.org/Webmention" target="_blank" rel="noopener noreferrer">Webmention</a>.</p>
+      <p>
+        <strong>Have something to say?</strong> Write a reply on your own site that links to this post, then send a <a href="https://indieweb.org/Webmention" target="_blank" rel="noopener noreferrer">Webmention</a>.
+      </p>
+      <label for="target-url" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem;">Target URL (Copy this):</label>
+      <input type="text" id="target-url" readonly value="{{ .Permalink }}" style="width: 100%; background: rgba(0,0,0,0.05); font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem;">
     </div>
 
     <div id="webmention-list" class="webmention-list" data-target="{{ .Permalink }}">
@@ -55,5 +60,6 @@
     <script src="{{ $js.Permalink }}" defer></script>
   </section>
   {{ end }}
+
 </div>
 {{ end }}

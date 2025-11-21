@@ -33,9 +33,10 @@
     <h2>Sign the Guestbook</h2>
     <div class="webmention-explainer">
       <p>
-        This Guestbook collects mentions sent to <strong>{{ .Site.BaseURL }}</strong>.
-        You can sign it by sending a <a href="https://indieweb.org/Webmention">Webmention</a> to that URL.
+        <strong>Want to sign the Guestbook?</strong> Write a post on your own site that links to the URL below, then send a <a href="https://indieweb.org/Webmention">Webmention</a>.
       </p>
+      <label for="guestbook-url" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem;">Target URL (Copy this):</label>
+      <input type="text" id="guestbook-url" readonly value="{{ .Site.BaseURL }}" style="width: 100%; background: rgba(0,0,0,0.05); font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem;">
     </div>
 
     <div id="webmention-list" class="webmention-list" data-target="{{ .Site.BaseURL }}">
