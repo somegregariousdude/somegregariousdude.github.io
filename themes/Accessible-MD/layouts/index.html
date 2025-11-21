@@ -28,8 +28,12 @@
       <ul class="social-list">
         {{ range .Site.Params.social }}
         <li>
-          <a href="{{ .url }}" rel="{{ .rel }}" class="u-url social-link">
-            {{ .name }}
+          <a href="{{ .url }}" rel="{{ .rel }}" class="u-url brand-chip" aria-label="{{ .name }}: {{ .handle }}">
+            {{ $icon := printf "icons/brands/%s.svg" .name }}
+            {{ if templates.Exists (printf "partials/%s" $icon) }}
+              <span class="brand-icon">{{ partial $icon . }}</span>
+            {{ end }}
+            <span class="brand-text">{{ .handle }}</span>
           </a>
         </li>
         {{ end }}
@@ -41,68 +45,53 @@
       <ul class="im-list">
         {{ range .Site.Params.im }}
         <li>
-          <a href="{{ .url }}" rel="{{ .rel }}" class="im-link">
-            {{ .name }}
+          <a href="{{ .url }}" rel="{{ .rel }}" class="brand-chip" aria-label="{{ .name }}: {{ .handle }}">
+            {{ $icon := printf "icons/brands/%s.svg" .name }}
+            {{ if templates.Exists (printf "partials/%s" $icon) }}
+              <span class="brand-icon">{{ partial $icon . }}</span>
+            {{ end }}
+            <span class="brand-text">{{ .handle }}</span>
           </a>
         </li>
         {{ end }}
       </ul>
     </div>
+
   </div>
   
   {{ if .Site.Params.home.showRecent }}
   <section class="recent-posts">
     <h2>Recent Updates</h2>
-    
     <ul class="post-list h-feed">
       {{ $pages := where .Site.RegularPages "Type" "in" (slice "posts" "notes") }}
-      
-      {{/* Sort Logic */}}
-      {{ if eq .Site.Params.home.recentOrder "asc" }}
-        {{ $pages = $pages.ByDate }}
-      {{ else }}
-        {{ $pages = $pages.ByDate.Reverse }}
-      {{ end }}
-
-      {{/* Limit Logic */}}
+      {{ if eq .Site.Params.home.recentOrder "asc" }}{{ $pages = $pages.ByDate }}{{ else }}{{ $pages = $pages.ByDate.Reverse }}{{ end }}
       {{ range first (.Site.Params.home.recentLimit | default 5) $pages }}
       <li class="post-item">
         <article class="h-entry">
-          
           <div class="post-meta" style="margin-bottom: 0.5rem; font-size: 0.8rem;">
             <span class="post-date" style="display: inline-block; margin-right: 0.5rem;">
-              <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-                {{ .Date.Format "Jan 02, 2006" }}
-              </time>
+              <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 02, 2006" }}</time>
             </span>
-            
             {{ if .Params.categories }}
               {{ range .Params.categories }}
-              <a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category category-chip" style="font-size: 0.7rem; padding: 1px 6px;">{{ . }}</a>
+              {{ $icon := printf "icons/%s.svg" . }}
+              {{ $hasIcon := templates.Exists (printf "partials/%s" $icon) }}
+              <a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category category-chip" style="font-size: 0.7rem; padding: 1px 6px;">
+                {{ if $hasIcon }}<span class="chip-icon" style="width: 12px; height: 12px; display: inline-block; vertical-align: -2px;">{{ partial $icon . }}</span>{{ end }}
+                <span class="chip-text">{{ . }}</span>
+              </a>
               {{ end }}
             {{ end }}
           </div>
-
           <h3 class="entry-title" style="margin-bottom: 0.5rem; font-size: 1.2rem;">
-            <a class="post-link u-url p-name" href="{{ .RelPermalink }}">
-              {{ .Title | default "Status Update" }}
-            </a>
+            <a class="post-link u-url p-name" href="{{ .RelPermalink }}">{{ .Title | default "Status Update" }}</a>
           </h3>
-
-          {{ if $.Site.Params.home.showRecentSummary }}
-          <div class="entry-summary p-summary" style="font-size: 0.9rem; opacity: 0.9;">
-            <p>{{ .Summary | truncate 200 }}</p>
-          </div>
-          {{ end }}
-
+          {{ if $.Site.Params.home.showRecentSummary }}<div class="entry-summary p-summary" style="font-size: 0.9rem; opacity: 0.9;"><p>{{ .Summary | truncate 200 }}</p></div>{{ end }}
         </article>
       </li>
       {{ end }}
     </ul>
-    
-    <div class="archive-link">
-      <a href="/posts/">View all posts →</a>
-    </div>
+    <div class="archive-link"><a href="/posts/">View all posts →</a></div>
   </section>
   {{ end }}
 

@@ -4,7 +4,7 @@
     <header class="post-header">
       <h1 class="p-name post-title">{{ .Title }}</h1>
       <div class="post-meta">
-        {{ if .Params.categories }}<div class="category-list">{{ range .Params.categories }}<a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category category-chip">{{ . }}</a>{{ end }}</div>{{ end }}
+        {{ if .Params.categories }}<div class="category-list">{{ range .Params.categories }}{{ $icon := printf "icons/%s.svg" . }}{{ $hasIcon := templates.Exists (printf "partials/%s" $icon) }}<a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}" class="p-category category-chip">{{ if $hasIcon }}<span class="chip-icon" style="width: 12px; height: 12px; display: inline-block; vertical-align: -2px;">{{ partial $icon . }}</span>{{ end }}<span class="chip-text">{{ . }}</span></a>{{ end }}</div>{{ end }}
       </div>
     </header>
     <div class="e-content post-content">

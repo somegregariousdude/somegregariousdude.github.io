@@ -1,153 +1,125 @@
-# -----------------------------------------------------------------------------
-# Site Parameters
-# Source: Project Context [Global Site Parameters]
-# -----------------------------------------------------------------------------
-
-# -----------------------------------------------------------------------------
-# Author Information (h-card data)
-# Source: [9, 10, 11, 12]
-# -----------------------------------------------------------------------------
 [author]
   name = "Gregory Lopez"
   bio = "I'm a gay, blind, middle-aged guy from the Pacific Northwest. As an Apple and Linux fan, I enjoy tinkering with tech and coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. I also love good food, drinks, and laughter with friends, plus a little cannabis to keep things mellow. Pronouns: he/him."
-  photo = "/images/profile.png" # Root-relative path
-
+  photo = "/images/profile.png"
   [author.location]
     city = "Burien"
     state = "Washington"
     country = "USA"
 
-# -----------------------------------------------------------------------------
-# Webmentions & Interaction
-# Source: [151, 153, 154]
-# -----------------------------------------------------------------------------
 [webmentions]
-  # Global toggle to control the Webmention feature site-wide.
   enable = true
-  # Default introduction text for the Guestbook page.
   guestbookIntro = "Welcome to the Guestbook!"
 
+[contact]
+  # ACTION ITEM: Update this with your real Formspree URL if needed
+  formAction = "https://formspree.io/f/xblwegvw" 
+  intro = "Have a question or just want to say hi? Send me a message!"
+
+[home]
+  showRecent = true
+  recentLimit = 5
+  recentOrder = "desc"
+  showRecentSummary = true
+
 # -----------------------------------------------------------------------------
-# Social Media Links
-# Source: [17-37]
-# Note: 'rel' attributes are pre-configured to meet Security Notes [27, 28].
+# Social Identity Links (With Handles)
 # -----------------------------------------------------------------------------
 [[social]]
   name = "Bluesky"
+  handle = "somegregariousdude.bsky.social"
   url = "https://bsky.app/profile/somegregariousdude.bsky.social"
   rel = "noopener noreferrer"
-  icon = "bluesky.svg"
 
 [[social]]
   name = "Facebook"
+  handle = "somegregariousdude"
   url = "https://www.facebook.com/somegregariousdude"
   rel = "noopener noreferrer"
-  icon = "facebook.svg"
 
 [[social]]
   name = "Friendica"
+  handle = "thegregariousdragon"
   url = "https://social.trom.tf/profile/thegregariousdragon"
-  rel = "me noopener noreferrer" # Mandatory 'me' [27]
-  icon = "friendica.svg"
+  rel = "me noopener noreferrer"
 
 [[social]]
   name = "GitHub"
+  handle = "somegregariousdude"
   url = "https://github.com/somegregariousdude"
-  rel = "me noopener noreferrer" # Mandatory 'me' [27]
-  icon = "github.svg"
+  rel = "me noopener noreferrer"
 
 [[social]]
   name = "Mastodon"
+  handle = "@somegregariousdude"
   url = "https://dragonscave.space/@somegregariousdude"
-  rel = "me noopener noreferrer" # Mandatory 'me' [27]
-  icon = "mastodon.svg"
+  rel = "me noopener noreferrer"
 
 [[social]]
   name = "Ramblio"
+  handle = "thegregariousdragon"
   url = "https://ramblio.com/user/thegregariousdragon"
   rel = "noopener noreferrer"
-  icon = "ramblio.svg"
 
 [[social]]
   name = "Reddit"
+  handle = "u/somegregariousdude"
   url = "https://reddit.com/u/somegregariousdude"
   rel = "noopener noreferrer"
-  icon = "reddit.svg"
 
 [[social]]
   name = "Twitch"
+  handle = "somegregariousdude"
   url = "https://twitch.tv/somegregariousdude"
   rel = "noopener noreferrer"
-  icon = "twitch.svg"
 
 [[social]]
   name = "YouTube"
+  handle = "@somegregariousdude"
   url = "https://youtube.com/@somegregariousdude"
   rel = "noopener noreferrer"
-  icon = "youtube.svg"
 
 # -----------------------------------------------------------------------------
-# Instant Messaging
-# Source: [30-37]
+# Instant Messaging (With Handles)
 # -----------------------------------------------------------------------------
 [[im]]
   name = "Discord"
+  handle = "somegregariousdude"
   url = "https://discord.com/users/877529484083998751"
   rel = "noopener noreferrer"
 
 [[im]]
   name = "Matrix"
+  handle = "@gregarious:4d2.org"
   url = "https://matrix.to/#/@gregarious:4d2.org"
   rel = "noopener noreferrer"
 
 [[im]]
   name = "Messenger"
+  handle = "somegregariousdude"
   url = "https://m.me/somegregariousdude"
   rel = "noopener noreferrer"
 
 [[im]]
   name = "Signal"
+  handle = "gregarious.42"
   url = "https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT"
   rel = "noopener noreferrer"
 
 [[im]]
   name = "Simplex"
+  handle = "Gregory Lopez" 
   url = "https.smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
   rel = "noopener noreferrer"
 
 [[im]]
   name = "Threema"
+  handle = "V424N2C4"
   url = "https://threema.id/V424N2C4"
   rel = "noopener noreferrer"
 
 [[im]]
   name = "WhatsApp"
+  handle = "Gregory Lopez"
   url = "https://wa.me/+12064882148"
   rel = "noopener noreferrer"
-
-# -----------------------------------------------------------------------------
-# Homepage Configuration
-# Source: User Request (2025-11-20)
-# -----------------------------------------------------------------------------
-[home]
-  showRecentSummary = true
-  # Toggle the "Recent Updates" section on/off.
-  showRecent = true
-  
-  # Number of posts to display.
-  recentLimit = 5
-  
-  # Sort Order: "desc" (Newest to Oldest) or "asc" (Oldest to Newest).
-  recentOrder = "desc"
-
-# -----------------------------------------------------------------------------
-# Contact Form Configuration
-# Source: [159]
-# -----------------------------------------------------------------------------
-[contact]
-  # The API endpoint for the form (e.g., https://formspree.io/f/YOUR_ID)
-  # Leave empty to disable the form or use a placeholder for now.
-  formAction = " https://formspree.io/f/xblwegvw" 
-  
-  # Intro text displayed above the form
-  intro = "Have a question or just want to say hi? Send me a message!"
