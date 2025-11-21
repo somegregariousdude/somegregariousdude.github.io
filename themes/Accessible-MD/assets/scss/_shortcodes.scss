@@ -1,0 +1,72 @@
+/* YouTube Embed Styles */
+
+.youtube-embed-wrapper {
+  max-width: 100%;
+  margin: var(--spacing-md) 0;
+  border-radius: var(--border-radius);
+  overflow: hidden; /* Clips the corners of the image */
+  box-shadow: var(--shadow-1);
+}
+
+.youtube-embed {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  background-color: #000;
+  cursor: pointer;
+}
+
+.youtube-embed img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.youtube-embed:hover img,
+.youtube-embed:focus img {
+  opacity: 1;
+}
+
+.youtube-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Play Button Overlay */
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.youtube-embed:hover .play-button,
+.youtube-embed:focus .play-button {
+  background-color: #FF0000; /* YouTube Red */
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Focus State for Accessibility */
+.youtube-embed:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+}

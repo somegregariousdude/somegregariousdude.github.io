@@ -1,0 +1,53 @@
+{{/* Usage: {{< youtube id="VIDEO_ID" title="Video Title" >}} 
+  Note: 'title' is important for Accessibility (aria-label).
+*/}}
+<div class="youtube-embed-wrapper">
+  <div class="youtube-embed" data-id="{{ .Get "id" }}" role="button" aria-label="Play Video: {{ .Get "title" | default "YouTube Video" }}" tabindex="0">
+    
+    <img src="https://i.ytimg.com/vi/{{ .Get "id" }}/hqdefault.jpg" alt="{{ .Get "title" | default "Video Thumbnail" }}" loading="lazy">
+    
+    <div class="play-button" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="64" height="64" fill="currentColor">
+        <path d="M8 5v14l11-7z"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Minimal Inline Script to handle the Swap
+  (function() {
+    const embeds = document.querySelectorAll('.youtube-embed');
+    embeds.forEach(embed => {
+      // Click Listener
+      embed.addEventListener('click', loadVideo);
+      
+      // Keyboard Listener (Enter key)
+      embed.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          loadVideo.call(this);
+        }
+      });
+    });
+
+    function loadVideo() {
+      if (this.classList.contains('loaded')) return;
+      
+      const videoId = this.getAttribute('data-id');
+      const iframe = document.createElement('iframe');
+      
+      // Privacy: Use youtube-nocookie domain
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', '1');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      iframe.setAttribute('title', this.getAttribute('aria-label'));
+      
+      this.innerHTML = '';
+      this.appendChild(iframe);
+      this.classList.add('loaded');
+    }
+  })();
+</script>
