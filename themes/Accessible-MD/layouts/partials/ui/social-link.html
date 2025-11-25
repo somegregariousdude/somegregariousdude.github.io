@@ -1,7 +1,16 @@
 <li>
   <a href="{{ .url }}" rel="{{ .rel }}" class="u-url social-link" style="text-decoration: none;">
+    {{/* Icon Block: Embeds the locally saved SVG */}}
+    {{ if .icon }}
+      <span class="brand-icon" style="color: var(--md-sys-color-primary); display: flex; align-items: center;">
+        {{/* 'printf' dynamically selects the file based on the params.toml 'icon' value */}}
+        {{ partial (printf "icons/%s.svg" .icon) . }}
+      </span>
+    {{ end }}
+
     <span class="brand-name" style="font-weight: 600; color: var(--md-sys-color-primary);">{{ .name }}</span>
-    {{/* Optional: Show handle if desired, or keep it simple with just Name */}}
+    
+    {{/* Handle: Optional */}}
     <span class="brand-handle" style="color: var(--md-sys-color-on-surface); opacity: 0.8; margin-left: 4px;">{{ .handle }}</span>
   </a>
 </li>
