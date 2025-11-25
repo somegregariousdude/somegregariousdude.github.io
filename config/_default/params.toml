@@ -75,6 +75,19 @@
   rel = "me"
   icon = "mastodon"
 
+[[social]]
+  name = "ReddIt"
+  handle = "u/somegregariousdude"
+  url = "https://reddit.com/u/somegregariousdude"
+  rel = "nofollow"
+  icon = "reddit"
+  
+[[social]]
+  name = "YouTube"
+  handle = "@somegregariousdude"
+  url = "https://youtube.com/@somegregariousdude"
+  rel = "nofollow"
+  icon = "youtube"
 # [Source: 45] Instant Messaging - Dynamic Block
 [[im]]
   name = "Matrix"
