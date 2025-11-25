@@ -1,0 +1,136 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.site-header {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface);
+  position: relative; /* For z-index context */
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.site-title {
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+}
+
+/* --- Desktop Navigation (Default) --- */
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+  font-weight: 500;
+}
+
+.nav-list a[aria-current="page"] {
+  color: var(--md-sys-color-primary);
+  border-bottom: 2px solid var(--md-sys-color-primary);
+}
+
+/* --- Mobile Toggle Button --- */
+.menu-toggle {
+  display: none; /* Hidden on Desktop */
+  background: none;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--md-sys-color-primary);
+}
+
+.menu-toggle .icon-box svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  display: block;
+}
+
+/* --- Mobile Responsive States --- */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block; /* Show button */
+  }
+
+  .site-header {
+    padding-bottom: 8px;
+  }
+
+  #main-nav {
+    width: 100%; /* Force new line */
+    margin-top: 16px;
+  }
+
+  /* Hidden State */
+  .nav-list {
+    display: none; 
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding-bottom: 16px;
+  }
+
+  /* Expanded State (Toggled via JS) */
+  .nav-list.is-open {
+    display: flex;
+    animation: slideDown 0.2s ease-out;
+  }
+
+  .nav-list li {
+    width: 100%;
+  }
+
+  .nav-list a {
+    display: block;
+    padding: 12px;
+    background-color: rgba(var(--md-sys-color-primary), 0.05);
+    border-radius: 8px;
+  }
+  
+  .nav-list a:hover {
+     background-color: rgba(var(--md-sys-color-primary), 0.1);
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.site-footer {
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  margin-top: 32px;
+  padding: 16px 0;
+}
+
+.feed-item {
+  margin-bottom: 16px;
+}
+
+/* Section Intro (Added Phase 02o) */
+.section-intro {
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface);
+  max-width: 65ch; /* Optimal reading width for introductory text */
+}

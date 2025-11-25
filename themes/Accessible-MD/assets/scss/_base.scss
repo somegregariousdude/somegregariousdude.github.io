@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  font-family: 'Noto Sans', sans-serif;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Noto Serif', serif;
+  margin-top: 0;
+}
+
+/* [Source: 194] Focus Appearance - High Contrast */
+:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* [Source: 193] Skip Link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  padding: 8px;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  top: 0;
+}

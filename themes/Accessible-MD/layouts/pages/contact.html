@@ -1,0 +1,42 @@
+{{ define "main" }}
+<section class="contact-page outlined-card h-entry">
+  {{/* Hidden Metadata for Parsers */}}
+  <div style="display: none;">
+     <div class="p-author h-card">
+       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+     </div>
+     <a href="{{ .Permalink }}" class="u-url"></a>
+     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     <span class="p-category">Contact Form</span>
+  </div>
+
+  <header class="page-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      {{/* Hardcoded P-Name */}}
+      <h1 class="p-name">Contact Me</h1>
+    </div>
+    <p class="p-summary">{{ .Site.Params.contact.intro }}</p>
+  </header>
+
+  <div class="e-content">{{ .Content }}</div>
+
+  {{ if .Params.tags }}
+  <footer class="post-footer">
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>
+      {{ end }}
+    </ul>
+  </footer>
+  {{ end }}
+
+  <form action="{{ .Site.Params.contact.formAction }}" method="POST" class="contact-form" aria-label="Contact Form">
+    <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" required></div>
+    <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" required></div>
+    <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" rows="5" required></textarea></div>
+    <button type="submit" class="button-primary">Send Message</button>
+  </form>
+</section>
+{{ end }}

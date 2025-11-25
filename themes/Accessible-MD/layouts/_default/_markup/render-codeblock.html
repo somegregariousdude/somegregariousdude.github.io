@@ -1,0 +1,6 @@
+<div class="code-block-wrapper">
+  <button class="copy-code-btn" aria-label="Copy code to clipboard">
+    {{ partial "icons/content_copy.svg" . }}
+  </button>
+  <pre{{ if .Attributes }} {{ .Attributes | safeHTMLAttr }}{{ end }}><code>{{ .Inner }}</code></pre>
+</div>

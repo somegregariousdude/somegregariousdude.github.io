@@ -1,0 +1,97 @@
+.outlined-card {
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  padding: 16px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.outlined-card:hover {
+  border-color: var(--md-sys-color-outline);
+  background-color: rgba(var(--md-sys-color-primary), 0.05); /* Faked opacity */
+}
+
+/* Chips [Source: 111] */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+  gap: 8px; /* Space between icon and text */
+}
+
+.chip-icon svg, .brand-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  display: block;
+}
+
+.social-links, .im-links {
+  list-style: none;
+  padding: 0;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+/* Webmentions [Refactored for Phase 02i] */
+.webmentions-container {
+  margin-top: 24px; /* Gap between Post Card and Mentions Card */
+  /* Old border styles removed since it is now a card */
+}
+
+/* Header Layouts */
+.headline-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.headline-row h1 {
+  margin: 0;
+}
+
+.chip-icon-only {
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 50%;
+  padding: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--md-sys-color-primary);
+}
+
+.chip-icon-only:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.1);
+}
+
+.feed-header .headline-row {
+  margin-bottom: 4px;
+}
+
+.headline-row h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.headline-row a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.headline-row a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--md-sys-color-primary);
+}

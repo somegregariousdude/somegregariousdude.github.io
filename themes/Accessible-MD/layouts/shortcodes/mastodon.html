@@ -1,0 +1,98 @@
+{{ $host := .Get "host" }}
+{{ $id := .Get "id" }}
+
+{{ if and $host $id }}
+  {{ $apiURL := printf "https://%s/api/v1/statuses/%s" $host $id }}
+  
+  {{/* Fetch Data with Error Handling */}}
+  {{ $data := dict }}
+  {{ $response := resources.GetRemote $apiURL }}
+  
+  {{ if $response }}
+    {{ if eq $response.StatusCode 200 }}
+      {{ $data = $response.Content | transform.Unmarshal }}
+    {{ else }}
+      <div class="mastodon-card error outlined-card">
+        <p><strong>Error:</strong> Could not fetch Mastodon post (Status {{ $response.StatusCode }}).</p>
+        <p><a href="https://{{ $host }}/@{{ $id }}">View Original on {{ $host }}</a></p>
+      </div>
+    {{ end }}
+  {{ else }}
+    <div class="mastodon-card error outlined-card">
+      <p><strong>Error:</strong> Unable to reach Mastodon instance ({{ $host }}).</p>
+    </div>
+  {{ end }}
+
+  {{/* Render Card if Data Exists */}}
+  {{ if $data }}
+    <article class="mastodon-card outlined-card" lang="{{ $data.language | default "en" }}">
+      
+      {{/* HEADER: Author Info */}}
+      <header class="mastodon-header">
+        <div class="mastodon-author">
+          {{/* PROXY AVATAR: Download image to serve locally for privacy */}}
+          {{ $avatar := resources.GetRemote $data.account.avatar }}
+          {{ if $avatar }}
+             {{/* Check for valid image resource before processing */}}
+             {{ if $avatar.Err }}
+               <div class="u-photo-placeholder">?</div>
+             {{ else }}
+               <img src="{{ $avatar.RelPermalink }}" alt="" class="u-photo" width="48" height="48" loading="lazy">
+             {{ end }}
+          {{ else }}
+             <div class="u-photo-placeholder">?</div>
+          {{ end }}
+          
+          <div class="author-meta">
+            <a href="{{ $data.account.url }}" class="p-name u-url" target="_blank" rel="noopener noreferrer">
+              <strong>{{ $data.account.display_name | default $data.account.username }}</strong>
+            </a>
+            <span class="p-nickname">@{{ $data.account.username }}@{{ $host }}</span>
+          </div>
+        </div>
+        
+        <div class="mastodon-logo" aria-label="Mastodon Post">
+          {{ partial "icons/mastodon.svg" . }}
+        </div>
+      </header>
+
+      {{/* BODY: Content */}}
+      <div class="e-content">
+        {{ $data.content | safeHTML }}
+      </div>
+
+      {{/* MEDIA: Image Grid */}}
+      {{ if $data.media_attachments }}
+      <div class="mastodon-media">
+        {{ range $data.media_attachments }}
+          {{ if eq .type "image" }}
+            {{/* PROXY MEDIA: Download content images */}}
+            {{ $img := resources.GetRemote .url }}
+            {{ if $img }}
+              {{ if not $img.Err }}
+                <img src="{{ $img.RelPermalink }}" alt="{{ .description | default "Attached image" }}" loading="lazy">
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+      {{ end }}
+
+      {{/* FOOTER: Meta & Stats */}}
+      <footer class="mastodon-footer">
+        <time class="dt-published" datetime="{{ $data.created_at }}">
+          {{ dateFormat "Jan 02, 2006" $data.created_at }}
+        </time>
+        <div class="mastodon-stats">
+          <span>↩ {{ $data.replies_count }}</span>
+          <span>↻ {{ $data.reblogs_count }}</span>
+          <span>♥ {{ $data.favourites_count }}</span>
+        </div>
+        <a href="{{ $data.url }}" class="button-small" target="_blank" rel="noopener noreferrer">View Original</a>
+      </footer>
+    </article>
+  {{ end }}
+
+{{ else }}
+  <p class="error"><strong>Mastodon Shortcode Error:</strong> Missing 'host' or 'id' parameter.</p>
+{{ end }}

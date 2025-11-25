@@ -1,0 +1,16 @@
+{{ $id := .Get 0 }}
+{{ $title := .Get 1 | default "Play Video" }}
+
+<div class="youtube-lite outlined-card" 
+     data-id="{{ $id }}" 
+     role="button" 
+     tabindex="0" 
+     aria-label="{{ $title }}"
+     title="{{ $title }}">
+  
+  <img src="https://img.youtube.com/vi/{{ $id }}/maxresdefault.jpg" 
+       alt="Video Thumbnail" 
+       loading="lazy">
+  
+  <div class="play-button" aria-hidden="true"></div>
+</div>

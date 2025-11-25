@@ -1,0 +1,12 @@
+# [Source: 64] Strict Security Policy
+[goldmark]
+  [goldmark.renderer]
+    unsafe = false 
+  [goldmark.parser]
+    attribute = { block = true, title = true }
+
+# [Source: 65] Syntax Highlighting
+[highlight]
+  style = "monokai"
+  lineNos = false
+  noClasses = false

@@ -1,0 +1,13 @@
+# Build Artifacts
+/public
+/resources
+
+# Environment & Dependencies
+.DS_Store
+.env
+node_modules/
+
+# Hugo Cache
+.hugo_build.lock
+# Build error log
+errors.txt

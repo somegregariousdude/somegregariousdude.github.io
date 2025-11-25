@@ -1,0 +1,29 @@
+baseURL = "https://simplygregario.us"
+title = "Greg's Place"
+theme = "Accessible-MD"
+languageCode = "en-us"
+
+# Pagination [Source: 18]
+[pagination]
+  pagerSize = 10
+
+# Permalinks [Source: 10-17]
+[permalinks]
+  pages = "/:slug/"
+  articles = "/articles/:year-:month-:day/:slug/"
+  status = "/status/:year-:month-:day/:contentbasename/"
+  replies = "/replies/:year-:month-:day/:contentbasename/"
+  reposts = "/reposts/:year-:month-:day/:contentbasename/"
+  likes = "/likes/:year-:month-:day/:contentbasename/"
+  bookmarks = "/bookmarks/:year-:month-:day/:contentbasename/"
+  rsvps = "/rsvps/:year-:month-:day/:contentbasename/"
+
+# Outputs [Source: 19]
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS", "JSON"]
+
+# Sass/SCSS [Source: 184]
+[css]
+  [css.sass]
+    enable = true

@@ -1,0 +1,28 @@
+{{ define "main" }}
+<section class="search-page outlined-card h-entry">
+  {{/* Hidden Metadata for Parsers */}}
+  <div style="display: none;">
+     <div class="p-author h-card">
+       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+     </div>
+     <a href="{{ .Permalink }}" class="u-url"></a>
+     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     <span class="p-category">Search</span>
+  </div>
+
+  <header class="page-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      {{/* Hardcoded P-Name */}}
+      <h1 class="p-name">Search</h1>
+    </div>
+  </header>
+  
+  <div id="search" role="search"></div>
+</section>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>window.addEventListener('DOMContentLoaded', (event) => { new PagefindUI({ element: "#search", showSubResults: true }); });</script>
+{{ end }}

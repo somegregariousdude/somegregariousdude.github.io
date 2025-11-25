@@ -1,0 +1,47 @@
+{{ define "main" }}
+<section class="list-feed h-feed">
+  <div class="headline-row">
+     {{ partial "ui/chip.html" . }}
+     <h1 class="p-name">{{ .Title }}</h1>
+  </div>
+
+  {{/* NEW: Section Intro (Blurb) */}}
+  {{ with .Content }}
+  <div class="section-intro p-summary">
+    {{ . }}
+  </div>
+  {{ end }}
+  
+  <div class="post-feed">
+    {{ range .Paginator.Pages }}
+      <article class="feed-item outlined-card h-entry {{ .Type }}">
+        {{/* Hidden Author for Feed Items */}}
+        <div style="display: none;" class="p-author h-card">
+           <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+        </div>
+
+        <header class="feed-header">
+          <div class="headline-row">
+            {{ partial "ui/chip.html" . }}
+            <h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2>
+          </div>
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
+        </header>
+
+        {{ if .Params.reply_to }}<div class="context-mini">↪ Replying to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to | truncate 40 }}</a></div>{{ end }}
+        {{ if .Params.like_of }}<div class="context-mini">♥ Liked <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of | truncate 40 }}</a></div>{{ end }}
+        {{ if .Params.repost_of }}<div class="context-mini">↻ Reposted <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of | truncate 40 }}</a></div>{{ end }}
+        {{ if .Params.bookmark_of }}<div class="context-mini">🔖 Bookmarked <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of | truncate 40 }}</a></div>{{ end }}
+        {{ if .Params.rsvp }}<div class="context-mini">📅 RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span></div>{{ end }}
+
+        <div class="feed-content p-summary">
+          {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | truncate 500 }}{{ end }}
+        </div>
+      </article>
+    {{ end }}
+  </div>
+  {{ template "_internal/pagination.html" . }}
+</section>
+{{ end }}

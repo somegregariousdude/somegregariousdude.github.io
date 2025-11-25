@@ -1,0 +1,40 @@
+{{ $type := .Type }}
+{{ $iconName := .Type }}
+{{ $vibe := "Icon" }}
+{{ $label := .Type | humanize }}
+
+{{/* 1. Override Type for Special Pages */}}
+{{ if eq .Layout "guestbook" }}
+  {{ $iconName = "guestbook" }}
+{{ end }}
+{{ if eq .Layout "contact" }}
+  {{ $iconName = "contact" }}
+{{ end }}
+{{ if eq .Layout "search" }}
+  {{ $iconName = "search" }}
+{{ end }}
+{{ if eq .Title "About" }}
+  {{ $iconName = "about" }}
+{{ end }}
+
+{{/* 2. Map Icons to Vibe Descriptors */}}
+{{ if eq $iconName "status" }}{{ $vibe = "Bubble" }}{{ end }}
+{{ if eq $iconName "replies" }}{{ $vibe = "Reply" }}{{ end }}
+{{ if eq $iconName "reposts" }}{{ $vibe = "Repeat" }}{{ end }}
+{{ if eq $iconName "likes" }}{{ $vibe = "Heart" }}{{ end }}
+{{ if eq $iconName "bookmarks" }}{{ $vibe = "Bookmark" }}{{ end }}
+{{ if eq $iconName "rsvps" }}{{ $vibe = "Event" }}{{ end }}
+{{ if eq $iconName "articles" }}{{ $vibe = "Article" }}{{ end }}
+{{ if eq $iconName "pages" }}{{ $vibe = "Page" }}{{ end }}
+{{ if eq $iconName "categories" }}{{ $vibe = "Category" }}{{ end }}
+{{ if eq $iconName "tags" }}{{ $vibe = "Tag" }}{{ end }}
+{{ if eq $iconName "guestbook" }}{{ $vibe = "Book" }}{{ end }}
+{{ if eq $iconName "contact" }}{{ $vibe = "Envelope" }}{{ end }}
+{{ if eq $iconName "search" }}{{ $vibe = "Magnifier" }}{{ end }}
+{{ if eq $iconName "about" }}{{ $vibe = "Info" }}{{ end }}
+
+<div class="chip chip-icon-only">
+  <span class="chip-icon" role="img" aria-label="{{ $vibe }}">
+    {{ partial (printf "icons/%s.svg" $iconName) . }}
+  </span>
+</div>

@@ -1,0 +1,76 @@
+{{ define "main" }}
+<section class="feed-stream">
+
+  {{/* 1. AUTHOR PROFILE CARD (Top of Page) */}}
+  <article class="h-card profile-card outlined-card" style="margin-bottom: 2rem;">
+    <h1 class="p-name">{{ .Site.Params.author.name }}</h1>
+    
+    {{/* Profile Photo */}}
+    {{ $avatar := resources.Get .Site.Params.author.photo }}
+    {{ if $avatar }}
+      {{ $avatar := $avatar.Fill "500x500 Center webp" }}
+      <img class="u-photo" src="{{ $avatar.RelPermalink }}" alt="Profile Photo" width="{{ $avatar.Width }}" height="{{ $avatar.Height }}">
+    {{ else }}
+      <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
+    {{ end }}
+
+    <p class="p-note">{{ .Site.Params.author.bio }}</p>
+
+    <div class="profile-meta">
+      <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
+      <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+    </div>
+    
+    <h2>Social Media</h2>
+    <ul class="social-links">
+      {{ range .Site.Params.social }}
+        {{ partial "ui/social-link.html" . }}
+      {{ end }}
+    </ul>
+
+    {{ if .Site.Params.im }}
+    <h2>Messaging Services</h2>
+    <ul class="im-links">
+      {{ range .Site.Params.im }}
+        {{ partial "ui/social-link.html" . }}
+      {{ end }}
+    </ul>
+    {{ end }}
+  </article>
+
+  {{/* 2. FEED SECTION TITLE */}}
+  <h1>Latest Updates</h1>
+
+  {{/* 3. FEED LOGIC */}}
+  {{ $allowed_sections := slice "articles" "status" "replies" "reposts" "likes" "bookmarks" "rsvps" }}
+  {{ $feed := where .Site.RegularPages "Section" "in" $allowed_sections }}
+  {{ $paginator := .Paginate $feed }}
+
+  <div class="post-feed">
+    {{ range $paginator.Pages }}
+      <article class="feed-item outlined-card h-entry">
+        <header class="feed-header">
+          <div class="headline-row">
+            {{ partial "ui/chip.html" . }}
+            <h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2>
+          </div>
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
+        </header>
+        <div class="feed-content p-summary">
+          {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | plainify | truncate 500 }}{{ end }}
+        </div>
+        <a href="{{ .Permalink }}" class="u-url">Read More</a>
+      </article>
+    {{ else }}
+      <div class="outlined-card">
+        <h3>No updates found.</h3>
+        <p>The stream is currently quiet.</p>
+      </div>
+    {{ end }}
+  </div>
+
+  {{ template "_internal/pagination.html" . }}
+</section>
+{{ end }}

@@ -1,0 +1,23 @@
+<header role="banner" class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="site-title">{{ .Site.Title }}</a>
+    
+    <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Open Menu">
+      <span class="icon-box">
+        {{ partial "icons/menu.svg" . }}
+      </span>
+    </button>
+
+    <nav role="navigation" aria-label="Main Navigation" id="main-nav">
+      <ul id="main-menu" class="nav-list">
+        {{ range .Site.Menus.main }}
+        <li>
+          <a href="{{ .URL }}" {{ if or (eq .URL $.RelPermalink) (eq .URL $.Permalink) }}aria-current="page"{{ end }}>
+            {{ .Name }}
+          </a>
+        </li>
+        {{ end }}
+      </ul>
+    </nav>
+  </div>
+</header>

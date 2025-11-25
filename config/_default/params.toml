@@ -1,0 +1,105 @@
+# ==============================================================================
+# FILE: config/_default/params.toml
+# PURPOSE: Site-wide Variables and IndieWeb Configuration
+# CONTEXT: Source [20-47]
+# ==============================================================================
+
+# [Source: 21] Author Metadata for H-Card and SEO
+[author]
+  name = "Gregory Lopez"
+  # [Source: 23] Short plain-text bio for H-Card meta tags.
+  bio = "I'm a gay, blind, middle-aged guy from the Pacific Northwest. As an Apple and Linux fan, I enjoy tinkering with tech and coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. I also love good food, drinks, and laughter with friends, plus a little cannabis to keep things mellow."
+  # [Source: 24] Root-relative path to profile photo.
+  photo = "images/profile_photo.jpg"
+
+  [author.location]
+    city = "Burien"
+    state = "Washington"
+    country = "USA"
+
+# [Source: 26] Webmention.io Integration
+[webmentions]
+  enable = true
+  # [Source: 28] Global Default. Can be overridden in Frontmatter.
+  show_webmentions = true
+  # [Source: 29] Must match the specific account name used on webmention.io.
+  username = "simplygregario.us"
+  guestbookIntro = ""
+
+# [Source: 31] Contact Form Settings
+[contact]
+  # [Source: 32] Formspree or similar URL
+  formAction = "https://formspree.io/f/xblwegvw"
+  intro = "Have a question or just want to say hi? Send me a message!"
+
+# [Source: 34] Visual Theming
+[theme]
+  # Options: "sound", "market", "mountain", "forest", "sunset"
+  colorScheme = "forest"
+
+# [Source: 36] Social Media - Dynamic Block
+# Used by generate_icons.sh to fetch SVGs from Simple Icons.
+
+[[social]]
+  name = "BlueSky"
+  handle = "@somegregariousdude.bsky.social"
+  url = "https://bsky.app/profile/somegregariousdude.bsky.social"
+  rel = "nofollow"
+  icon = "bluesky"
+
+[[social]]
+  name = "Facebook"
+  handle = "@gregarious:4d2.org"
+  url = "https://facebook.com/somegregariousdude"
+  rel = "nofollow"
+  icon = "facebook"
+
+[[social]]
+  name = "Friendica"
+  handle = "thegregariousdragon"
+  url = "https://social.trom.tf/profile/thegregariousdragon"
+  rel = "me"
+  icon = "friendica"
+
+[[social]]
+  name = "GitHub"
+  handle = "somegregariousdude"
+  url = "https://github.com/somegregariousdude"
+  rel = "me"
+  icon = "github"
+
+[[social]]
+  name = "Mastodon"
+  handle = "@somegregariousdude@dragonscave.space"
+  url = "https://dragonscave.space/@somegregariousdude"
+  rel = "me"
+  icon = "mastodon"
+
+# [Source: 45] Instant Messaging - Dynamic Block
+[[im]]
+  name = "Matrix"
+  handle = "@gregarious:4d2.org"
+  url = "https://matrix.to/#/@gregarious:4d2.org"
+  rel = "nofollow"
+  icon = "matrix"
+
+[[im]]
+  name = "Messenger"
+  handle = "@somegregariousdude"
+  url = "https://m.me/somegregariousdude"
+  rel = "nofollow"
+  icon = "messenger"
+
+[[im]]
+  name = "Signal"
+  handle = "gregarious.42"
+  url = "https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT"
+  rel = "nofollow"
+  icon = "signal"
+  
+  [[im]]
+  name = "Simplex Chat"
+  handle = "Gregory Lopez"
+  url = "https.smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
+  rel = "nofollow"
+  icon = "simplex"

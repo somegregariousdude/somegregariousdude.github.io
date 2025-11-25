@@ -1,0 +1,57 @@
+/* --- MD3 Images & Galleries --- */
+
+/* Single Image Wrapper */
+.md-figure {
+  margin: 2rem 0;
+  display: block;
+}
+
+/* The Image Itself */
+.md-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--md-sys-shape-corner-medium);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface);
+}
+
+/* Captions */
+.md-figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-outline);
+  font-family: 'Noto Sans', sans-serif;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Gallery Grid (Responsive Masonry-ish) */
+.md-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 2rem 0;
+}
+
+.gallery-item {
+  display: block;
+  border-radius: var(--md-sys-shape-corner-medium);
+  overflow: hidden;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: border-color 0.2s, transform 0.2s;
+  aspect-ratio: 1 / 1; /* Force square thumbnails */
+}
+
+.gallery-item:hover, .gallery-item:focus-visible {
+  border-color: var(--md-sys-color-primary);
+  transform: scale(1.02);
+  outline: none;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

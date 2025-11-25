@@ -1,0 +1,26 @@
+{{ $match := .Get "match" | default "gallery/*" }}
+{{ $images := .Page.Resources.Match $match }}
+
+{{ if $images }}
+<div class="md-gallery-grid">
+  {{ range $images }}
+    {{ $thumb := .Fill "600x600 Center webp" }}
+    
+    {{/* ACCESSIBILITY LOGIC: */}}
+    {{/* 1. Check 'alt' in params. 2. Check 'title'. 3. Fallback to Name. */}}
+    {{ $altText := .Params.alt | default .Title | default .Name }}
+    
+    <a href="{{ .RelPermalink }}" class="gallery-item" target="_blank" aria-label="View full size: {{ $altText }}">
+      <img 
+        src="{{ $thumb.RelPermalink }}" 
+        alt="{{ $altText }}" 
+        width="{{ $thumb.Width }}" 
+        height="{{ $thumb.Height }}"
+        loading="lazy"
+      >
+    </a>
+  {{ end }}
+</div>
+{{ else }}
+  <p class="error">No images found for gallery match: {{ $match }}</p>
+{{ end }}

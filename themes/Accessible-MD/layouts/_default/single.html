@@ -1,0 +1,82 @@
+{{ define "main" }}
+<article class="single-post h-entry outlined-card">
+  
+  {{/* MICROFORMATS: Hidden Author Block */}}
+  <div style="display: none;" class="p-author h-card">
+    <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+    <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+  </div>
+
+  <header class="post-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">{{ .Title }}</h1>
+    </div>
+    <a href="{{ .Permalink }}" class="u-url" style="text-decoration: none; color: inherit;">
+      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+        {{ .Date.Format "January 2, 2006" }}
+      </time>
+    </a>
+  </header>
+
+  {{/* CONTEXT BLOCKS */}}
+  {{ if .Params.reply_to }}<div class="context-block reply-context"><p>Replying to: <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
+  {{ if .Params.like_of }}<div class="context-block like-context"><p>Liked: <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of }}</a></p></div>{{ end }}
+  {{ if .Params.repost_of }}<div class="context-block repost-context"><p>Reposted: <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of }}</a></p></div>{{ end }}
+  {{ if .Params.bookmark_of }}<div class="context-block bookmark-context"><p>Bookmarked: <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of }}</a></p></div>{{ end }}
+  {{ if and .Params.rsvp .Params.reply_to }}<div class="context-block rsvp-context"><p>RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span> to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
+
+  <div class="e-content">{{ .Content }}</div>
+
+  <footer class="post-footer">
+    {{/* POSSE: Smart Syndication Links (Text Only) */}}
+    {{ if .Params.syndication }}
+    <div class="syndication-container">
+      <span class="syndication-label">Also on:</span>
+      <ul class="syndication-list" style="display: inline; padding: 0; list-style: none;">
+        {{ range .Params.syndication }}
+          {{ $synURL := . }}
+          {{ $match := false }}
+          {{ $name := "" }}
+          
+          {{/* LOOKUP */}}
+          {{ range $.Site.Params.social }}
+             {{ if in $synURL .url }}
+               {{ $match = true }}
+               {{ $name = .name }}
+             {{ end }}
+          {{ end }}
+
+          <li style="display: inline; margin-right: 12px;">
+            <a href="{{ $synURL }}" class="u-syndication" rel="syndication">
+              {{ if $match }}
+                 {{ $name }}
+              {{ else }}
+                 {{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}
+              {{ end }}
+            </a>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+    {{ end }}
+
+    {{ if .Params.tags }}
+    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{ end }}
+  </footer>
+</article>
+
+{{ if .Params.show_webmentions }}
+<section id="webmentions" class="webmentions-container outlined-card" data-target="{{ .Permalink }}" aria-labelledby="mentions-heading">
+  <h2 id="mentions-heading">Webmentions</h2>
+  
+  {{/* NEW: Webmention Explainer (Restored) */}}
+  <div class="webmention-explainer">
+    <p>Have your say. Write a post on your own site and link to <code>{{ .Permalink }}</code> to appear here!</p>
+  </div>
+
+  <div id="webmentions-list"><p>Loading...</p></div>
+</section>
+{{ end }}
+{{ end }}

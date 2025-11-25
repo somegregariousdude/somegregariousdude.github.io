@@ -1,0 +1,17 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "{{ .Title }} | {{ .Site.Title }}",
+    "home_page_url": "{{ .Site.BaseURL }}",
+    "feed_url": "{{ .Permalink }}",
+    "items": [
+        {{ range $index, $element := .Paginator.Pages }}{{ if $index }},{{ end }}
+        {
+            "id": "{{ .Permalink }}",
+            "url": "{{ .Permalink }}",
+            "title": "{{ .Title }}",
+            "content_html": {{ .Content | jsonify }},
+            "date_published": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
+        }
+        {{ end }}
+    ]
+}

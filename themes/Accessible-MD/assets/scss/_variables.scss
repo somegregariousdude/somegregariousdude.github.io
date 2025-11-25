@@ -1,0 +1,55 @@
+:root {
+  /* MD3 Dimension Tokens */
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-spacing-base: 8px; /* [Source: 202] 8dp grid */
+  
+  /* DEFAULT THEME: "The Sound" [Source: 206] */
+  --md-sys-color-primary: #4A5D8A;       /* Slate Blue */
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-secondary: #4A7A7A;     /* Muted Teal */
+  --md-sys-color-tertiary: #E98A78;      /* Pacific Salmon */
+  --md-sys-color-surface: #FFFFFF;
+  --md-sys-color-on-surface: #1C1B1F;
+  --md-sys-color-outline: #79747E;       /* For Outlined Cards */
+  --md-sys-color-outline-variant: #CAC4D0;
+}
+
+/* THEME: The Market [Source: 207] */
+[data-theme="market"] {
+  --md-sys-color-primary: #4E342E;       /* Espresso */
+  --md-sys-color-secondary: #C62828;     /* Brick Red */
+  --md-sys-color-tertiary: #F9A825;      /* Rainier Gold */
+}
+
+/* THEME: The Mountain [Source: 208] */
+[data-theme="mountain"] {
+  --md-sys-color-primary: #455A64;       /* Basalt Grey */
+  --md-sys-color-secondary: #00838F;     /* Glacial Cyan */
+  --md-sys-color-tertiary: #7E57C2;      /* Lupine Purple */
+}
+
+/* THEME: The Forest [Source: 209] */
+[data-theme="forest"] {
+  --md-sys-color-primary: #1B5E20;       /* Deep Evergreen */
+  --md-sys-color-secondary: #5D4037;     /* Cedar Brown */
+  --md-sys-color-tertiary: #8BC34A;      /* Fern Light Green */
+}
+
+/* THEME: The Sunset [Source: 210] */
+[data-theme="sunset"] {
+  --md-sys-color-primary: #311B92;       /* Deep Indigo */
+  --md-sys-color-secondary: #880E4F;     /* Twilight Plum */
+  --md-sys-color-tertiary: #FF6D00;      /* Tangerine */
+}
+
+/* [Source: 211] Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-sys-color-surface: #1C1B1F;
+    --md-sys-color-on-surface: #E6E1E5;
+    --md-sys-color-outline: #938F99;
+    
+    /* Inverted/Softer variants for dark mode contrast would go here */
+    --md-sys-color-primary: #B0C4DE; /* Light Steel Blue for contrast */
+  }
+}

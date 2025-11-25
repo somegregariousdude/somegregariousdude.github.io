@@ -1,0 +1,118 @@
+/* Mastodon Static Facade */
+/* Extends .outlined-card logic but specific to social embeds */
+
+.mastodon-card {
+  /* Inherits base .outlined-card styles from _components.scss */
+  max-width: 600px;
+  margin: 2rem auto;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.mastodon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.mastodon-author {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.mastodon-author img.u-photo {
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+.author-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.author-meta a {
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+}
+
+.author-meta a:hover {
+  text-decoration: underline;
+}
+
+.p-nickname {
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+}
+
+.mastodon-logo {
+  color: var(--md-sys-color-primary);
+  width: 24px;
+  height: 24px;
+}
+
+.mastodon-logo svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.mastodon-card .e-content {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.mastodon-card .e-content p {
+  margin-bottom: 0.5rem;
+}
+
+.mastodon-card .e-content a {
+  color: var(--md-sys-color-secondary);
+  word-break: break-all;
+}
+
+.mastodon-media {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mastodon-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background-color: rgba(0,0,0,0.05);
+}
+
+.mastodon-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-top: 12px;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+}
+
+.mastodon-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.button-small {
+  text-decoration: none;
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+}
+
+.button-small:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.1);
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 4px;
+}
