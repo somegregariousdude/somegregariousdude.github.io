@@ -52,16 +52,18 @@ mkdir -p .github/workflows
 # ==============================================================================
 echo "Generating Configuration..."
 
-# hugo.toml (Main)
+# hugo.toml (Main) [Source: 6]
 cat <<EOT > "config/_default/hugo.toml"
 baseURL = "https://simplygregario.us"
 title = "Greg's Place"
 theme = "Accessible-MD"
 languageCode = "en-us"
 
+# Pagination [Source: 18]
 [pagination]
   pagerSize = 10
 
+# Permalinks [Source: 10-17]
 [permalinks]
   pages = "/:slug/"
   articles = "/articles/:year-:month-:day/:slug/"
@@ -72,20 +74,31 @@ languageCode = "en-us"
   bookmarks = "/bookmarks/:year-:month-:day/:contentbasename/"
   rsvps = "/rsvps/:year-:month-:day/:contentbasename/"
 
+# Outputs [Source: 19]
 [outputs]
   home = ["HTML", "RSS", "JSON"]
   section = ["HTML", "RSS", "JSON"]
 
+# Sass/SCSS [Source: 184]
 [css]
   [css.sass]
     enable = true
 EOT
 
-# params.toml (Site Variables)
+# params.toml (Site Variables) [Source: 9]
 cat <<EOT > "config/_default/params.toml"
+# ==============================================================================
+# FILE: config/_default/params.toml
+# PURPOSE: Site-wide Variables and IndieWeb Configuration
+# CONTEXT: Source [20-47]
+# ==============================================================================
+
+# [Source: 21] Author Metadata for H-Card and SEO
 [author]
   name = "Gregory Lopez"
+  # [Source: 23] Short plain-text bio for H-Card meta tags.
   bio = "I'm a gay, blind, middle-aged guy from the Pacific Northwest. As an Apple and Linux fan, I enjoy tinkering with tech and coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. I also love good food, drinks, and laughter with friends, plus a little cannabis to keep things mellow."
+  # [Source: 24] Root-relative path to profile photo.
   photo = "images/profile_photo.jpg"
 
   [author.location]
@@ -93,25 +106,42 @@ cat <<EOT > "config/_default/params.toml"
     state = "Washington"
     country = "USA"
 
+# [Source: 26] Webmention.io Integration
 [webmentions]
   enable = true
+  # [Source: 28] Global Default. Can be overridden in Frontmatter.
   show_webmentions = true
+  # [Source: 29] Must match the specific account name used on webmention.io.
   username = "simplygregario.us"
   guestbookIntro = ""
 
+# [Source: 31] Contact Form Settings
 [contact]
+  # [Source: 32] Formspree or similar URL
   formAction = "https://formspree.io/f/xblwegvw"
   intro = "Have a question or just want to say hi? Send me a message!"
 
+# [Source: 34] Visual Theming
 [theme]
+  # Options: "sound", "market", "mountain", "forest", "sunset"
   colorScheme = "forest"
+
+# [Source: 36] Social Media - Dynamic Block
+# Used by generate_icons.sh to fetch SVGs from Simple Icons.
 
 [[social]]
   name = "BlueSky"
   handle = "@somegregariousdude.bsky.social"
   url = "https://bsky.app/profile/somegregariousdude.bsky.social"
-  rel = "me"
+  rel = "nofollow"
   icon = "bluesky"
+
+[[social]]
+  name = "Facebook"
+  handle = "somegregariousdude"
+  url = "https://facebook.com/somegregariousdude"
+  rel = "nofollow"
+  icon = "facebook"
 
 [[social]]
   name = "Friendica"
@@ -134,6 +164,7 @@ cat <<EOT > "config/_default/params.toml"
   rel = "me"
   icon = "mastodon"
 
+# [Source: 45] Instant Messaging - Dynamic Block
 [[im]]
   name = "Matrix"
   handle = "@gregarious:4d2.org"
@@ -142,13 +173,20 @@ cat <<EOT > "config/_default/params.toml"
   icon = "matrix"
 
 [[im]]
+  name = "Messenger"
+  handle = "@somegregariousdude"
+  url = "https://m.me/somegregariousdude"
+  rel = "nofollow"
+  icon = "messenger"
+
+[[im]]
   name = "Signal"
   handle = "gregarious.42"
   url = "https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT"
   rel = "nofollow"
   icon = "signal"
   
-[[im]]
+  [[im]]
   name = "Simplex Chat"
   handle = "Gregory Lopez"
   url = "https.smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
@@ -156,14 +194,21 @@ cat <<EOT > "config/_default/params.toml"
   icon = "simplex"
 EOT
 
-# menus.toml (Navigation)
+# menus.toml (Navigation) [Source: 8]
 cat <<EOT > "config/_default/menus.toml"
+# ==============================================================================
+# FILE: config/_default/menus.toml
+# PURPOSE: Main Navigation Structure
+# CONTEXT: Source [48-62]
+# ==============================================================================
+
 [[main]]
   name = "Home"
   url = "/"
   weight = 100
 
 [[main]]
+  # [Source: 52] Optional. Must appear between Home and Articles.
   name = "About"
   url = "/about/"
   weight = 150
@@ -219,14 +264,16 @@ cat <<EOT > "config/_default/menus.toml"
   weight = 1100
 EOT
 
-# markup.toml (Security & Rendering)
+# markup.toml (Security & Rendering) [Source: 7]
 cat <<EOT > "config/_default/markup.toml"
+# [Source: 64] Strict Security Policy
 [goldmark]
   [goldmark.renderer]
     unsafe = false 
   [goldmark.parser]
     attribute = { block = true, title = true }
 
+# [Source: 65] Syntax Highlighting
 [highlight]
   style = "monokai"
   lineNos = false
@@ -242,9 +289,12 @@ cat <<EOT > "$THEME_ROOT/archetypes/default.md"
 +++
 title = "{{ replace .Name "-" " " | title }}"
 date = {{ .Date }}
+# [Source: 126] Required for SEO and RSS feed freshness.
 lastmod = {{ .Date }}
 draft = true
+# [Source: 127] Required for Homepage display.
 summary = ""
+# [Source: 128] Optional: Set to false to hide webmentions for this specific post.
 show_webmentions = true
 +++
 EOT
@@ -270,6 +320,7 @@ title = "{{ replace .Name "-" " " | title }}"
 date = {{ .Date }}
 lastmod = {{ .Date }}
 draft = false
+# [Source: 90] If summary is missing, theme will truncate first 500 chars.
 summary = ""
 tags = []
 syndication = []
@@ -285,6 +336,7 @@ date = {{ .Date }}
 lastmod = {{ .Date }}
 draft = false
 summary = ""
+# [Source: 130] Target URL is required for Replies.
 reply_to = "" 
 tags = []
 syndication = []
@@ -297,6 +349,7 @@ title = "Repost: {{ replace .Name "-" " " | title }}"
 date = {{ .Date }}
 lastmod = {{ .Date }}
 draft = false
+# [Source: 132] Target URL is required for Reposts.
 repost_of = ""
 tags = []
 syndication = []
@@ -309,6 +362,7 @@ title = "Like: {{ replace .Name "-" " " | title }}"
 date = {{ .Date }}
 lastmod = {{ .Date }}
 draft = false
+# [Source: 131] Target URL is required for Likes.
 like_of = ""
 tags = []
 syndication = []
@@ -322,6 +376,7 @@ date = {{ .Date }}
 lastmod = {{ .Date }}
 draft = false
 summary = ""
+# [Source: 133] Target URL is required for Bookmarks.
 bookmark_of = ""
 tags = []
 syndication = []
@@ -335,7 +390,9 @@ date = {{ .Date }}
 lastmod = {{ .Date }}
 draft = false
 summary = ""
+# [Source: 130] Target URL (the event you are replying to).
 reply_to = ""
+# [Source: 134] RSVP Status: "yes", "no", or "maybe".
 rsvp = "yes"
 tags = []
 syndication = []
@@ -347,38 +404,66 @@ EOT
 # ==============================================================================
 echo "Generating SCSS..."
 
+# [Source: 48]
 cat <<EOT > "$THEME_ROOT/assets/scss/_variables.scss"
 :root {
   /* MD3 Dimension Tokens */
   --md-sys-shape-corner-medium: 12px;
-  --md-sys-spacing-base: 8px;
+  --md-sys-spacing-base: 8px; /* [Source: 202] 8dp grid */
   
-  /* DEFAULT THEME: "The Sound" */
-  --md-sys-color-primary: #4A5D8A;
+  /* DEFAULT THEME: "The Sound" [Source: 206] */
+  --md-sys-color-primary: #4A5D8A;       /* Slate Blue */
   --md-sys-color-on-primary: #FFFFFF;
-  --md-sys-color-secondary: #4A7A7A;
-  --md-sys-color-tertiary: #E98A78;
+  --md-sys-color-secondary: #4A7A7A;     /* Muted Teal */
+  --md-sys-color-tertiary: #E98A78;      /* Pacific Salmon */
   --md-sys-color-surface: #FFFFFF;
   --md-sys-color-on-surface: #1C1B1F;
-  --md-sys-color-outline: #79747E;
+  --md-sys-color-outline: #79747E;       /* For Outlined Cards */
   --md-sys-color-outline-variant: #CAC4D0;
 }
 
-[data-theme="market"] { --md-sys-color-primary: #4E342E; --md-sys-color-secondary: #C62828; --md-sys-color-tertiary: #F9A825; }
-[data-theme="mountain"] { --md-sys-color-primary: #455A64; --md-sys-color-secondary: #00838F; --md-sys-color-tertiary: #7E57C2; }
-[data-theme="forest"] { --md-sys-color-primary: #1B5E20; --md-sys-color-secondary: #5D4037; --md-sys-color-tertiary: #8BC34A; }
-[data-theme="sunset"] { --md-sys-color-primary: #311B92; --md-sys-color-secondary: #880E4F; --md-sys-color-tertiary: #FF6D00; }
+/* THEME: The Market [Source: 207] */
+[data-theme="market"] {
+  --md-sys-color-primary: #4E342E;       /* Espresso */
+  --md-sys-color-secondary: #C62828;     /* Brick Red */
+  --md-sys-color-tertiary: #F9A825;      /* Rainier Gold */
+}
 
+/* THEME: The Mountain [Source: 208] */
+[data-theme="mountain"] {
+  --md-sys-color-primary: #455A64;       /* Basalt Grey */
+  --md-sys-color-secondary: #00838F;     /* Glacial Cyan */
+  --md-sys-color-tertiary: #7E57C2;      /* Lupine Purple */
+}
+
+/* THEME: The Forest [Source: 209] */
+[data-theme="forest"] {
+  --md-sys-color-primary: #1B5E20;       /* Deep Evergreen */
+  --md-sys-color-secondary: #5D4037;     /* Cedar Brown */
+  --md-sys-color-tertiary: #8BC34A;      /* Fern Light Green */
+}
+
+/* THEME: The Sunset [Source: 210] */
+[data-theme="sunset"] {
+  --md-sys-color-primary: #311B92;       /* Deep Indigo */
+  --md-sys-color-secondary: #880E4F;     /* Twilight Plum */
+  --md-sys-color-tertiary: #FF6D00;      /* Tangerine */
+}
+
+/* [Source: 211] Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   :root {
     --md-sys-color-surface: #1C1B1F;
     --md-sys-color-on-surface: #E6E1E5;
     --md-sys-color-outline: #938F99;
-    --md-sys-color-primary: #B0C4DE;
+    
+    /* Inverted/Softer variants for dark mode contrast would go here */
+    --md-sys-color-primary: #B0C4DE; /* Light Steel Blue for contrast */
   }
 }
 EOT
 
+# [Source: 43]
 cat <<EOT > "$THEME_ROOT/assets/scss/_base.scss"
 body {
   margin: 0;
@@ -388,41 +473,87 @@ body {
   line-height: 1.5;
 }
 
-h1, h2, h3, h4 { font-family: 'Noto Serif', serif; margin-top: 0; }
-
-:focus-visible { outline: 3px solid var(--md-sys-color-primary); outline-offset: 2px; }
-
-.skip-link {
-  position: absolute; top: -100px; left: 0;
-  background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);
-  padding: 8px; z-index: 9999;
+h1, h2, h3, h4 {
+  font-family: 'Noto Serif', serif;
+  margin-top: 0;
 }
-.skip-link:focus { top: 0; }
+
+/* [Source: 194] Focus Appearance - High Contrast */
+:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* [Source: 193] Skip Link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  padding: 8px;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  top: 0;
+}
 EOT
 
+# [Source: 47]
 cat <<EOT > "$THEME_ROOT/assets/scss/_typography.scss"
 /* TYPE SCALE & MD3 MAPPINGS */
+
+/* Headings: Noto Serif */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Noto Serif', serif;
   color: var(--md-sys-color-on-surface);
-  margin-top: 2rem; margin-bottom: 1rem; line-height: 1.2;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
 }
-h1 { font-size: 2.5rem; font-weight: 700; margin-top: 0; }
-h2 { font-size: 2rem; font-weight: 600; }
-h3 { font-size: 1.75rem; font-weight: 600; }
-h4 { font-size: 1.5rem; font-weight: 600; }
-h5 { font-size: 1.25rem; font-weight: 600; }
-h6 { font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
-p { font-family: 'Noto Sans', sans-serif; font-size: 1rem; line-height: 1.6; margin-bottom: 1rem; color: var(--md-sys-color-on-surface); }
+h1 { font-size: 2.5rem;  font-weight: 700; margin-top: 0; } /* Headline Large */
+h2 { font-size: 2rem;    font-weight: 600; } /* Headline Medium */
+h3 { font-size: 1.75rem; font-weight: 600; } /* Title Large */
+h4 { font-size: 1.5rem;  font-weight: 600; } /* Title Medium */
+h5 { font-size: 1.25rem; font-weight: 600; } /* Title Small */
+h6 { font-size: 1rem;    font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
-a { color: var(--md-sys-color-primary); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
-a:hover { text-decoration-thickness: 2px; background-color: rgba(var(--md-sys-color-primary), 0.05); }
+/* Body Copy: Noto Sans */
+p {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--md-sys-color-on-surface);
+}
 
-hr { border: 0; height: 1px; background-color: var(--md-sys-color-outline-variant); margin: 2rem 0; width: 100%; }
+/* Links */
+a {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+}
 
+/* Horizontal Rule (Thematic Break) */
+hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--md-sys-color-outline-variant);
+  margin: 2rem 0;
+  width: 100%;
+}
+
+/* Blockquotes */
 blockquote {
-  margin: 1.5rem 0; padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
   border-left: 4px solid var(--md-sys-color-primary);
   background-color: rgba(var(--md-sys-color-primary), 0.05);
   font-style: italic;
@@ -430,65 +561,295 @@ blockquote {
 }
 blockquote p:last-child { margin-bottom: 0; }
 
-ul, ol { margin-bottom: 1rem; padding-left: 2rem; }
-li { margin-bottom: 0.5rem; line-height: 1.6; }
-li::marker { color: var(--md-sys-color-secondary); }
-
-code { font-family: monospace; background-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface); padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.9em; }
-
-/* Tables */
-.table-wrapper { overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-sys-shape-corner-medium); }
-.md-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; border: none; }
-.md-table caption { caption-side: top; text-align: left; padding: 12px 16px; font-family: 'Noto Serif', serif; font-weight: 700; color: var(--md-sys-color-primary); background-color: rgba(var(--md-sys-color-primary), 0.05); border-bottom: 1px solid var(--md-sys-color-outline-variant); }
-.md-table th, .md-table td { padding: 12px 16px; border-bottom: 1px solid var(--md-sys-color-outline-variant); white-space: nowrap; }
-.md-table th { background-color: var(--md-sys-color-surface); font-weight: 600; color: var(--md-sys-color-on-surface); text-align: left; }
-.md-table tr:last-child td { border-bottom: none; }
-.md-table tbody tr:nth-child(even) { background-color: rgba(var(--md-sys-color-primary), 0.02); }
-
-/* Code Blocks */
-pre { background-color: #272822; color: #f8f8f2; padding: 1rem; border-radius: var(--md-sys-shape-corner-medium); overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid var(--md-sys-color-outline-variant); }
-pre code { background-color: transparent; color: inherit; padding: 0; }
-.code-block-wrapper { position: relative; margin-bottom: 1.5rem; }
-.code-block-wrapper pre { margin-bottom: 0; }
-.copy-code-btn { position: absolute; top: 8px; right: 8px; background-color: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); color: var(--md-sys-color-primary); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0.5; transition: opacity 0.2s, background-color 0.2s; z-index: 2; }
-.copy-code-btn:hover, .copy-code-btn:focus-visible { opacity: 1; background-color: var(--md-sys-color-outline-variant); }
-.copy-code-btn svg { width: 18px; height: 18px; fill: currentColor; }
-EOT
-
-cat <<EOT > "$THEME_ROOT/assets/scss/_layout.scss"
-.container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
-
-.site-header { padding: 16px 0; border-bottom: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); position: relative; }
-.header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-.site-title { font-family: 'Noto Serif', serif; font-weight: 700; font-size: 1.25rem; text-decoration: none; color: var(--md-sys-color-on-surface); }
-
-.nav-list { list-style: none; padding: 0; margin: 0; display: flex; gap: 16px; flex-wrap: wrap; }
-.nav-list a { text-decoration: none; color: var(--md-sys-color-on-surface); font-weight: 500; }
-.nav-list a[aria-current="page"] { color: var(--md-sys-color-primary); border-bottom: 2px solid var(--md-sys-color-primary); }
-
-.menu-toggle { display: none; background: none; border: 1px solid var(--md-sys-color-outline); border-radius: 8px; cursor: pointer; padding: 8px; color: var(--md-sys-color-primary); }
-.menu-toggle .icon-box svg { width: 24px; height: 24px; fill: currentColor; display: block; }
-
-@media (max-width: 768px) {
-  .menu-toggle { display: block; }
-  .site-header { padding-bottom: 8px; }
-  #main-nav { width: 100%; margin-top: 16px; }
-  .nav-list { display: none; flex-direction: column; gap: 8px; width: 100%; padding-bottom: 16px; }
-  .nav-list.is-open { display: flex; animation: slideDown 0.2s ease-out; }
-  .nav-list li { width: 100%; }
-  .nav-list a { display: block; padding: 12px; background-color: rgba(var(--md-sys-color-primary), 0.05); border-radius: 8px; }
-  .nav-list a:hover { background-color: rgba(var(--md-sys-color-primary), 0.1); }
+/* Lists */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+li::marker {
+  color: var(--md-sys-color-secondary); /* Theme flavor for bullets */
 }
 
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+/* Inline Code */
+code {
+  font-family: monospace;
+  background-color: var(--md-sys-color-outline-variant); /* High contrast background */
+  color: var(--md-sys-color-on-surface);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
 
-.site-footer { border-top: 1px solid var(--md-sys-color-outline-variant); margin-top: 32px; padding: 16px 0; }
-.feed-item { margin-bottom: 16px; }
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+th, td {
+  padding: 12px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  text-align: left;
+}
+th {
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  font-weight: 700;
+}
 
-/* Section Intro */
-.section-intro { margin-bottom: 24px; font-size: 1.1rem; line-height: 1.6; color: var(--md-sys-color-on-surface); max-width: 65ch; }
+/* Code Blocks (Pre) */
+/* The outer container is handled by the Render Hook wrapper, but we style the 'pre' here */
+pre {
+  background-color: #272822; /* Monokai Background (Matches markup.toml) */
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: var(--md-sys-shape-corner-medium);
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* Copy Button Wrapper (Generated by Render Hook) */
+.code-block-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.code-block-wrapper pre {
+  margin-bottom: 0; /* Wrapper handles margin */
+}
+
+.copy-code-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  color: var(--md-sys-color-primary);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s, background-color 0.2s;
+  z-index: 2;
+}
+
+.copy-code-btn:hover, .copy-code-btn:focus-visible {
+  opacity: 1;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+.copy-code-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* --- Accessible Tables (Phase 02q) --- */
+
+.table-wrapper {
+  overflow-x: auto; /* Horizontal scroll on mobile */
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  /* Reset border since wrapper handles the outer stroke */
+  border: none; 
+}
+
+.md-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: 12px 16px;
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  color: var(--md-sys-color-primary);
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.md-table th, 
+.md-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  white-space: nowrap; /* Prevents awkward wrapping on mid-size screens */
+}
+
+.md-table th {
+  background-color: var(--md-sys-color-surface);
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  text-align: left;
+}
+
+.md-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Zebra striping for readability */
+.md-table tbody tr:nth-child(even) {
+  background-color: rgba(var(--md-sys-color-primary), 0.02);
+}
 EOT
 
+# [Source: 46]
+cat <<EOT > "$THEME_ROOT/assets/scss/_layout.scss"
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.site-header {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface);
+  position: relative; /* For z-index context */
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.site-title {
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+}
+
+/* --- Desktop Navigation (Default) --- */
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+  font-weight: 500;
+}
+
+.nav-list a[aria-current="page"] {
+  color: var(--md-sys-color-primary);
+  border-bottom: 2px solid var(--md-sys-color-primary);
+}
+
+/* --- Mobile Toggle Button --- */
+.menu-toggle {
+  display: none; /* Hidden on Desktop */
+  background: none;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--md-sys-color-primary);
+}
+
+.menu-toggle .icon-box svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  display: block;
+}
+
+/* --- Mobile Responsive States --- */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block; /* Show button */
+  }
+
+  .site-header {
+    padding-bottom: 8px;
+  }
+
+  #main-nav {
+    width: 100%; /* Force new line */
+    margin-top: 16px;
+  }
+
+  /* Hidden State */
+  .nav-list {
+    display: none; 
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding-bottom: 16px;
+  }
+
+  /* Expanded State (Toggled via JS) */
+  .nav-list.is-open {
+    display: flex;
+    animation: slideDown 0.2s ease-out;
+  }
+
+  .nav-list li {
+    width: 100%;
+  }
+
+  .nav-list a {
+    display: block;
+    padding: 12px;
+    background-color: rgba(var(--md-sys-color-primary), 0.05);
+    border-radius: 8px;
+  }
+  
+  .nav-list a:hover {
+     background-color: rgba(var(--md-sys-color-primary), 0.1);
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.site-footer {
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  margin-top: 32px;
+  padding: 16px 0;
+}
+
+.feed-item {
+  margin-bottom: 16px;
+}
+
+/* Section Intro (Added Phase 02o) */
+.section-intro {
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface);
+  max-width: 65ch; /* Optimal reading width for introductory text */
+}
+EOT
+
+# [Source: 44]
 cat <<EOT > "$THEME_ROOT/assets/scss/_components.scss"
 .outlined-card {
   background-color: var(--md-sys-color-surface);
@@ -497,68 +858,344 @@ cat <<EOT > "$THEME_ROOT/assets/scss/_components.scss"
   padding: 16px;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
-.outlined-card:hover { border-color: var(--md-sys-color-outline); background-color: rgba(var(--md-sys-color-primary), 0.05); }
 
-.chip { display: inline-flex; align-items: center; border: 1px solid var(--md-sys-color-outline); border-radius: 8px; padding: 4px 8px; font-size: 0.875rem; margin-bottom: 8px; gap: 8px; }
-.chip-icon svg, .brand-icon svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+.outlined-card:hover {
+  border-color: var(--md-sys-color-outline);
+  background-color: rgba(var(--md-sys-color-primary), 0.05); /* Faked opacity */
+}
 
-.social-links, .im-links { list-style: none; padding: 0; }
-.social-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+/* Chips [Source: 111] */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+  gap: 8px; /* Space between icon and text */
+}
 
-.webmentions-container { margin-top: 24px; }
+.chip-icon svg, .brand-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  display: block;
+}
 
-.headline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-.headline-row h1 { margin: 0; }
-.headline-row h2 { margin: 0; font-size: 1.25rem; line-height: 1.3; }
-.headline-row a { text-decoration: none; color: inherit; }
-.headline-row a:hover { text-decoration: underline; text-decoration-color: var(--md-sys-color-primary); }
+.social-links, .im-links {
+  list-style: none;
+  padding: 0;
+}
 
-.chip-icon-only { border: 1px solid var(--md-sys-color-outline); border-radius: 50%; padding: 8px; display: inline-flex; justify-content: center; align-items: center; width: 20px; height: 20px; color: var(--md-sys-color-primary); }
-.chip-icon-only:hover { background-color: rgba(var(--md-sys-color-primary), 0.1); }
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+/* Webmentions [Refactored for Phase 02i] */
+.webmentions-container {
+  margin-top: 24px; /* Gap between Post Card and Mentions Card */
+  /* Old border styles removed since it is now a card */
+}
+
+/* Header Layouts */
+.headline-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.headline-row h1 {
+  margin: 0;
+}
+
+.chip-icon-only {
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 50%;
+  padding: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--md-sys-color-primary);
+}
+
+.chip-icon-only:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.1);
+}
+
+.feed-header .headline-row {
+  margin-bottom: 4px;
+}
+
+.headline-row h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.headline-row a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.headline-row a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--md-sys-color-primary);
+}
 EOT
 
+# [Source: 45]
 cat <<EOT > "$THEME_ROOT/assets/scss/_images.scss"
-.md-figure { margin: 2rem 0; display: block; }
-.md-image { max-width: 100%; height: auto; display: block; border-radius: var(--md-sys-shape-corner-medium); border: 1px solid var(--md-sys-color-outline-variant); background-color: var(--md-sys-color-surface); }
-.md-figcaption { margin-top: 0.75rem; font-size: 0.9rem; color: var(--md-sys-color-outline); font-family: 'Noto Sans', sans-serif; text-align: center; font-style: italic; }
-.md-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 2rem 0; }
-.gallery-item { display: block; border-radius: var(--md-sys-shape-corner-medium); overflow: hidden; border: 1px solid var(--md-sys-color-outline-variant); transition: border-color 0.2s, transform 0.2s; aspect-ratio: 1 / 1; }
-.gallery-item:hover, .gallery-item:focus-visible { border-color: var(--md-sys-color-primary); transform: scale(1.02); outline: none; }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* --- MD3 Images & Galleries --- */
+
+/* Single Image Wrapper */
+.md-figure {
+  margin: 2rem 0;
+  display: block;
+}
+
+/* The Image Itself */
+.md-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--md-sys-shape-corner-medium);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface);
+}
+
+/* Captions */
+.md-figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-outline);
+  font-family: 'Noto Sans', sans-serif;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Gallery Grid (Responsive Masonry-ish) */
+.md-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 2rem 0;
+}
+
+.gallery-item {
+  display: block;
+  border-radius: var(--md-sys-shape-corner-medium);
+  overflow: hidden;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: border-color 0.2s, transform 0.2s;
+  aspect-ratio: 1 / 1; /* Force square thumbnails */
+}
+
+.gallery-item:hover, .gallery-item:focus-visible {
+  border-color: var(--md-sys-color-primary);
+  transform: scale(1.02);
+  outline: none;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 EOT
 
+# [Source: 49]
 cat <<EOT > "$THEME_ROOT/assets/scss/_youtube.scss"
-.youtube-lite { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer; background-color: #000; display: flex; align-items: center; justify-content: center; padding: 0; }
-.youtube-lite img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.3s ease; }
-.youtube-lite:hover img, .youtube-lite:focus-visible img { opacity: 1; }
-.youtube-lite .play-button { position: absolute; width: 68px; height: 48px; background-color: rgba(33, 33, 33, 0.8); border-radius: 12px; z-index: 1; transition: background-color 0.2s ease; display: flex; align-items: center; justify-content: center; }
-.youtube-lite:hover .play-button, .youtube-lite:focus-visible .play-button { background-color: #f00; }
-.youtube-lite .play-button::before { content: ""; border-style: solid; border-width: 10px 0 10px 20px; border-color: transparent transparent transparent #fff; }
-.youtube-lite iframe { width: 100%; height: 100%; border: none; }
+.youtube-lite {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* Override generic card padding */
+}
+
+.youtube-lite img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.youtube-lite:hover img,
+.youtube-lite:focus-visible img {
+  opacity: 1;
+}
+
+/* Play Button */
+.youtube-lite .play-button {
+  position: absolute;
+  width: 68px;
+  height: 48px;
+  background-color: rgba(33, 33, 33, 0.8);
+  border-radius: 12px;
+  z-index: 1;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.youtube-lite:hover .play-button,
+.youtube-lite:focus-visible .play-button {
+  background-color: #f00; /* YouTube Red */
+}
+
+.youtube-lite .play-button::before {
+  content: "";
+  border-style: solid;
+  border-width: 10px 0 10px 20px;
+  border-color: transparent transparent transparent #fff;
+}
+
+/* Iframe (Loaded State) */
+.youtube-lite iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
 EOT
 
+# [Source: 46]
 cat <<EOT > "$THEME_ROOT/assets/scss/_mastodon.scss"
-.mastodon-card { max-width: 600px; margin: 2rem auto; font-family: 'Noto Sans', sans-serif; }
-.mastodon-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
-.mastodon-author { display: flex; gap: 12px; align-items: center; }
-.mastodon-author img.u-photo { border-radius: 50%; object-fit: cover; background-color: var(--md-sys-color-outline-variant); }
-.author-meta { display: flex; flex-direction: column; line-height: 1.2; }
-.author-meta a { text-decoration: none; color: var(--md-sys-color-on-surface); }
-.author-meta a:hover { text-decoration: underline; }
-.p-nickname { font-size: 0.85rem; color: var(--md-sys-color-outline); }
-.mastodon-logo { color: var(--md-sys-color-primary); width: 24px; height: 24px; }
-.mastodon-logo svg { width: 100%; height: 100%; fill: currentColor; }
-.mastodon-card .e-content { font-size: 1rem; line-height: 1.5; margin-bottom: 1rem; }
-.mastodon-card .e-content p { margin-bottom: 0.5rem; }
-.mastodon-card .e-content a { color: var(--md-sys-color-secondary); word-break: break-all; }
-.mastodon-media { display: grid; gap: 8px; margin-bottom: 1rem; border-radius: 8px; overflow: hidden; }
-.mastodon-media img { width: 100%; height: auto; display: block; background-color: rgba(0,0,0,0.05); }
-.mastodon-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--md-sys-color-outline-variant); padding-top: 12px; font-size: 0.85rem; color: var(--md-sys-color-outline); }
-.mastodon-stats { display: flex; gap: 16px; }
-.button-small { text-decoration: none; color: var(--md-sys-color-primary); font-weight: 600; }
-.button-small:hover { background-color: rgba(var(--md-sys-color-primary), 0.1); padding: 4px 8px; margin: -4px -8px; border-radius: 4px; }
+/* Mastodon Static Facade */
+/* Extends .outlined-card logic but specific to social embeds */
+
+.mastodon-card {
+  /* Inherits base .outlined-card styles from _components.scss */
+  max-width: 600px;
+  margin: 2rem auto;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.mastodon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.mastodon-author {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.mastodon-author img.u-photo {
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+.author-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.author-meta a {
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+}
+
+.author-meta a:hover {
+  text-decoration: underline;
+}
+
+.p-nickname {
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+}
+
+.mastodon-logo {
+  color: var(--md-sys-color-primary);
+  width: 24px;
+  height: 24px;
+}
+
+.mastodon-logo svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.mastodon-card .e-content {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.mastodon-card .e-content p {
+  margin-bottom: 0.5rem;
+}
+
+.mastodon-card .e-content a {
+  color: var(--md-sys-color-secondary);
+  word-break: break-all;
+}
+
+.mastodon-media {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mastodon-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background-color: rgba(0,0,0,0.05);
+}
+
+.mastodon-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-top: 12px;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+}
+
+.mastodon-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.button-small {
+  text-decoration: none;
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+}
+
+.button-small:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.1);
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 4px;
+}
 EOT
 
+# [Source: 50]
 cat <<EOT > "$THEME_ROOT/assets/scss/main.scss"
 @import "variables";
 @import "base";
@@ -575,6 +1212,7 @@ EOT
 # ==============================================================================
 echo "Generating JS..."
 
+# [Source: 41]
 cat <<EOT > "$THEME_ROOT/assets/js/menu.js"
 document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.getElementById('menu-toggle');
@@ -583,15 +1221,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!toggle || !menu) return;
 
     toggle.addEventListener('click', () => {
+        // 1. Toggle State
         const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
         toggle.setAttribute('aria-expanded', !isExpanded);
+        
+        // 2. Toggle Visibility Class
+        // We use a class selector for CSS transitions instead of inline styles
         menu.classList.toggle('is-open');
+
+        // 3. Icon Swap (Optional visual polish)
+        // We swap the label to help screen readers context
         const label = isExpanded ? "Open Menu" : "Close Menu";
         toggle.setAttribute('aria-label', label);
     });
 });
 EOT
 
+# [Source: 40]
 cat <<EOT > "$THEME_ROOT/assets/js/copy-code.js"
 document.addEventListener('DOMContentLoaded', () => {
     const copyButtons = document.querySelectorAll('.copy-code-btn');
@@ -603,9 +1249,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = code.innerText;
 
             navigator.clipboard.writeText(text).then(() => {
+                // Success Feedback
                 const originalIcon = btn.innerHTML;
+                
+                // Temporary Checkmark (We assume check.svg exists or use emoji fallback if needed, 
+                // but we will fetch the SVG in step 5)
                 btn.innerHTML = '<span role="img" aria-label="Copied">✓</span>'; 
                 btn.setAttribute('aria-label', 'Copied!');
+                
                 setTimeout(() => {
                     btn.innerHTML = originalIcon;
                     btn.setAttribute('aria-label', 'Copy code to clipboard');
@@ -618,12 +1269,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 EOT
 
+# [Source: 42]
 cat <<EOT > "$THEME_ROOT/assets/js/youtube-lite.js"
 document.addEventListener('DOMContentLoaded', () => {
     const players = document.querySelectorAll('.youtube-lite');
 
     players.forEach(player => {
+        // Handle Mouse Click
         player.addEventListener('click', (e) => loadVideo(player));
+
+        // Handle Keyboard (Enter/Space)
         player.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -634,13 +1289,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadVideo(wrapper) {
         if (wrapper.dataset.loaded) return;
+
         const id = wrapper.dataset.id;
         const title = wrapper.getAttribute('aria-label');
+        
+        // [Source: 191] Call API only on click
+        // Using youtube-nocookie for extra privacy
         const iframe = document.createElement('iframe');
         iframe.setAttribute('src', \`https://www.youtube-nocookie.com/embed/\${id}?autoplay=1\`);
         iframe.setAttribute('title', title);
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
         iframe.setAttribute('allowfullscreen', '');
+        
+        // Clear thumbnail and play button
         wrapper.innerHTML = '';
         wrapper.appendChild(iframe);
         wrapper.dataset.loaded = 'true';
@@ -648,10 +1309,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 EOT
 
+# [Source: 42 (from snippet)]
 cat <<EOT > "$THEME_ROOT/assets/js/webmentions.js"
 /**
- * Webmention Logic (Patched: Invalid Date Fix + Missing Author URL)
+ * Webmention Logic
+ * Context: Source [214] Minimal, purposeful JS.
+ * Refactored: Phase 02j (Robustness Patch)
  */
+
 (function() {
     const container = document.getElementById('webmentions');
     if (!container) return;
@@ -670,6 +1335,7 @@ cat <<EOT > "$THEME_ROOT/assets/js/webmentions.js"
             return response.json();
         })
         .then(data => {
+            // [Patch] Filter out completely empty/malformed items
             allMentions = (data.children || []).filter(item => {
                 const hasContent = item.content && (item.content.text || item.content.html);
                 const hasAuthor = item.author && item.author.name;
@@ -680,6 +1346,7 @@ cat <<EOT > "$THEME_ROOT/assets/js/webmentions.js"
                 list.innerHTML = '<p>No mentions yet. Be the first!</p>';
                 return;
             }
+
             renderPage(1);
         })
         .catch(error => {
@@ -689,15 +1356,18 @@ cat <<EOT > "$THEME_ROOT/assets/js/webmentions.js"
 
     function renderPage(page) {
         list.innerHTML = '';
+        
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const pageItems = allMentions.slice(start, end);
+
         pageItems.forEach(item => {
             const article = document.createElement('article');
             article.className = 'mention h-cite outlined-card';
             article.innerHTML = buildMentionHTML(item);
             list.appendChild(article);
         });
+
         if (allMentions.length > itemsPerPage) {
             renderPaginationControls(page);
         }
@@ -708,30 +1378,45 @@ cat <<EOT > "$THEME_ROOT/assets/js/webmentions.js"
         const nav = document.createElement('nav');
         nav.className = 'pagination-controls';
         nav.ariaLabel = "Webmention Pagination";
+
         if (page > 1) {
             const prev = document.createElement('button');
             prev.innerText = 'Previous';
             prev.className = 'button-secondary';
-            prev.onclick = () => { currentPage--; renderPage(currentPage); list.focus(); };
+            prev.onclick = () => { 
+                currentPage--; 
+                renderPage(currentPage);
+                list.focus(); 
+            };
             nav.appendChild(prev);
         }
+
         if (page < totalPages) {
             const next = document.createElement('button');
             next.innerText = 'Next';
             next.className = 'button-secondary';
-            next.onclick = () => { currentPage++; renderPage(currentPage); list.focus(); };
+            next.onclick = () => { 
+                currentPage++; 
+                renderPage(currentPage);
+                list.focus();
+            };
             nav.appendChild(next);
         }
+        
         list.appendChild(nav);
     }
 
     function buildMentionHTML(item) {
         const author = item.author || {};
         const name = author.name || 'Anonymous';
+        // [Patch] Handle missing URLs to prevent broken/internal links
         const authorLink = author.url 
             ? \`<a href="\${author.url}" class="p-name u-url" rel="nofollow">\${name}</a>\`
             : \`<span class="p-name">\${name}</span>\`;
+            
         const content = sanitize(item.content ? item.content.html || item.content.text : '');
+        
+        // [Patch] Handle missing dates
         let timeHtml = '';
         if (item.published) {
             const dateStr = new Date(item.published).toLocaleDateString();
@@ -739,12 +1424,15 @@ cat <<EOT > "$THEME_ROOT/assets/js/webmentions.js"
                 timeHtml = \`<time class="dt-published">\${dateStr}</time>\`;
             }
         }
+        
         return \`
             <div class="mention-author u-author h-card">
                 <img src="\${author.photo || '/images/default-avatar.png'}" alt="" class="u-photo">
                 \${authorLink}
             </div>
-            <div class="mention-content p-content">\${content}</div>
+            <div class="mention-content p-content">
+                \${content}
+            </div>
             \${timeHtml}
         \`;
     }
@@ -752,19 +1440,23 @@ cat <<EOT > "$THEME_ROOT/assets/js/webmentions.js"
     function sanitize(html) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
+        
         const forbidden = ['script', 'iframe', 'object', 'style', 'link', 'meta'];
         forbidden.forEach(tag => {
             const elements = doc.querySelectorAll(tag);
             elements.forEach(el => el.remove());
         });
+
         const allElements = doc.querySelectorAll('*');
         allElements.forEach(el => {
             Array.from(el.attributes).forEach(attr => {
-                if (attr.name.startsWith('on') || (attr.name === 'href' && attr.value.toLowerCase().startsWith('javascript:'))) {
+                if (attr.name.startsWith('on') || 
+                   (attr.name === 'href' && attr.value.toLowerCase().startsWith('javascript:'))) {
                     el.removeAttribute(attr.name);
                 }
             });
         });
+
         return doc.body.innerHTML;
     }
 })();
@@ -775,15 +1467,28 @@ EOT
 # ==============================================================================
 echo "Generating HTML Layouts..."
 
-# UI Partials
+# UI Partials [Source: 79]
 cat <<EOT > "$THEME_ROOT/layouts/partials/ui/chip.html"
 {{ \$type := .Type }}
 {{ \$iconName := .Type }}
 {{ \$vibe := "Icon" }}
-{{ if eq .Layout "guestbook" }}{{ \$iconName = "guestbook" }}{{ end }}
-{{ if eq .Layout "contact" }}{{ \$iconName = "contact" }}{{ end }}
-{{ if eq .Layout "search" }}{{ \$iconName = "search" }}{{ end }}
-{{ if eq .Title "About" }}{{ \$iconName = "about" }}{{ end }}
+{{ \$label := .Type | humanize }}
+
+{{/* 1. Override Type for Special Pages */}}
+{{ if eq .Layout "guestbook" }}
+  {{ \$iconName = "guestbook" }}
+{{ end }}
+{{ if eq .Layout "contact" }}
+  {{ \$iconName = "contact" }}
+{{ end }}
+{{ if eq .Layout "search" }}
+  {{ \$iconName = "search" }}
+{{ end }}
+{{ if eq .Title "About" }}
+  {{ \$iconName = "about" }}
+{{ end }}
+
+{{/* 2. Map Icons to Vibe Descriptors */}}
 {{ if eq \$iconName "status" }}{{ \$vibe = "Bubble" }}{{ end }}
 {{ if eq \$iconName "replies" }}{{ \$vibe = "Reply" }}{{ end }}
 {{ if eq \$iconName "reposts" }}{{ \$vibe = "Repeat" }}{{ end }}
@@ -798,6 +1503,7 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/ui/chip.html"
 {{ if eq \$iconName "contact" }}{{ \$vibe = "Envelope" }}{{ end }}
 {{ if eq \$iconName "search" }}{{ \$vibe = "Magnifier" }}{{ end }}
 {{ if eq \$iconName "about" }}{{ \$vibe = "Info" }}{{ end }}
+
 <div class="chip chip-icon-only">
   <span class="chip-icon" role="img" aria-label="{{ \$vibe }}">
     {{ partial (printf "icons/%s.svg" \$iconName) . }}
@@ -805,24 +1511,29 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/ui/chip.html"
 </div>
 EOT
 
+# [Source: 80]
 cat <<EOT > "$THEME_ROOT/layouts/partials/ui/social-link.html"
 <li>
   <a href="{{ .url }}" rel="{{ .rel }}" class="u-url social-link" style="text-decoration: none;">
     <span class="brand-name" style="font-weight: 600; color: var(--md-sys-color-primary);">{{ .name }}</span>
+    {{/* Optional: Show handle if desired, or keep it simple with just Name */}}
     <span class="brand-handle" style="color: var(--md-sys-color-on-surface); opacity: 0.8; margin-left: 4px;">{{ .handle }}</span>
   </a>
 </li>
 EOT
 
-# Core Partials
+# Core Partials [Source: 55]
 cat <<EOT > "$THEME_ROOT/layouts/partials/head.html"
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
 {{ hugo.Generator }}
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+
+{{/* INDIEWEB DISCOVERY */}}
 {{ with .Site.Params.webmentions.username }}
 <link rel="webmention" href="https://webmention.io/{{ . }}/webmention" />
 <link rel="pingback" href="https://webmention.io/{{ . }}/xmlrpc" />
@@ -830,22 +1541,32 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/head.html"
 {{ if .Site.Params.authorization_endpoint }}<link rel="authorization_endpoint" href="{{ .Site.Params.authorization_endpoint }}">{{ end }}
 {{ if .Site.Params.token_endpoint }}<link rel="token_endpoint" href="{{ .Site.Params.token_endpoint }}">{{ end }}
 {{ if .Site.Params.micropub }}<link rel="micropub" href="{{ .Site.Params.micropub }}">{{ end }}
+
 {{ \$opts := dict "transpiler" "libsass" "targetPath" "css/style.css" }}
 {{ \$style := resources.Get "scss/main.scss" | css.Sass \$opts | resources.Minify | resources.Fingerprint }}
 <link rel="stylesheet" href="{{ \$style.RelPermalink }}">
 EOT
 
+# [Source: 56]
 cat <<EOT > "$THEME_ROOT/layouts/partials/header.html"
 <header role="banner" class="site-header">
   <div class="container header-inner">
     <a href="/" class="site-title">{{ .Site.Title }}</a>
+    
     <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Open Menu">
-      <span class="icon-box">{{ partial "icons/menu.svg" . }}</span>
+      <span class="icon-box">
+        {{ partial "icons/menu.svg" . }}
+      </span>
     </button>
+
     <nav role="navigation" aria-label="Main Navigation" id="main-nav">
       <ul id="main-menu" class="nav-list">
         {{ range .Site.Menus.main }}
-        <li><a href="{{ .URL }}" {{ if or (eq .URL $.RelPermalink) (eq .URL $.Permalink) }}aria-current="page"{{ end }}>{{ .Name }}</a></li>
+        <li>
+          <a href="{{ .URL }}" {{ if or (eq .URL $.RelPermalink) (eq .URL $.Permalink) }}aria-current="page"{{ end }}>
+            {{ .Name }}
+          </a>
+        </li>
         {{ end }}
       </ul>
     </nav>
@@ -853,6 +1574,7 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/header.html"
 </header>
 EOT
 
+# [Source: 54]
 cat <<EOT > "$THEME_ROOT/layouts/partials/footer.html"
 <footer role="contentinfo" class="site-footer">
   <div class="container">
@@ -862,63 +1584,127 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/footer.html"
 </footer>
 EOT
 
-# Render Hooks
+# Render Hooks [Source: 52]
 cat <<EOT > "$THEME_ROOT/layouts/_default/_markup/render-image.html"
 {{- \$img := .Page.Resources.GetMatch .Destination -}}
 {{- \$alt := .PlainText | default "" -}}
 {{- \$caption := .Title | default "" -}}
+
 <figure class="md-figure {{ if not \$img }}md-figure-remote{{ end }}">
   {{- if \$img -}}
+    {{/* LOCAL IMAGE PROCESSING */}}
     {{- \$tiny := \$img.Resize "480x webp" -}}
     {{- \$small := \$img.Resize "800x webp" -}}
     {{- \$medium := \$img.Resize "1200x webp" -}}
-    <img class="md-image" src="{{ \$small.RelPermalink }}" srcset="{{ \$tiny.RelPermalink }} 480w, {{ \$small.RelPermalink }} 800w, {{ \$medium.RelPermalink }} 1200w" sizes="(max-width: 600px) 100vw, 800px" alt="{{ \$alt }}" loading="lazy" width="{{ \$img.Width }}" height="{{ \$img.Height }}">
+    
+    <img 
+      class="md-image"
+      src="{{ \$small.RelPermalink }}" 
+      srcset="
+        {{ \$tiny.RelPermalink }} 480w,
+        {{ \$small.RelPermalink }} 800w,
+        {{ \$medium.RelPermalink }} 1200w"
+      sizes="(max-width: 600px) 100vw, 800px"
+      alt="{{ \$alt }}"
+      loading="lazy"
+      width="{{ \$img.Width }}"
+      height="{{ \$img.Height }}"
+    >
   {{- else -}}
-    <img class="md-image" src="{{ .Destination | safeURL }}" alt="{{ \$alt }}" title="{{ \$caption }}" loading="lazy">
+    {{/* REMOTE IMAGE FALLBACK */}}
+    <img 
+      class="md-image" 
+      src="{{ .Destination | safeURL }}" 
+      alt="{{ \$alt }}" 
+      title="{{ \$caption }}"
+      loading="lazy"
+    >
   {{- end -}}
-  {{- if \$caption -}}<figcaption class="md-figcaption">{{ \$caption | safeHTML }}</figcaption>{{- end -}}
+
+  {{- if \$caption -}}
+    <figcaption class="md-figcaption">{{ \$caption | safeHTML }}</figcaption>
+  {{- end -}}
 </figure>
 EOT
 
+# [Source: 53]
 cat <<EOT > "$THEME_ROOT/layouts/_default/_markup/render-table.html"
 <div class="table-wrapper">
   <table class="md-table">
-    {{- with .Attributes.caption }}<caption>{{ . }}</caption>{{- end }}
-    <thead>{{- range .THead }}<tr>{{- range . }}<th scope="col" {{ with .Alignment }}style="text-align:{{ . }}"{{ end }}>{{- .Text -}}</th>{{- end }}</tr>{{- end }}</thead>
-    <tbody>{{- range .TBody }}<tr>{{- range . }}<td {{ with .Alignment }}style="text-align:{{ . }}"{{ end }}>{{- .Text -}}</td>{{- end }}</tr>{{- end }}</tbody>
+    {{- with .Attributes.caption }}
+      <caption>{{ . }}</caption>
+    {{- end }}
+    <thead>
+      {{- range .THead }}
+        <tr>
+          {{- range . }}
+            <th scope="col" {{ with .Alignment }}style="text-align:{{ . }}"{{ end }}>
+              {{- .Text -}}
+            </th>
+          {{- end }}
+        </tr>
+      {{- end }}
+    </thead>
+    <tbody>
+      {{- range .TBody }}
+        <tr>
+          {{- range . }}
+            <td {{ with .Alignment }}style="text-align:{{ . }}"{{ end }}>
+              {{- .Text -}}
+            </td>
+          {{- end }}
+        </tr>
+      {{- end }}
+    </tbody>
   </table>
 </div>
 EOT
 
+# [Source: 51]
 cat <<EOT > "$THEME_ROOT/layouts/_default/_markup/render-codeblock.html"
 <div class="code-block-wrapper">
-  <button class="copy-code-btn" aria-label="Copy code to clipboard">{{ partial "icons/content_copy.svg" . }}</button>
+  <button class="copy-code-btn" aria-label="Copy code to clipboard">
+    {{ partial "icons/content_copy.svg" . }}
+  </button>
   <pre{{ if .Attributes }} {{ .Attributes | safeHTMLAttr }}{{ end }}><code>{{ .Inner }}</code></pre>
 </div>
 EOT
 
-# Base Layout
+# Base Layout [Source: 117]
 cat <<EOT > "$THEME_ROOT/layouts/_default/baseof.html"
 <!DOCTYPE html>
 <html lang="{{ .Site.LanguageCode }}">
-<head>{{ partial "head.html" . }}</head>
+<head>
+  {{ partial "head.html" . }}
+</head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
+
   {{ partial "header.html" . }}
-  <main id="main-content" role="main" class="container">{{ block "main" . }}{{ end }}</main>
+
+  <main id="main-content" role="main" class="container">
+    {{ block "main" . }}{{ end }}
+  </main>
+
   {{ partial "footer.html" . }}
+
+  {{/* BUNDLE: Webmentions + YouTube + Menu + Copy Code */}}
   {{ \$js := slice (resources.Get "js/webmentions.js") (resources.Get "js/youtube-lite.js") (resources.Get "js/menu.js") (resources.Get "js/copy-code.js") | resources.Concat "js/main.js" | resources.Minify | resources.Fingerprint }}
   <script src="{{ \$js.RelPermalink }}" defer></script>
 </body>
 </html>
 EOT
 
-# Main Layouts
+# Main Layouts [Source: 119]
 cat <<EOT > "$THEME_ROOT/layouts/index.html"
 {{ define "main" }}
 <section class="feed-stream">
+
+  {{/* 1. AUTHOR PROFILE CARD (Top of Page) */}}
   <article class="h-card profile-card outlined-card" style="margin-bottom: 2rem;">
     <h1 class="p-name">{{ .Site.Params.author.name }}</h1>
+    
+    {{/* Profile Photo */}}
     {{ \$avatar := resources.Get .Site.Params.author.photo }}
     {{ if \$avatar }}
       {{ \$avatar := \$avatar.Fill "500x500 Center webp" }}
@@ -926,14 +1712,35 @@ cat <<EOT > "$THEME_ROOT/layouts/index.html"
     {{ else }}
       <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
     {{ end }}
+
     <p class="p-note">{{ .Site.Params.author.bio }}</p>
-    <div class="profile-meta"><span class="p-locality">{{ .Site.Params.author.location.city }}</span>, <span class="p-region">{{ .Site.Params.author.location.state }}</span></div>
+
+    <div class="profile-meta">
+      <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
+      <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+    </div>
+    
     <h2>Social Media</h2>
-    <ul class="social-links">{{ range .Site.Params.social }}{{ partial "ui/social-link.html" . }}{{ end }}</ul>
-    {{ if .Site.Params.im }}<h2>Messaging Services</h2><ul class="im-links">{{ range .Site.Params.im }}{{ partial "ui/social-link.html" . }}{{ end }}</ul>{{ end }}
+    <ul class="social-links">
+      {{ range .Site.Params.social }}
+        {{ partial "ui/social-link.html" . }}
+      {{ end }}
+    </ul>
+
+    {{ if .Site.Params.im }}
+    <h2>Messaging Services</h2>
+    <ul class="im-links">
+      {{ range .Site.Params.im }}
+        {{ partial "ui/social-link.html" . }}
+      {{ end }}
+    </ul>
+    {{ end }}
   </article>
 
+  {{/* 2. FEED SECTION TITLE */}}
   <h1>Latest Updates</h1>
+
+  {{/* 3. FEED LOGIC */}}
   {{ \$allowed_sections := slice "articles" "status" "replies" "reposts" "likes" "bookmarks" "rsvps" }}
   {{ \$feed := where .Site.RegularPages "Section" "in" \$allowed_sections }}
   {{ \$paginator := .Paginate \$feed }}
@@ -942,21 +1749,33 @@ cat <<EOT > "$THEME_ROOT/layouts/index.html"
     {{ range \$paginator.Pages }}
       <article class="feed-item outlined-card h-entry">
         <header class="feed-header">
-          <div class="headline-row">{{ partial "ui/chip.html" . }}<h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2></div>
-          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 02, 2006" }}</time>
+          <div class="headline-row">
+            {{ partial "ui/chip.html" . }}
+            <h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2>
+          </div>
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
         </header>
-        <div class="feed-content p-summary">{{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | plainify | truncate 500 }}{{ end }}</div>
+        <div class="feed-content p-summary">
+          {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | plainify | truncate 500 }}{{ end }}
+        </div>
         <a href="{{ .Permalink }}" class="u-url">Read More</a>
       </article>
     {{ else }}
-      <div class="outlined-card"><h3>No updates found.</h3><p>The stream is currently quiet.</p></div>
+      <div class="outlined-card">
+        <h3>No updates found.</h3>
+        <p>The stream is currently quiet.</p>
+      </div>
     {{ end }}
   </div>
+
   {{ template "_internal/pagination.html" . }}
 </section>
 {{ end }}
 EOT
 
+# [Source: 60]
 cat <<EOT > "$THEME_ROOT/layouts/index.json"
 {
     "version": "https://jsonfeed.org/version/1",
@@ -977,25 +1796,49 @@ cat <<EOT > "$THEME_ROOT/layouts/index.json"
 }
 EOT
 
+# [Source: 58]
 cat <<EOT > "$THEME_ROOT/layouts/_default/list.html"
 {{ define "main" }}
 <section class="list-feed h-feed">
-  <div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">{{ .Title }}</h1></div>
-  {{ with .Content }}<div class="section-intro p-summary">{{ . }}</div>{{ end }}
+  <div class="headline-row">
+     {{ partial "ui/chip.html" . }}
+     <h1 class="p-name">{{ .Title }}</h1>
+  </div>
+
+  {{/* NEW: Section Intro (Blurb) */}}
+  {{ with .Content }}
+  <div class="section-intro p-summary">
+    {{ . }}
+  </div>
+  {{ end }}
+  
   <div class="post-feed">
     {{ range .Paginator.Pages }}
       <article class="feed-item outlined-card h-entry {{ .Type }}">
-        <div style="display: none;" class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
+        {{/* Hidden Author for Feed Items */}}
+        <div style="display: none;" class="p-author h-card">
+           <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+        </div>
+
         <header class="feed-header">
-          <div class="headline-row">{{ partial "ui/chip.html" . }}<h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2></div>
-          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 02, 2006" }}</time>
+          <div class="headline-row">
+            {{ partial "ui/chip.html" . }}
+            <h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2>
+          </div>
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
         </header>
+
         {{ if .Params.reply_to }}<div class="context-mini">↪ Replying to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to | truncate 40 }}</a></div>{{ end }}
         {{ if .Params.like_of }}<div class="context-mini">♥ Liked <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of | truncate 40 }}</a></div>{{ end }}
         {{ if .Params.repost_of }}<div class="context-mini">↻ Reposted <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of | truncate 40 }}</a></div>{{ end }}
         {{ if .Params.bookmark_of }}<div class="context-mini">🔖 Bookmarked <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of | truncate 40 }}</a></div>{{ end }}
         {{ if .Params.rsvp }}<div class="context-mini">📅 RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span></div>{{ end }}
-        <div class="feed-content p-summary">{{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | truncate 500 }}{{ end }}</div>
+
+        <div class="feed-content p-summary">
+          {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | truncate 500 }}{{ end }}
+        </div>
       </article>
     {{ end }}
   </div>
@@ -1004,6 +1847,7 @@ cat <<EOT > "$THEME_ROOT/layouts/_default/list.html"
 {{ end }}
 EOT
 
+# [Source: 59]
 cat <<EOT > "$THEME_ROOT/layouts/_default/list.json"
 {
     "version": "https://jsonfeed.org/version/1",
@@ -1024,15 +1868,30 @@ cat <<EOT > "$THEME_ROOT/layouts/_default/list.json"
 }
 EOT
 
+# [Source: 111]
 cat <<EOT > "$THEME_ROOT/layouts/_default/single.html"
 {{ define "main" }}
 <article class="single-post h-entry outlined-card">
-  <div style="display: none;" class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a><img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}"></div>
+  
+  {{/* MICROFORMATS: Hidden Author Block */}}
+  <div style="display: none;" class="p-author h-card">
+    <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+    <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+  </div>
+
   <header class="post-header">
-    <div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">{{ .Title }}</h1></div>
-    <a href="{{ .Permalink }}" class="u-url" style="text-decoration: none; color: inherit;"><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 2, 2006" }}</time></a>
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">{{ .Title }}</h1>
+    </div>
+    <a href="{{ .Permalink }}" class="u-url" style="text-decoration: none; color: inherit;">
+      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+        {{ .Date.Format "January 2, 2006" }}
+      </time>
+    </a>
   </header>
 
+  {{/* CONTEXT BLOCKS */}}
   {{ if .Params.reply_to }}<div class="context-block reply-context"><p>Replying to: <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
   {{ if .Params.like_of }}<div class="context-block like-context"><p>Liked: <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of }}</a></p></div>{{ end }}
   {{ if .Params.repost_of }}<div class="context-block repost-context"><p>Reposted: <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of }}</a></p></div>{{ end }}
@@ -1042,84 +1901,183 @@ cat <<EOT > "$THEME_ROOT/layouts/_default/single.html"
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
+    {{/* POSSE: Smart Syndication Links (Text Only) */}}
     {{ if .Params.syndication }}
-    <div class="syndication-container"><span class="syndication-label">Also on:</span>
+    <div class="syndication-container">
+      <span class="syndication-label">Also on:</span>
       <ul class="syndication-list" style="display: inline; padding: 0; list-style: none;">
         {{ range .Params.syndication }}
-          {{ \$synURL := . }}{{ \$match := false }}{{ \$name := "" }}
-          {{ range \$.Site.Params.social }}{{ if in \$synURL .url }}{{ \$match = true }}{{ \$name = .name }}{{ end }}{{ end }}
-          <li style="display: inline; margin-right: 12px;"><a href="{{ \$synURL }}" class="u-syndication" rel="syndication">{{ if \$match }}{{ \$name }}{{ else }}{{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}{{ end }}</a></li>
+          {{ \$synURL := . }}
+          {{ \$match := false }}
+          {{ \$name := "" }}
+          
+          {{/* LOOKUP */}}
+          {{ range \$.Site.Params.social }}
+             {{ if in \$synURL .url }}
+               {{ \$match = true }}
+               {{ \$name = .name }}
+             {{ end }}
+          {{ end }}
+
+          <li style="display: inline; margin-right: 12px;">
+            <a href="{{ \$synURL }}" class="u-syndication" rel="syndication">
+              {{ if \$match }}
+                 {{ \$name }}
+              {{ else }}
+                 {{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}
+              {{ end }}
+            </a>
+          </li>
         {{ end }}
       </ul>
     </div>
     {{ end }}
-    {{ if .Params.tags }}<ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>{{ end }}
+
+    {{ if .Params.tags }}
+    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{ end }}
   </footer>
 </article>
 
 {{ if .Params.show_webmentions }}
 <section id="webmentions" class="webmentions-container outlined-card" data-target="{{ .Permalink }}" aria-labelledby="mentions-heading">
   <h2 id="mentions-heading">Webmentions</h2>
-  <div class="webmention-explainer"><p>Have your say. Write a post on your own site and link to <code>{{ .Permalink }}</code> to appear here!</p></div>
+  
+  {{/* NEW: Webmention Explainer (Restored) */}}
+  <div class="webmention-explainer">
+    <p>Have your say. Write a post on your own site and link to <code>{{ .Permalink }}</code> to appear here!</p>
+  </div>
+
   <div id="webmentions-list"><p>Loading...</p></div>
 </section>
 {{ end }}
 {{ end }}
 EOT
 
+# [Source: 112]
 cat <<EOT > "$THEME_ROOT/layouts/_default/search.html"
 {{ define "main" }}
 <section class="search-page outlined-card h-entry">
-  <div style="display: none;"><div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a><img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}"></div><a href="{{ .Permalink }}" class="u-url"></a><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time><span class="p-category">Search</span></div>
-  <header class="page-header"><div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">Search</h1></div></header>
+  {{/* Hidden Metadata for Parsers */}}
+  <div style="display: none;">
+     <div class="p-author h-card">
+       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+     </div>
+     <a href="{{ .Permalink }}" class="u-url"></a>
+     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     <span class="p-category">Search</span>
+  </div>
+
+  <header class="page-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      {{/* Hardcoded P-Name */}}
+      <h1 class="p-name">Search</h1>
+    </div>
+  </header>
+  
   <div id="search" role="search"></div>
 </section>
+
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 <script src="/pagefind/pagefind-ui.js"></script>
 <script>window.addEventListener('DOMContentLoaded', (event) => { new PagefindUI({ element: "#search", showSubResults: true }); });</script>
 {{ end }}
 EOT
 
+# [Source: 118]
 cat <<EOT > "$THEME_ROOT/layouts/404.html"
 {{ define "main" }}
 <section class="error-page outlined-card">
   <h1>404: Page Not Found</h1>
   <p>Sorry, the page you are looking for has moved or does not exist.</p>
+
   <div class="recovery-actions">
     <a href="/" class="button-primary">Back to Home</a>
-    <div class="search-recovery"><p>Or try searching for it:</p><div id="search"></div></div>
+    
+    <div class="search-recovery">
+      <p>Or try searching for it:</p>
+      <div id="search"></div>
+    </div>
   </div>
 </section>
+
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 <script src="/pagefind/pagefind-ui.js"></script>
-<script>window.addEventListener('DOMContentLoaded', (event) => { new PagefindUI({ element: "#search", showSubResults: true }); });</script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 {{ end }}
 EOT
 
+# [Source: 113]
 cat <<EOT > "$THEME_ROOT/layouts/pages/guestbook.html"
 {{ define "main" }}
 <section class="guestbook-page outlined-card h-entry">
-  <div style="display: none;"><div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a><img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}"></div><a href="{{ .Permalink }}" class="u-url"></a><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time><span class="p-category">Guestbook</span></div>
+  {{/* Hidden Metadata */}}
+  <div style="display: none;">
+     <div class="p-author h-card">
+       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+     </div>
+     <a href="{{ .Permalink }}" class="u-url"></a>
+     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     <span class="p-category">Guestbook</span>
+  </div>
+
   <header class="page-header">
-    <div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">Guestbook</h1></div>
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">Guestbook</h1>
+    </div>
     <p class="p-summary">{{ .Site.Params.webmentions.guestbookIntro }}</p>
   </header>
+
   <div class="e-content">{{ .Content }}</div>
+
   <footer class="post-footer">
+    {{/* POSSE: Smart Syndication Links (Text Only) */}}
     {{ if .Params.syndication }}
-    <div class="syndication-container"><span class="syndication-label">Also on:</span>
+    <div class="syndication-container">
+      <span class="syndication-label">Also on:</span>
       <ul class="syndication-list" style="display: inline; padding: 0; list-style: none;">
         {{ range .Params.syndication }}
-          {{ \$synURL := . }}{{ \$match := false }}{{ \$name := "" }}
-          {{ range \$.Site.Params.social }}{{ if in \$synURL .url }}{{ \$match = true }}{{ \$name = .name }}{{ end }}{{ end }}
-          <li style="display: inline; margin-right: 12px;"><a href="{{ \$synURL }}" class="u-syndication" rel="syndication">{{ if \$match }}{{ \$name }}{{ else }}{{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}{{ end }}</a></li>
+          {{ \$synURL := . }}
+          {{ \$match := false }}
+          {{ \$name := "" }}
+          
+          {{/* LOOKUP */}}
+          {{ range \$.Site.Params.social }}
+             {{ if in \$synURL .url }}
+               {{ \$match = true }}
+               {{ \$name = .name }}
+             {{ end }}
+          {{ end }}
+
+          <li style="display: inline; margin-right: 12px;">
+            <a href="{{ \$synURL }}" class="u-syndication" rel="syndication">
+              {{ if \$match }}
+                 {{ \$name }}
+              {{ else }}
+                 {{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}
+              {{ end }}
+            </a>
+          </li>
         {{ end }}
       </ul>
     </div>
     {{ end }}
-    {{ if .Params.tags }}<ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>{{ end }}
+
+    {{ if .Params.tags }}
+    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{ end }}
   </footer>
 </section>
+
 <section id="webmentions" class="webmentions-container outlined-card h-feed" data-target="{{ .Site.BaseURL }}" aria-labelledby="guestbook-heading">
   <h2 id="guestbook-heading">Signatures</h2>
   <div class="webmention-explainer"><p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p></div>
@@ -1128,16 +2086,42 @@ cat <<EOT > "$THEME_ROOT/layouts/pages/guestbook.html"
 {{ end }}
 EOT
 
+# [Source: 114]
 cat <<EOT > "$THEME_ROOT/layouts/pages/contact.html"
 {{ define "main" }}
 <section class="contact-page outlined-card h-entry">
-  <div style="display: none;"><div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a><img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}"></div><a href="{{ .Permalink }}" class="u-url"></a><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time><span class="p-category">Contact Form</span></div>
+  {{/* Hidden Metadata for Parsers */}}
+  <div style="display: none;">
+     <div class="p-author h-card">
+       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+     </div>
+     <a href="{{ .Permalink }}" class="u-url"></a>
+     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     <span class="p-category">Contact Form</span>
+  </div>
+
   <header class="page-header">
-    <div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">Contact Me</h1></div>
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      {{/* Hardcoded P-Name */}}
+      <h1 class="p-name">Contact Me</h1>
+    </div>
     <p class="p-summary">{{ .Site.Params.contact.intro }}</p>
   </header>
+
   <div class="e-content">{{ .Content }}</div>
-  {{ if .Params.tags }}<footer class="post-footer"><ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul></footer>{{ end }}
+
+  {{ if .Params.tags }}
+  <footer class="post-footer">
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>
+      {{ end }}
+    </ul>
+  </footer>
+  {{ end }}
+
   <form action="{{ .Site.Params.contact.formAction }}" method="POST" class="contact-form" aria-label="Contact Form">
     <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" required></div>
     <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" required></div>
@@ -1148,7 +2132,7 @@ cat <<EOT > "$THEME_ROOT/layouts/pages/contact.html"
 {{ end }}
 EOT
 
-# Shortcodes
+# Shortcodes [Source: 83]
 cat <<EOT > "$THEME_ROOT/layouts/shortcodes/youtube.html"
 {{ \$id := .Get 0 }}{{ \$title := .Get 1 | default "Play Video" }}
 <div class="youtube-lite outlined-card" data-id="{{ \$id }}" role="button" tabindex="0" aria-label="{{ \$title }}" title="{{ \$title }}">
@@ -1157,65 +2141,136 @@ cat <<EOT > "$THEME_ROOT/layouts/shortcodes/youtube.html"
 </div>
 EOT
 
+# [Source: 81]
 cat <<EOT > "$THEME_ROOT/layouts/shortcodes/gallery.html"
 {{ \$match := .Get "match" | default "gallery/*" }}
 {{ \$images := .Page.Resources.Match \$match }}
+
 {{ if \$images }}
 <div class="md-gallery-grid">
   {{ range \$images }}
     {{ \$thumb := .Fill "600x600 Center webp" }}
+    
+    {{/* ACCESSIBILITY LOGIC: */}}
+    {{/* 1. Check 'alt' in params. 2. Check 'title'. 3. Fallback to Name. */}}
     {{ \$altText := .Params.alt | default .Title | default .Name }}
+    
     <a href="{{ .RelPermalink }}" class="gallery-item" target="_blank" aria-label="View full size: {{ \$altText }}">
-      <img src="{{ \$thumb.RelPermalink }}" alt="{{ \$altText }}" width="{{ \$thumb.Width }}" height="{{ \$thumb.Height }}" loading="lazy">
+      <img 
+        src="{{ \$thumb.RelPermalink }}" 
+        alt="{{ \$altText }}" 
+        width="{{ \$thumb.Width }}" 
+        height="{{ \$thumb.Height }}"
+        loading="lazy"
+      >
     </a>
   {{ end }}
 </div>
-{{ else }}<p class="error">No images found for gallery match: {{ \$match }}</p>{{ end }}
+{{ else }}
+  <p class="error">No images found for gallery match: {{ \$match }}</p>
+{{ end }}
 EOT
 
+# [Source: 124]
 cat <<EOT > "$THEME_ROOT/layouts/shortcodes/mastodon.html"
 {{ \$host := .Get "host" }}
 {{ \$id := .Get "id" }}
+
 {{ if and \$host \$id }}
   {{ \$apiURL := printf "https://%s/api/v1/statuses/%s" \$host \$id }}
+  
+  {{/* Fetch Data with Error Handling */}}
   {{ \$data := dict }}
   {{ \$response := resources.GetRemote \$apiURL }}
+  
   {{ if \$response }}
     {{ if eq \$response.StatusCode 200 }}
       {{ \$data = \$response.Content | transform.Unmarshal }}
     {{ else }}
-      <div class="mastodon-card error outlined-card"><p><strong>Error:</strong> Could not fetch Mastodon post (Status {{ \$response.StatusCode }}).</p><p><a href="https://{{ \$host }}/@{{ \$id }}">View Original on {{ \$host }}</a></p></div>
+      <div class="mastodon-card error outlined-card">
+        <p><strong>Error:</strong> Could not fetch Mastodon post (Status {{ \$response.StatusCode }}).</p>
+        <p><a href="https://{{ \$host }}/@{{ \$id }}">View Original on {{ \$host }}</a></p>
+      </div>
     {{ end }}
   {{ else }}
-    <div class="mastodon-card error outlined-card"><p><strong>Error:</strong> Unable to reach Mastodon instance ({{ \$host }}).</p></div>
+    <div class="mastodon-card error outlined-card">
+      <p><strong>Error:</strong> Unable to reach Mastodon instance ({{ \$host }}).</p>
+    </div>
   {{ end }}
+
+  {{/* Render Card if Data Exists */}}
   {{ if \$data }}
     <article class="mastodon-card outlined-card" lang="{{ \$data.language | default "en" }}">
+      
+      {{/* HEADER: Author Info */}}
       <header class="mastodon-header">
         <div class="mastodon-author">
+          {{/* PROXY AVATAR: Download image to serve locally for privacy */}}
           {{ \$avatar := resources.GetRemote \$data.account.avatar }}
-          {{ if \$avatar }}{{ if \$avatar.Err }}<div class="u-photo-placeholder">?</div>{{ else }}<img src="{{ \$avatar.RelPermalink }}" alt="" class="u-photo" width="48" height="48" loading="lazy">{{ end }}{{ else }}<div class="u-photo-placeholder">?</div>{{ end }}
+          {{ if \$avatar }}
+             {{/* Check for valid image resource before processing */}}
+             {{ if \$avatar.Err }}
+               <div class="u-photo-placeholder">?</div>
+             {{ else }}
+               <img src="{{ \$avatar.RelPermalink }}" alt="" class="u-photo" width="48" height="48" loading="lazy">
+             {{ end }}
+          {{ else }}
+             <div class="u-photo-placeholder">?</div>
+          {{ end }}
+          
           <div class="author-meta">
-            <a href="{{ \$data.account.url }}" class="p-name u-url" target="_blank" rel="noopener noreferrer"><strong>{{ \$data.account.display_name | default \$data.account.username }}</strong></a>
+            <a href="{{ \$data.account.url }}" class="p-name u-url" target="_blank" rel="noopener noreferrer">
+              <strong>{{ \$data.account.display_name | default \$data.account.username }}</strong>
+            </a>
             <span class="p-nickname">@{{ \$data.account.username }}@{{ \$host }}</span>
           </div>
         </div>
-        <div class="mastodon-logo" aria-label="Mastodon Post">{{ partial "icons/mastodon.svg" . }}</div>
+        
+        <div class="mastodon-logo" aria-label="Mastodon Post">
+          {{ partial "icons/mastodon.svg" . }}
+        </div>
       </header>
-      <div class="e-content">{{ \$data.content | safeHTML }}</div>
+
+      {{/* BODY: Content */}}
+      <div class="e-content">
+        {{ \$data.content | safeHTML }}
+      </div>
+
+      {{/* MEDIA: Image Grid */}}
       {{ if \$data.media_attachments }}
       <div class="mastodon-media">
-        {{ range \$data.media_attachments }}{{ if eq .type "image" }}{{ \$img := resources.GetRemote .url }}{{ if \$img }}{{ if not \$img.Err }}<img src="{{ \$img.RelPermalink }}" alt="{{ .description | default "Attached image" }}" loading="lazy">{{ end }}{{ end }}{{ end }}{{ end }}
+        {{ range \$data.media_attachments }}
+          {{ if eq .type "image" }}
+            {{/* PROXY MEDIA: Download content images */}}
+            {{ \$img := resources.GetRemote .url }}
+            {{ if \$img }}
+              {{ if not \$img.Err }}
+                <img src="{{ \$img.RelPermalink }}" alt="{{ .description | default "Attached image" }}" loading="lazy">
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
       </div>
       {{ end }}
+
+      {{/* FOOTER: Meta & Stats */}}
       <footer class="mastodon-footer">
-        <time class="dt-published" datetime="{{ \$data.created_at }}">{{ dateFormat "Jan 02, 2006" \$data.created_at }}</time>
-        <div class="mastodon-stats"><span>↩ {{ \$data.replies_count }}</span><span>↻ {{ \$data.reblogs_count }}</span><span>♥ {{ \$data.favourites_count }}</span></div>
+        <time class="dt-published" datetime="{{ \$data.created_at }}">
+          {{ dateFormat "Jan 02, 2006" \$data.created_at }}
+        </time>
+        <div class="mastodon-stats">
+          <span>↩ {{ \$data.replies_count }}</span>
+          <span>↻ {{ \$data.reblogs_count }}</span>
+          <span>♥ {{ \$data.favourites_count }}</span>
+        </div>
         <a href="{{ \$data.url }}" class="button-small" target="_blank" rel="noopener noreferrer">View Original</a>
       </footer>
     </article>
   {{ end }}
-{{ else }}<p class="error"><strong>Mastodon Shortcode Error:</strong> Missing 'host' or 'id' parameter.</p>{{ end }}
+
+{{ else }}
+  <p class="error"><strong>Mastodon Shortcode Error:</strong> Missing 'host' or 'id' parameter.</p>
+{{ end }}
 EOT
 
 # ==============================================================================
@@ -1223,6 +2278,7 @@ EOT
 # ==============================================================================
 echo "Generating Content..."
 
+# [Source: 116]
 cat <<EOT > "content/articles/_index.md"
 ---
 title: "Articles"
@@ -1234,6 +2290,7 @@ sort_order: "desc"
 Welcome to my long-form writing. Here you'll find essays, stories, and deep dives that need a bit more space than a quick note. Grab a cup of coffee and settle in.
 EOT
 
+# [Source: 20]
 cat <<EOT > "content/status/_index.md"
 ---
 title: "Status Updates"
@@ -1245,6 +2302,7 @@ sort_order: "desc"
 These are my "micro-posts"—similar to tweets. Expect quick life updates, random thoughts, and behind-the-scenes moments. Short, sweet, and to the point.
 EOT
 
+# [Source: 17]
 cat <<EOT > "content/replies/_index.md"
 ---
 title: "Replies"
@@ -1256,6 +2314,7 @@ sort_order: "desc"
 The web is all about conversation. This page collects my responses to posts from other people around the internet. It’s the other half of the dialogue.
 EOT
 
+# [Source: 121]
 cat <<EOT > "content/reposts/_index.md"
 ---
 title: "Reposts"
@@ -1267,6 +2326,7 @@ sort_order: "desc"
 Sharing is caring. These are posts from other creators that I found valuable, funny, or important enough to boost on my own site.
 EOT
 
+# [Source: 106]
 cat <<EOT > "content/likes/_index.md"
 ---
 title: "Likes"
@@ -1278,6 +2338,7 @@ sort_order: "desc"
 A digital nod of appreciation. This is a collection of content I’ve "liked" from around the web—think of it as a public log of things that made me smile or think.
 EOT
 
+# [Source: 11]
 cat <<EOT > "content/bookmarks/_index.md"
 ---
 title: "Bookmarks"
@@ -1289,6 +2350,7 @@ sort_order: "desc"
 My personal library of links. These are articles, tools, and sites I’ve saved for future reference. Feel free to browse through my reading list.
 EOT
 
+# [Source: 19]
 cat <<EOT > "content/rsvps/_index.md"
 ---
 title: "RSVPs"
@@ -1300,51 +2362,42 @@ sort_order: "desc"
 My social calendar. This tracks public events I’ve responded to, whether I'm attending in person, watching online, or just interested.
 EOT
 
+# [Source: 13]
 cat <<EOT > "content/pages/about/index.md"
 ---
 title: "About"
-date: $(date +%Y-%m-%dT%H:%M:%S%z)
+date: 2025-11-22T19:10:40-0800
+lastmod: 2025-11-23T11:10:00-08:00
 summary: "A little bit about me."
 ---
-
-## Hello, I'm Gregory.
-
-I am a web designer and developer based in **Burien, Washington**. 
-
-This site is built with the **Accessible-MD** theme, focusing on:
-* **Accessibility:** Strict adherence to WCAG 2.2 AA standards.
-* **IndieWeb:** Owning my own data and social interactions.
-* **Simplicity:** Using static HTML/CSS over heavy JavaScript frameworks.
-
-### My Tools
-* **Engine:** Hugo Extended
-* **Design:** Material Design 3 (Outlined)
-* **Search:** Pagefind
 EOT
 
+# [Source: 14]
 cat <<EOT > "content/pages/contact/index.md"
 ---
 title: "Contact"
 layout: "contact"
-date: $(date +%Y-%m-%dT%H:%M:%S%z)
+date: 2025-11-22T23:40:00-08:00
 summary: "A contact form where visitors can get in touch with the author"
 ---
 EOT
 
+# [Source: 15]
 cat <<EOT > "content/pages/guestbook/index.md"
 ---
 title: "Guestbook"
 layout: "guestbook"
-date: $(date +%Y-%m-%dT%H:%M:%S%z)
-summary: "A place to collect webmentions from around the IndieWeb that are not tied to a particular post or page"
+date: 2025-11-22T23:35:00-08:00
+summary: "A place to collect webmentions from around the IndieWeb that are  not tied to a particular post or page"
 syndication: []
 ---
 EOT
 
+# [Source: 16]
 cat <<EOT > "content/pages/search/index.md"
 ---
 title: "Search"
-date: $(date +%Y-%m-%dT%H:%M:%S%z)
+date: 2025-11-22T19:10:40-0800
 layout: "search"
 summary: "A page where visitors can search this website"
 ---
@@ -1355,6 +2408,7 @@ EOT
 # ==============================================================================
 echo "Generating Utilities..."
 
+# [Source: 22]
 cat <<'GENERATOR' > generate_icons.sh
 #!/bin/bash
 # ==============================================================================
@@ -1429,6 +2483,7 @@ echo "Icon generation complete."
 GENERATOR
 chmod +x generate_icons.sh
 
+# [Source: 23]
 cat <<'NEWPOST' > new_post.sh
 #!/bin/bash
 # ==============================================================================
@@ -1500,6 +2555,7 @@ echo "Done."
 NEWPOST
 chmod +x new_post.sh
 
+# [Source: 21]
 cat <<'DEBUGSERVER' > debug_server.sh
 #!/bin/bash
 # ==============================================================================
@@ -1549,6 +2605,7 @@ chmod +x debug_server.sh
 # ==============================================================================
 echo "Generating Root Files..."
 
+# [Source: 2]
 cat <<EOT > ".gitignore"
 # Build Artifacts
 /public
@@ -1565,12 +2622,14 @@ node_modules/
 errors.txt
 EOT
 
+# [Source: 3]
 echo "simplygregario.us" > "$THEME_ROOT/static/CNAME"
 
+# [Source: 4]
 cat <<EOT > "LICENSE"
 MIT License
 
-Copyright (c) $(date +%Y) Gregory Lopez
+Copyright (c) 2025 Gregory Lopez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1581,7 +2640,6 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -1591,7 +2649,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 EOT
 
-# Updated README.md
+# [Source: 5]
 cat <<EOT > "README.md"
 # Greg's Place
 
@@ -1684,7 +2742,7 @@ This site deploys via **GitHub Actions** to GitHub Pages.
 * **Content:** [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](http://creativecommons.org/licenses/by-sa/4.0/).
 EOT
 
-# Updated project_context.txt
+# [Source: 30]
 cat <<EOT > "project_context.txt"
 # Project Context: Greg's Place
 
@@ -1698,7 +2756,7 @@ All settings must include comments explaining their function and default values.
 * Language Code: "en-us"
 * Permalinks:
     * \`pages = "/:slug/"\` (Critical: Ensures /about/ works at root).
-    * \`articles = "/articles/:year-:month-:day/:slug/"\`
+* \`articles = "/articles/:year-:month-:day/:slug/"\`
     * \`status = "/status/:year-:month-:day/:contentbasename/"\`
     * \`replies = "/replies/:year-:month-:day/:contentbasename/"\`
     * \`reposts = "/reposts/:year-:month-:day/:contentbasename/"\`
@@ -1711,12 +2769,12 @@ All settings must include comments explaining their function and default values.
 * [author]
     * \`name\`: "Gregory Lopez"
     * \`bio\`: Short plain-text bio for H-Card meta tags.
-    * \`photo\`: "images/profile_photo.jpg" (Refers to physical file: themes/Accessible-MD/assets/images/profile_photo.jpg)
+* \`photo\`: "images/profile_photo.jpg" (Refers to physical file: themes/Accessible-MD/assets/images/profile_photo.jpg)
     * \`[author.location]\`: City (Burien), State (Washington), Country (USA).
 * [webmentions]
     * \`enable\`: true
     * \`show_webmentions\`: true (Global Default).
-    * \`username\`: "simplygregario.us" # This is the webmention.io username.
+* \`username\`: "simplygregario.us" # This is the webmention.io username.
     * \`guestbookIntro\`: "Welcome to the Guestbook!"
 * [contact]
     * \`formAction\`: (e.g., Formspree URL)
@@ -1725,7 +2783,7 @@ All settings must include comments explaining their function and default values.
     * \`colorScheme\`: Options: "sound", "market", "mountain", "forest", "sunset".
 * [[social]] & [[im]] (Repeated Blocks for H-Card)
     * Display Strategy: Text-Only Links ("Name: @Handle") for maximum accessibility and stability.
-    * Required Keys: \`name\`, \`handle\`, \`url\`, \`rel\`.
+* Required Keys: \`name\`, \`handle\`, \`url\`, \`rel\`.
 
 ### 3. Menus (menus.toml)
 * Structure: \`[[main]]\` array with 100-level weight spacing.
@@ -1743,13 +2801,14 @@ All settings must include comments explaining their function and default values.
 * Theme Structure: All functional code (layouts, SCSS, JS) resides in \`themes/Accessible-MD/\`.
 * Asset Strategy:
     * CNAME: Must live in \`themes/Accessible-MD/static/CNAME\`.
-    (Note: Hugo copies this to the deployment root during build, satisfying GitHub's requirements).
-    * Static Files: \`favicon.ico\` and other root assets live in \`themes/Accessible-MD/static/\`.
-    * Icons: Functional UI icons (Material Symbols) are fetched dynamically. Brand icons are restricted to essential use cases (e.g., Mastodon shortcode) to prevent build fragility.
+(Note: Hugo copies this to the deployment root during build, satisfying GitHub's requirements).
+* Static Files: \`favicon.ico\` and other root assets live in \`themes/Accessible-MD/static/\`.
+* Icons: Functional UI icons (Material Symbols) are fetched dynamically.
+Brand icons are restricted to essential use cases (e.g., Mastodon shortcode) to prevent build fragility.
 * Content Structure: Leaf Bundles (directory + \`index.md\`) for all content types to ensure asset colocation.
 * License Strategy (Hybrid):
     * **Codebase:** The root \`LICENSE\` file must use the **MIT License**.
-    * **Content:** All creative content (text, media) is licensed under **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**.
+* **Content:** All creative content (text, media) is licensed under **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**.
 ---
 
 ## CORE SITE TEMPLATES & LOGIC
@@ -1771,13 +2830,14 @@ This allows for user-friendly explanations of content types.
 * Context Blocks: If \`reply_to\`, \`like_of\`, etc., are present, they appear *above* the content.
 * **Image Engine:**
     * **Single Images:** Uses a Render Hook (\`render-image.html\`) to intercept standard Markdown images.
-    Automatically generates responsive \`srcset\` (WebP), adds lazy loading, and wraps in \`<figure>\` with \`<figcaption>\`.
-    * **Galleries:** Uses a Shortcode (\`gallery.html\`) to display a responsive grid of Page Resources.
+Automatically generates responsive \`srcset\` (WebP), adds lazy loading, and wraps in \`<figure>\` with \`<figcaption>\`.
+* **Galleries:** Uses a Shortcode (\`gallery.html\`) to display a responsive grid of Page Resources.
 * **Accessible Tables:** Uses a Render Hook (\`render-table.html\`) to enforce captions and mobile responsiveness.
 * **Smart Syndication:** Automatically converts known syndication URLs (matching \`params.toml\`) into clean text links (e.g., "Mastodon") instead of raw URLs.
 * Webmentions: Must be rendered in a Distinct Card (\`<section class="outlined-card">\`) completely separate from the main \`<article>\` content.
 ### 4. Utility Pages
-* **Guestbook:** Must act as an \`h-entry\` for the page itself, but an \`h-feed\` for the comments section. Includes Smart Syndication links.
+* **Guestbook:** Must act as an \`h-entry\` for the page itself, but an \`h-feed\` for the comments section.
+Includes Smart Syndication links.
 **Critical:** Must support Syndication (POSSE) links in the footer, unlike standard pages.
 * Search: Dedicated page (\`layouts/_default/search.html\`) initializing Pagefind UI.
 * 404: User-friendly error page with a "Back to Home" button and an embedded search box.
@@ -1787,12 +2847,12 @@ This allows for user-friendly explanations of content types.
 
 * Source Code Documentation:
     * Headers: Major files must begin with a brief comment explaining the file's role.
-    * Inline: Complex logic must have concise comments explaining the "Why."
+* Inline: Complex logic must have concise comments explaining the "Why."
 * Archetypes & Frontmatter Standards:
     * \`lastmod\`: (ISO 8601) Required for SEO and RSS feed freshness.
-    * \`summary\`: Required for Homepage display.
+* \`summary\`: Required for Homepage display.
     * \`show_webmentions\`: Optional boolean to override global config.
-    * IndieWeb Parameters: \`reply_to\`, \`like_of\`, \`repost_of\`, \`bookmark_of\`, \`rsvp\`.
+* IndieWeb Parameters: \`reply_to\`, \`like_of\`, \`repost_of\`, \`bookmark_of\`, \`rsvp\`.
 
 ---
 
@@ -1804,15 +2864,15 @@ Shortcodes must NEVER inject third-party iframes or client-side scripts that tra
 * **Library:**
     1.  **YouTube (\`youtube\`):**
         * **Logic:** Loads a static thumbnail image.
-        Only calls the privacy-enhanced YouTube API (\`youtube-nocookie.com\`) upon user click.
-        * **Usage:** \`{{< youtube "VIDEO_ID" "Title for A11y" >}}\`
+Only calls the privacy-enhanced YouTube API (\`youtube-nocookie.com\`) upon user click.
+* **Usage:** \`{{< youtube "VIDEO_ID" "Title for A11y" >}}\`
     2.  **Mastodon (\`mastodon\`):**
         * **Logic:** Fetches API JSON at build time.
-        Downloads/proxies all images to local assets. Sanitizes HTML content.
+Downloads/proxies all images to local assets. Sanitizes HTML content.
         * **Usage:** \`{{< mastodon host="instance.url" id="123456789" >}}\`
     3.  **Gallery (\`gallery\`):**
         * **Logic:** Scans Page Resources for images matching a pattern.
-        Generates 600x600 WebP thumbnails. Renders in a responsive grid.
+Generates 600x600 WebP thumbnails. Renders in a responsive grid.
         * **Usage:** \`{{< gallery match="images/*" >}}\`
         * **Accessibility:** Requires defining \`alt\` text in the page's \`resources\` front matter.
 ---
@@ -1822,19 +2882,20 @@ Shortcodes must NEVER inject third-party iframes or client-side scripts that tra
 * Toolchain: Hugo Extended (Version pinned in workflow), NodeJS (LTS).
 * **Syntax Standards:**
     * Modern Hugo syntax only (e.g., use \`[pagination]\`, \`css.Sass\`).
-    * **Constraint:** No backslashes (\\) allowed inside Hugo template variables.
+* **Constraint:** No backslashes (\) allowed inside Hugo template variables.
 * **CI/CD Pipeline (GitHub Actions):**
     * Trigger: Push to 'main'.
-    * **Pre-Build:** \`./generate_icons.sh\` (Safe Mode: fetches System icons + specific required Brand icons).
-    * Build Command: \`hugo --minify --gc\` (Garbage Collection enabled).
+* **Pre-Build:** \`./generate_icons.sh\` (Safe Mode: fetches System icons + specific required Brand icons).
+* Build Command: \`hugo --minify --gc\` (Garbage Collection enabled).
     * Post-Processing: \`npx pagefind --site public\` (Client-side indexing).
     * Deployment: \`actions/deploy-pages\`.
 * Portability: Scripts must run on macOS/Linux with standard dependencies (Hugo, Node, Git).
-* Regression Policy: Any regressions  must be avoided. If creating or modifying scripts, sanity checks must be performed to ensure regression free code. If potential regressions are detected, notification and an explanation of the potential regression are required before proceeding.
+* Regression Policy: Any regressions  must be avoided. If creating or modifying scripts, sanity checks must be performed to ensure regression free code.
+If potential regressions are detected, notification and an explanation of the potential regression are required before proceeding.
 * \`new_post.sh\` Logic:
     * Articles/Bookmarks: Title is Required. Generates slug-based directory.
     * Status/Replies/etc: Title is Optional.
-    * If Title provided -> Slug-based directory.
+* If Title provided -> Slug-based directory.
     * If Title omitted -> Timestamp-based directory (\`YYYY-MM-DD-HHMM\`).
 * \`generate_icons.sh\`: Fetches Material Design system icons. Does NOT fetch dynamic social icons to ensure build stability.
 * \`debug_server.sh\`: Runs Hugo with aggressive error logging (\`--printI18nWarnings\`, \`--disableFastRender\`) to a text file.
@@ -1852,7 +2913,7 @@ Shortcodes must NEVER inject third-party iframes or client-side scripts that tra
 * Metaphor: "Outlined Cards." High contrast borders instead of shadows.
 * Palette: MD3 Compliant (Primary/Secondary/Tertiary).
 * Themes (PNW Inspired): Presets defined in \`_variables.scss\`.
-    * "The Sound" (Default)
+* "The Sound" (Default)
     * "The Market"
     * "The Mountain"
     * "The Forest"
@@ -1872,10 +2933,10 @@ Shortcodes must NEVER inject third-party iframes or client-side scripts that tra
 * Approved Use Cases: Interaction Utilities (Menus), Webmentions, Copy Code.
 * Webmentions Security (Client-Side Sanitization):
     * **Constraint:** Incoming HTML content must be parsed to prevent XSS.
-    * **Allowlist:** Only semantic text tags (p, a, em, strong, blockquote) are permitted.
-    * **Blocklist:** All script, iframe, object, and style tags must be stripped.
-    * **Attribute Scrubbing:** All event handlers (e.g., onload, onclick) and javascript: URIs must be removed.
-    * Valid href URLs must be preserved.
+* **Allowlist:** Only semantic text tags (p, a, em, strong, blockquote) are permitted.
+* **Blocklist:** All script, iframe, object, and style tags must be stripped.
+* **Attribute Scrubbing:** All event handlers (e.g., onload, onclick) and javascript: URIs must be removed.
+* Valid href URLs must be preserved.
 * Pagination Constraint: If fetch returns > 20 items, the display must paginate client-side using custom JS.
 ---
 
@@ -1888,16 +2949,22 @@ Shortcodes must NEVER inject third-party iframes or client-side scripts that tra
 * Phase 3 (Deployment): COMPLETE. (GitHub Actions, CNAME, License).
 
 ### Script execution
-The website can be built from scratch after running 'hugo new site [site name]' (replacing [Site Name] with your preferred folder name), switching to the newly created directory and importing the setup_project.sh script to your newly minted Hugo project's root. Make it executeable with 'chmod +x setup_project.sh' and then run it to begin.
+The website can be built from scratch after running 'hugo new site [site name]' (replacing [Site Name] with your preferred folder name), switching to the newly created directory and importing the setup_project.sh script to your newly minted Hugo project's root.
+Make it executeable with 'chmod +x setup_project.sh' and then run it to begin.
 EOT
 
+# [Source: 1]
 cat <<EOT > ".github/workflows/hugo.yml"
 # [Source: 178] CI/CD Pipeline
 name: Deploy to GitHub Pages
 
 on:
-  # [Source: 179] Trigger: Push to 'main' branch.
+  # Trigger on Push to Main (Deployment)
   push:
+    branches: ["main"]
+  
+  # Trigger on PR to Main (Validation - Enables Status Checks)
+  pull_request:
     branches: ["main"]
   
   # Allows manual run from the Actions tab
@@ -1967,6 +3034,8 @@ jobs:
       url: \${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    # [Fix] Only deploy when pushing to main. Skips deployment on Pull Requests.
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
