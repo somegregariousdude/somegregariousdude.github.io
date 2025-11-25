@@ -1,9 +1,9 @@
 #!/bin/bash
 # ==============================================================================
-# SCRIPT: generate_icons.sh (STABILITY MODE)
-# PURPOSE: Fetch essential SVGs.
-#          - Social Links are now Text-Only (no icons needed).
-#          - Mastodon Shortcode STILL NEEDS mastodon.svg.
+# SCRIPT: generate_icons.sh (LOCAL ASSET BUILDER)
+# PURPOSE: Fetch SVGs at build time and save locally.
+#          - System Icons: Material Symbols
+#          - Social Icons: Simple Icons + Official Repos
 # ==============================================================================
 
 ICON_DIR="themes/Accessible-MD/layouts/partials/icons"
@@ -38,32 +38,60 @@ for NAME in "${!SYSTEM_ICONS[@]}"; do
     TARGET="$ICON_DIR/$NAME.svg"
     
     if [ ! -f "$TARGET" ]; then
-        echo "Fetching $NAME..."
+        echo "Fetching System: $NAME..."
         URL="https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/${MATERIAL_NAME}/materialsymbolsoutlined/${MATERIAL_NAME}_24px.svg"
+        curl -s -L -f "$URL" -o "$TARGET" || echo "  X Failed to fetch $NAME"
+    fi
+done
+
+# 2. Standard Social Icons (Simple Icons CDN)
+# Maps your params.toml 'icon' keys to Simple Icons slugs
+# NOTE: Slugs must be lowercase (e.g. 'reddit', 'youtube')
+declare -A SOCIAL_ICONS=(
+    ["bluesky"]="bluesky"
+    ["facebook"]="facebook"
+    ["github"]="github"
+    ["mastodon"]="mastodon"
+    ["matrix"]="matrix"
+    ["messenger"]="messenger"
+    ["reddit"]="reddit"
+    ["signal"]="signal"
+    ["simplex"]="simplex"
+    ["youtube"]="youtube"
+)
+
+echo "--- Updating Social Icons ---"
+for NAME in "${!SOCIAL_ICONS[@]}"; do
+    SLUG="${SOCIAL_ICONS[$NAME]}"
+    TARGET="$ICON_DIR/$NAME.svg"
+    
+    if [ ! -f "$TARGET" ]; then
+        echo "Fetching Social: $NAME..."
+        URL="https://cdn.simpleicons.org/$SLUG"
         
         if curl -s -L -f "$URL" -o "$TARGET"; then
              echo "  ✓ OK"
         else
-             echo "  X ERROR: Could not fetch '$MATERIAL_NAME'."
-             rm -f "$TARGET"
+             echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."
+             # Fallback: Empty square to prevent build crash
+             echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"
         fi
     fi
 done
 
-# 2. Essential Brand Icons (Manual List)
-# We only fetch what is strictly required by Shortcodes/Layouts.
-# We skip the social loop to avoid CI failures.
-
-MASTODON_TARGET="$ICON_DIR/mastodon.svg"
-if [ ! -f "$MASTODON_TARGET" ]; then
-    echo "Fetching Essential Brand: Mastodon..."
-    # Use Simple Icons CDN as primary, fallback to raw if needed
-    if curl -s -L -f "https://cdn.simpleicons.org/mastodon" -o "$MASTODON_TARGET"; then
-        echo "  ✓ OK"
+# 3. Special Case: Friendica (Official Repo)
+# Friendica is often missing from aggregators, so we pull from source.
+TARGET="$ICON_DIR/friendica.svg"
+if [ ! -f "$TARGET" ]; then
+    echo "Fetching Special: friendica..."
+    # Official Raw URL from Friendica's Stable Branch
+    URL="https://raw.githubusercontent.com/friendica/friendica/stable/images/friendica.svg"
+    
+    if curl -s -L -f "$URL" -o "$TARGET"; then
+         echo "  ✓ OK"
     else
-        echo "  X Failed to fetch Mastodon icon."
-        # Create blank to prevent build crash
-        echo '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/></svg>' > "$MASTODON_TARGET"
+         echo "  X ERROR: Could not fetch Friendica icon."
+         echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"
     fi
 fi
 
