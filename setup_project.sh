@@ -780,13 +780,13 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/social-meta.html"
 EOT
 
 cat <<EOT > "$THEME_ROOT/layouts/partials/share-buttons.html"
-{{ \$bluesky := index (where .Site.Params.social "name" "BlueSky") 0 }}
-{{ \$mastodon := index (where .Site.Params.social "name" "Mastodon") 0 }}
-{{ \$friendica := index (where .Site.Params.social "name" "Friendica") 0 }}
+{{ $bluesky := index (where .Site.Params.social "name" "BlueSky") 0 }}
+{{ $mastodon := index (where .Site.Params.social "name" "Mastodon") 0 }}
+{{ $friendica := index (where .Site.Params.social "name" "Friendica") 0 }}
 <section class="share-card outlined-card">
   <h3>Share this</h3>
   <div class="share-buttons-row">
-    <a href="https://bsky.app/intent/compose?text={{ .Title | urlquery }}%20{{ .Permalink | urlquery }}{{ if \$bluesky }}%20via%20{{ \$bluesky.handle | urlquery }}{{ end }}" 
+    <a href="https://bsky.app/intent/compose?text={{ .Title | urlquery }}%20{{ .Permalink | urlquery }}{{ if $bluesky }}%20via%20{{ $bluesky.handle | urlquery }}{{ end }}" 
        target="_blank" rel="noopener noreferrer" class="share-btn" aria-label="Share on BlueSky">
        {{ partial "icons/bluesky.svg" . }}
     </a>
@@ -795,11 +795,11 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/share-buttons.html"
        {{ partial "icons/facebook.svg" . }}
     </a>
     <button class="share-btn fediverse-btn" data-network="friendica" 
-            {{ if \$friendica }}data-handle="{{ \$friendica.handle }}"{{ end }} aria-label="Share on Friendica">
+            {{ if $friendica }}data-handle="{{ $friendica.handle }}"{{ end }} aria-label="Share on Friendica" aria-haspopup="dialog">
        {{ partial "icons/friendica.svg" . }}
     </button>
     <button class="share-btn fediverse-btn" data-network="mastodon" 
-            {{ if \$mastodon }}data-handle="{{ \$mastodon.handle }}"{{ end }} aria-label="Share on Mastodon">
+            {{ if $mastodon }}data-handle="{{ $mastodon.handle }}"{{ end }} aria-label="Share on Mastodon" aria-haspopup="dialog">
        {{ partial "icons/mastodon.svg" . }}
     </button>
     <a href="https://reddit.com/submit?url={{ .Permalink | urlquery }}&title={{ .Title | urlquery }}" 
