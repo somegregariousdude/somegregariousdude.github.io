@@ -1,0 +1,45 @@
+{{/* =======================================================================
+   PARTIAL: social-meta.html
+   PURPOSE: Generates Open Graph & Twitter Cards for rich social sharing.
+   LOGIC: Auto-detects featured images or falls back to author photo.
+   ======================================================================= */}}
+
+{{/* 1. BASIC METADATA */}}
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:description" content="{{ .Summary | default .Site.Params.author.bio | truncate 160 }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ .Site.Title }}">
+
+{{/* 2. IMAGE DETECTION LOGIC */}}
+{{/* Priority: 1. "feature" in name, 2. "cover" in name, 3. Any image, 4. Profile Photo */}}
+{{ $img := .Resources.GetMatch "*feature*" }}
+{{ if not $img }}{{ $img = .Resources.GetMatch "*cover*" }}{{ end }}
+{{ if not $img }}{{ $img = .Resources.GetMatch "*.jpg" }}{{ end }}
+{{ if not $img }}{{ $img = .Resources.GetMatch "*.png" }}{{ end }}
+
+{{/* Fallback: Site Author Photo */}}
+{{ if not $img }}
+  {{ $img = resources.Get .Site.Params.author.photo }}
+{{ end }}
+
+{{/* 3. GENERATE IMAGE TAGS */}}
+{{ if $img }}
+  {{/* Resize to recommended OG dimensions (1200x630) for best crop */}}
+  {{ $socialImg := $img.Fill "1200x630 Center webp" }}
+  
+  <meta property="og:image" content="{{ $socialImg.Permalink }}">
+  <meta property="og:image:width" content="{{ $socialImg.Width }}">
+  <meta property="og:image:height" content="{{ $socialImg.Height }}">
+  
+  {{/* Twitter/Fediverse Card Style */}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ $socialImg.Permalink }}">
+{{ else }}
+  {{/* Absolute fail-safe if no images exist at all */}}
+  <meta name="twitter:card" content="summary">
+{{ end }}
+
+{{/* 4. TWITTER/FEDIVERSE TITLE & DESC */}}
+<meta name="twitter:title" content="{{ .Title }}">
+<meta name="twitter:description" content="{{ .Summary | default .Site.Params.author.bio | truncate 160 }}">

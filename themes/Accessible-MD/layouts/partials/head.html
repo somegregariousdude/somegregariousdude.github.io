@@ -19,3 +19,4 @@
 {{ $opts := dict "transpiler" "libsass" "targetPath" "css/style.css" }}
 {{ $style := resources.Get "scss/main.scss" | css.Sass $opts | resources.Minify | resources.Fingerprint }}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+{{ partial "social-meta.html" . }}
