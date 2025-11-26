@@ -7,9 +7,13 @@ This project is a static site designed with a focus on **Accessibility (WCAG 2.2
 
 ### Key Design Features
 * **Inline Headers:** Category chips (using semantic icons) are aligned inline with post titles.
-* **Privacy First:** Media embeds use "Static Facades" (click-to-load or build-time fetch) to prevent third-party tracking.
-* **Utility Pages:** Guestbook and Contact pages use specific microformats to support IndieWeb discovery while maintaining a clean UI.
-* **Stability:** Social links are text-only to prevent build failures from external icon APIs.
+* **Privacy First:**
+    * Media embeds use "Static Facades" (click-to-load or build-time fetch) to prevent third-party tracking.
+    * Social Sharing uses "Intent URLs" and local modals (no third-party tracking scripts).
+    * Fonts are loaded via Google Fonts (Intentional Design Choice).
+* **Discovery:** Full support for Open Graph, Twitter Cards, and Full-Content RSS feeds.
+* **Utility Pages:** Guestbook, Contact, search and a formal **Accessibility Statement** (`/accessibility/`).
+* **Stability:** Social links are text-only or locally cached SVGs to prevent build failures from external icon APIs.
 
 ## 2. Cheat Sheet (Script Usage)
 
@@ -76,7 +80,7 @@ Fetches the post content at **build time** and renders it as static HTML.
 ```
 
 ## 4. Installation (Reproduction)
-To reproduce this environment on a fresh machine, run the setup_project.sh script.
+To reproduce this environment on a fresh machine, run the `setup_project.sh` script.
 
 ## 5. Deployment
 This site deploys via **GitHub Actions** to GitHub Pages.

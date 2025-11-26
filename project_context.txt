@@ -55,9 +55,8 @@ All settings must include comments explaining their function and default values.
 * Theme Structure: All functional code (layouts, SCSS, JS) resides in `themes/Accessible-MD/`.
 * Asset Strategy:
     * CNAME: Must live in `themes/Accessible-MD/static/CNAME`.
-(Note: Hugo copies this to the deployment root during build, satisfying GitHub's requirements).
+    * Icons: Functional UI icons (Material Symbols) are fetched dynamically via `generate_icons.sh`.
     * Static Files: `favicon.ico` and other root assets live in `themes/Accessible-MD/static/`.
-    * Icons: Functional UI icons (Material Symbols) are fetched dynamically. Brand icons are restricted to essential use cases (e.g., Mastodon shortcode) to prevent build fragility.
 * Content Structure: Leaf Bundles (directory + `index.md`) for all content types to ensure asset colocation.
 * License Strategy (Hybrid):
     * **Codebase:** The root `LICENSE` file must use the **MIT License**.
@@ -75,24 +74,33 @@ All settings must include comments explaining their function and default values.
 ### 2. Section Lists (Feed Pages)
 * Template: `layouts/_default/list.html`
 * Section Intros: The template MUST check for and render the content (`{{ .Content }}`) of the section's `_index.md` file immediately after the title.
-This allows for user-friendly explanations of content types.
 * Display: Outlined Cards with inline headers.
 ### 3. Single Post Layout
 * Header: Inline layout where the Category Chip acts as a visual signpost next to the Title.
 * Content: Standard body content.
-* Context Blocks: If `reply_to`, `like_of`, etc., are present, they appear *above* the content.
+* **Syndication & Sharing:**
+    * **Social Meta:** `head.html` includes `social-meta.html` to generate Open Graph/Twitter Cards (auto-detects featured image or falls back to profile photo).
+    * **Share Buttons:** A privacy-first "Share Card" (`share-buttons.html`) appears below content but above Webmentions.
+        * Centralized Networks (BlueSky, Facebook, Reddit): Use "Intent URLs" (no JS widgets).
+        * Federated Networks (Mastodon, Friendica): Use a **Client-Side Modal** (`share.js`) to ask for the user's instance. No third-party intermediaries.
 * **Image Engine:**
-    * **Single Images:** Uses a Render Hook (`render-image.html`) to intercept standard Markdown images.
-Automatically generates responsive `srcset` (WebP), adds lazy loading, and wraps in `<figure>` with `<figcaption>`.
+    * **Single Images:** Uses a Render Hook (`render-image.html`) to intercept standard Markdown images. Automatically generates responsive `srcset` (WebP), adds lazy loading, and wraps in `<figure>` with `<figcaption>`.
     * **Galleries:** Uses a Shortcode (`gallery.html`) to display a responsive grid of Page Resources.
 * **Accessible Tables:** Uses a Render Hook (`render-table.html`) to enforce captions and mobile responsiveness.
 * **Smart Syndication:** Automatically converts known syndication URLs (matching `params.toml`) into clean text links (e.g., "Mastodon") instead of raw URLs.
 * Webmentions: Must be rendered in a Distinct Card (`<section class="outlined-card">`) completely separate from the main `<article>` content.
 ### 4. Utility Pages
-* **Guestbook:** Must act as an `h-entry` for the page itself, but an `h-feed` for the comments section. Includes Smart Syndication links.
-**Critical:** Must support Syndication (POSSE) links in the footer, unlike standard pages.
+* **Guestbook:** Supports "Share Buttons" to encourage invites. Syndication links included.
+* **Accessibility Statement:** A dedicated page (`/accessibility/`) linked from the footer pipe separator. Explicitly declares WCAG 2.2 AA target and feedback mechanism.
 * Search: Dedicated page (`layouts/_default/search.html`) initializing Pagefind UI.
 * 404: User-friendly error page with a "Back to Home" button and an embedded search box.
+---
+
+## SYNDICATION & FEEDS
+
+* **RSS (Custom):** Uses `layouts/_default/rss.xml` to provide **Full Content** (`<content:encoded>`) and Media Enclosures (`<media:content>`) for feed readers.
+* **JSON:** Standard full-content output.
+
 ---
 
 ## DOCUMENTATION & MAINTAINABILITY
@@ -103,38 +111,33 @@ Automatically generates responsive `srcset` (WebP), adds lazy loading, and wraps
 * Archetypes & Frontmatter Standards:
     * `lastmod`: (ISO 8601) Required for SEO and RSS feed freshness.
     * `summary`: Required for Homepage display.
-    * `show_webmentions`: Optional boolean to override global config.
-    * IndieWeb Parameters: `reply_to`, `like_of`, `repost_of`, `bookmark_of`, `rsvp`.
+    * `show_webmentions`: Optional boolean to override global config (Default: true).
+* IndieWeb Parameters: `reply_to`, `like_of`, `repost_of`, `bookmark_of`, `rsvp`.
 
 ---
 
 ## SHORTCODE STANDARDS & LIBRARY
 
-* **Philosophy:** "Static Facades."
-Shortcodes must NEVER inject third-party iframes or client-side scripts that track the user.
+* **Philosophy:** "Static Facades." Shortcodes must NEVER inject third-party iframes or client-side scripts that track the user.
 * **Implementation:** Fetches must happen at **Build Time** (using `resources.GetRemote`) to ensure privacy and performance.
 * **Library:**
     1.  **YouTube (`youtube`):**
-        * **Logic:** Loads a static thumbnail image.
-Only calls the privacy-enhanced YouTube API (`youtube-nocookie.com`) upon user click.
-        * **Usage:** `{{< youtube "VIDEO_ID" "Title for A11y" >}}`
+        * **Logic:** Loads a static thumbnail image. Only calls the privacy-enhanced YouTube API (`youtube-nocookie.com`) upon user click.
+        * **Usage:** `{{< youtube "VIDEO_ID" "Title for A11y" >}}` (Title is required for `aria-label`).
     2.  **Mastodon (`mastodon`):**
-        * **Logic:** Fetches API JSON at build time.
-Downloads/proxies all images to local assets. Sanitizes HTML content.
+        * **Logic:** Fetches API JSON at build time. Downloads/proxies all images to local assets. Sanitizes HTML content.
         * **Usage:** `{{< mastodon host="instance.url" id="123456789" >}}`
     3.  **Gallery (`gallery`):**
-        * **Logic:** Scans Page Resources for images matching a pattern.
-Generates 600x600 WebP thumbnails. Renders in a responsive grid.
+        * **Logic:** Scans Page Resources for images matching a pattern. Generates 600x600 WebP thumbnails. Renders in a responsive grid.
         * **Usage:** `{{< gallery match="images/*" >}}`
         * **Accessibility:** Requires defining `alt` text in the page's `resources` front matter.
+
 ---
 
 ## DEVELOPMENT & AUTOMATION STANDARDS
 
 * Toolchain: Hugo Extended (Version pinned in workflow), NodeJS (LTS).
-* **Syntax Standards:**
-    * Modern Hugo syntax only (e.g., use `[pagination]`, `css.Sass`).
-    * **Constraint:** No backslashes (\) allowed inside Hugo template variables.
+* **Syntax Standards:** Modern Hugo syntax only (e.g., use `[pagination]`, `css.Sass`). No backslashes (\) allowed inside Hugo template variables.
 * **CI/CD Pipeline (GitHub Actions):**
     * Trigger: Push to 'main'.
     * **Pre-Build:** `./generate_icons.sh` (Safe Mode: fetches System icons + specific required Brand icons).
@@ -142,20 +145,24 @@ Generates 600x600 WebP thumbnails. Renders in a responsive grid.
     * Post-Processing: `npx pagefind --site public` (Client-side indexing).
     * Deployment: `actions/deploy-pages`.
 * Portability: Scripts must run on macOS/Linux with standard dependencies (Hugo, Node, Git).
-* Regression Policy: Any regressions  must be avoided. If creating or modifying scripts, sanity checks must be performed to ensure regression free code. If potential regressions are detected, notification and an explanation of the potential regression are required before proceeding.
+* Regression Policy: Any regressions must be avoided. If creating or modifying scripts, sanity checks must be performed to ensure regression free code.
 * `new_post.sh` Logic:
     * Articles/Bookmarks: Title is Required. Generates slug-based directory.
     * Status/Replies/etc: Title is Optional.
-    * If Title provided -> Slug-based directory.
-    * If Title omitted -> Timestamp-based directory (`YYYY-MM-DD-HHMM`).
-* `generate_icons.sh`: Fetches Material Design system icons. Does NOT fetch dynamic social icons to ensure build stability.
+        * If Title provided -> Slug-based directory.
+        * If Title omitted -> Timestamp-based directory (`YYYY-MM-DD-HHMM`).
+* `generate_icons.sh`: Fetches Material Design system icons. Does NOT fetch dynamic social icons to ensure build stability. Includes generic `share` icon.
 * `debug_server.sh`: Runs Hugo with aggressive error logging (`--printI18nWarnings`, `--disableFastRender`) to a text file.
+
 ---
 
 ## PRIVACY & ACCESSIBILITY
 
 * WCAG 2.2 AA: All interactive elements must meet contrast (4.5:1) and target size (24x24px) requirements.
 * YouTube Facade: Videos must use the "Lite Facade" pattern (static image, click-to-load) to prevent tracking on page load.
+* **Social Sharing:** Uses "Intent URLs" and local modals (no tracking scripts).
+* **Fonts:** Loaded via Google Fonts (Intentional Design Choice).
+
 ---
 
 ## STYLING & UX (MATERIAL DESIGN 3)
@@ -176,12 +183,15 @@ Generates 600x600 WebP thumbnails. Renders in a responsive grid.
 * **Tables:** Uses a Render Hook to enforce captions and mobile responsiveness (scroll wrapper).
 * **Images:** Responsive figures with semantic captions and "Outlined Card" styling.
 * Mobile Menu: "Hamburger" toggle using `aria-expanded` state management (no checkbox hacks).
+* **Share Buttons:** 48x48px circular touch targets with SVG icons.
+* **Modals:** Native `<dialog>` element with backdrop styling.
+
 ---
 
 ## JAVASCRIPT POLICY & SECURITY PROTOCOL
 
 * Principle: Minimal, purposeful JS.
-* Approved Use Cases: Interaction Utilities (Menus), Webmentions, Copy Code.
+* Approved Use Cases: Interaction Utilities (Menus), Webmentions, Copy Code, YouTube Facade, **Share Modal**.
 * Webmentions Security (Client-Side Sanitization):
     * **Constraint:** Incoming HTML content must be parsed to prevent XSS.
     * **Allowlist:** Only semantic text tags (p, a, em, strong, blockquote) are permitted.
@@ -189,15 +199,16 @@ Generates 600x600 WebP thumbnails. Renders in a responsive grid.
     * **Attribute Scrubbing:** All event handlers (e.g., onload, onclick) and javascript: URIs must be removed.
     * Valid href URLs must be preserved.
 * Pagination Constraint: If fetch returns > 20 items, the display must paginate client-side using custom JS.
+
 ---
 
 ## PROJECT PHASING STATUS
 
-* Phase 1 (Foundation): COMPLETE.
-(Structure, Config, Archetypes, Base Layouts, SCSS).
-* Phase 2 (Interaction): COMPLETE.
-(Feeds, Webmentions, Search, Forms, Privacy Facade, Mobile Menu, Typography, Microformats, Static Shortcodes, Accessible Tables, Image Engine, Stability Refactor).
+* Phase 1 (Foundation): COMPLETE. (Structure, Config, Archetypes, Base Layouts, SCSS).
+* Phase 2 (Interaction): COMPLETE. (Feeds, Webmentions, Search, Forms, Privacy Facade, Mobile Menu, Typography, Microformats, Static Shortcodes, Accessible Tables, Image Engine, Stability Refactor).
 * Phase 3 (Deployment): COMPLETE. (GitHub Actions, CNAME, License).
+* Phase 4 (Social & Discovery): COMPLETE. (Open Graph, Rich Sharing, Full RSS, Accessibility Page).
 
 ### Script execution
-The website can be built from scratch after running 'hugo new site [site name]' (replacing [Site Name] with your preferred folder name), switching to the newly created directory and importing the setup_project.sh script to your newly minted Hugo project's root. Make it executeable with 'chmod +x setup_project.sh' and then run it to begin.
+The website can be built from scratch after running 'hugo new site [site name]' (replacing [Site Name] with your preferred folder name), switching to the newly created directory and importing the setup_project.sh script to your newly minted Hugo project's root.
+Make it executeable with 'chmod +x setup_project.sh' and then run it to begin.
