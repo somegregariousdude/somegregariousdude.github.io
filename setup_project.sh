@@ -1,10 +1,11 @@
 #!/bin/bash
 # ==============================================================================
-# SCRIPT: setup_project.sh (MASTER SNAPSHOT)
+# SCRIPT: setup_project.sh (MASTER SNAPSHOT - V2)
 # PURPOSE: Full Reproduction of "Greg's Place" Website Environment
-# CONTEXT: Consolidates all logic from setup_phase_01a through 03b.
-#          Represents the "Final State" of the codebase as of Phase 3.
-#          UPDATED: Includes final README.md and project_context.txt.
+# CONTEXT: Consolidates all logic including Phase 3 visual/accessibility patches.
+#          - Updated Icon Generation (Local + Build Time)
+#          - Updated UI (Syndication Chips + Aria-Hidden Icons)
+#          - Validated CI/CD Workflow
 # AUTHOR: Lead Web Designer (Gemini) for Greg's Place
 # ==============================================================================
 
@@ -1511,12 +1512,20 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/ui/chip.html"
 </div>
 EOT
 
-# [Source: 80]
+# [Source: 80] - UPDATED: Aria-Hidden Fix
 cat <<EOT > "$THEME_ROOT/layouts/partials/ui/social-link.html"
 <li>
   <a href="{{ .url }}" rel="{{ .rel }}" class="u-url social-link" style="text-decoration: none;">
+    {{/* Icon Block: aria-hidden="true" ensures this is invisible to screen readers */}}
+    {{ if .icon }}
+      <span class="brand-icon" aria-hidden="true" style="color: var(--md-sys-color-primary); display: flex; align-items: center;">
+        {{ partial (printf "icons/%s.svg" .icon) . }}
+      </span>
+    {{ end }}
+
     <span class="brand-name" style="font-weight: 600; color: var(--md-sys-color-primary);">{{ .name }}</span>
-    {{/* Optional: Show handle if desired, or keep it simple with just Name */}}
+    
+    {{/* Handle */}}
     <span class="brand-handle" style="color: var(--md-sys-color-on-surface); opacity: 0.8; margin-left: 4px;">{{ .handle }}</span>
   </a>
 </li>
@@ -1868,7 +1877,7 @@ cat <<EOT > "$THEME_ROOT/layouts/_default/list.json"
 }
 EOT
 
-# [Source: 111]
+# [Source: 111] - UPDATED: Syndication Chips Logic
 cat <<EOT > "$THEME_ROOT/layouts/_default/single.html"
 {{ define "main" }}
 <article class="single-post h-entry outlined-card">
@@ -1901,35 +1910,40 @@ cat <<EOT > "$THEME_ROOT/layouts/_default/single.html"
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{/* POSSE: Smart Syndication Links (Text Only) */}}
+    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
     {{ if .Params.syndication }}
     <div class="syndication-container">
       <span class="syndication-label">Also on:</span>
-      <ul class="syndication-list" style="display: inline; padding: 0; list-style: none;">
+      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
         {{ range .Params.syndication }}
           {{ \$synURL := . }}
           {{ \$match := false }}
-          {{ \$name := "" }}
+          {{ \$data := dict }}
           
           {{/* LOOKUP */}}
           {{ range \$.Site.Params.social }}
              {{ if in \$synURL .url }}
                {{ \$match = true }}
-               {{ \$name = .name }}
+               {{ \$data = . }}
              {{ end }}
           {{ end }}
 
-          <li style="display: inline; margin-right: 12px;">
-            <a href="{{ \$synURL }}" class="u-syndication" rel="syndication">
-              {{ if \$match }}
-                 {{ \$name }}
-              {{ else }}
-                 {{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}
-              {{ end }}
-            </a>
-          </li>
+          <a href="{{ \$synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
+            {{ if \$match }}
+               {{/* Icon Block: Silent for screen readers */}}
+               {{ if \$data.icon }}
+                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
+                   {{ partial (printf "icons/%s.svg" \$data.icon) . }}
+                 </span>
+               {{ end }}
+               <span class="chip-label">{{ \$data.name }}</span>
+            {{ else }}
+               {{/* Fallback for unknown sites */}}
+               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}</span>
+            {{ end }}
+          </a>
         {{ end }}
-      </ul>
+      </div>
     </div>
     {{ end }}
 
@@ -2014,7 +2028,7 @@ cat <<EOT > "$THEME_ROOT/layouts/404.html"
 {{ end }}
 EOT
 
-# [Source: 113]
+# [Source: 113] - UPDATED: Syndication Chips Logic
 cat <<EOT > "$THEME_ROOT/layouts/pages/guestbook.html"
 {{ define "main" }}
 <section class="guestbook-page outlined-card h-entry">
@@ -2040,35 +2054,40 @@ cat <<EOT > "$THEME_ROOT/layouts/pages/guestbook.html"
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{/* POSSE: Smart Syndication Links (Text Only) */}}
+    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
     {{ if .Params.syndication }}
     <div class="syndication-container">
       <span class="syndication-label">Also on:</span>
-      <ul class="syndication-list" style="display: inline; padding: 0; list-style: none;">
+      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
         {{ range .Params.syndication }}
           {{ \$synURL := . }}
           {{ \$match := false }}
-          {{ \$name := "" }}
+          {{ \$data := dict }}
           
           {{/* LOOKUP */}}
           {{ range \$.Site.Params.social }}
              {{ if in \$synURL .url }}
                {{ \$match = true }}
-               {{ \$name = .name }}
+               {{ \$data = . }}
              {{ end }}
           {{ end }}
 
-          <li style="display: inline; margin-right: 12px;">
-            <a href="{{ \$synURL }}" class="u-syndication" rel="syndication">
-              {{ if \$match }}
-                 {{ \$name }}
-              {{ else }}
-                 {{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}
-              {{ end }}
-            </a>
-          </li>
+          <a href="{{ \$synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
+            {{ if \$match }}
+               {{/* Icon Block: Silent for screen readers */}}
+               {{ if \$data.icon }}
+                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
+                   {{ partial (printf "icons/%s.svg" \$data.icon) . }}
+                 </span>
+               {{ end }}
+               <span class="chip-label">{{ \$data.name }}</span>
+            {{ else }}
+               {{/* Fallback for unknown sites */}}
+               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}</span>
+            {{ end }}
+          </a>
         {{ end }}
-      </ul>
+      </div>
     </div>
     {{ end }}
 
@@ -2408,14 +2427,14 @@ EOT
 # ==============================================================================
 echo "Generating Utilities..."
 
-# [Source: 22]
+# [Source: 22] - UPDATED: Local Icon Fetching Logic
 cat <<'GENERATOR' > generate_icons.sh
 #!/bin/bash
 # ==============================================================================
-# SCRIPT: generate_icons.sh (STABILITY MODE)
-# PURPOSE: Fetch essential SVGs.
-#          - Social Links are now Text-Only (no icons needed).
-#          - Mastodon Shortcode STILL NEEDS mastodon.svg.
+# SCRIPT: generate_icons.sh (LOCAL ASSET BUILDER)
+# PURPOSE: Fetch SVGs at build time and save locally.
+#          - System Icons: Material Symbols
+#          - Social Icons: Simple Icons + Official Repos
 # ==============================================================================
 
 ICON_DIR="themes/Accessible-MD/layouts/partials/icons"
@@ -2450,32 +2469,60 @@ for NAME in "${!SYSTEM_ICONS[@]}"; do
     TARGET="$ICON_DIR/$NAME.svg"
     
     if [ ! -f "$TARGET" ]; then
-        echo "Fetching $NAME..."
+        echo "Fetching System: $NAME..."
         URL="https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/${MATERIAL_NAME}/materialsymbolsoutlined/${MATERIAL_NAME}_24px.svg"
+        curl -s -L -f "$URL" -o "$TARGET" || echo "  X Failed to fetch $NAME"
+    fi
+done
+
+# 2. Standard Social Icons (Simple Icons CDN)
+# Maps your params.toml 'icon' keys to Simple Icons slugs
+# NOTE: Slugs must be lowercase (e.g. 'reddit', 'youtube')
+declare -A SOCIAL_ICONS=(
+    ["bluesky"]="bluesky"
+    ["facebook"]="facebook"
+    ["github"]="github"
+    ["mastodon"]="mastodon"
+    ["matrix"]="matrix"
+    ["messenger"]="messenger"
+    ["reddit"]="reddit"
+    ["signal"]="signal"
+    ["simplex"]="simplex"
+    ["youtube"]="youtube"
+)
+
+echo "--- Updating Social Icons ---"
+for NAME in "${!SOCIAL_ICONS[@]}"; do
+    SLUG="${SOCIAL_ICONS[$NAME]}"
+    TARGET="$ICON_DIR/$NAME.svg"
+    
+    if [ ! -f "$TARGET" ]; then
+        echo "Fetching Social: $NAME..."
+        URL="https://cdn.simpleicons.org/$SLUG"
         
         if curl -s -L -f "$URL" -o "$TARGET"; then
              echo "  ✓ OK"
         else
-             echo "  X ERROR: Could not fetch '$MATERIAL_NAME'."
-             rm -f "$TARGET"
+             echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."
+             # Fallback: Empty square to prevent build crash
+             echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"
         fi
     fi
 done
 
-# 2. Essential Brand Icons (Manual List)
-# We only fetch what is strictly required by Shortcodes/Layouts.
-# We skip the social loop to avoid CI failures.
-
-MASTODON_TARGET="$ICON_DIR/mastodon.svg"
-if [ ! -f "$MASTODON_TARGET" ]; then
-    echo "Fetching Essential Brand: Mastodon..."
-    # Use Simple Icons CDN as primary, fallback to raw if needed
-    if curl -s -L -f "https://cdn.simpleicons.org/mastodon" -o "$MASTODON_TARGET"; then
-        echo "  ✓ OK"
+# 3. Special Case: Friendica (Official Repo)
+# Friendica is often missing from aggregators, so we pull from source.
+TARGET="$ICON_DIR/friendica.svg"
+if [ ! -f "$TARGET" ]; then
+    echo "Fetching Special: friendica..."
+    # Official Raw URL from Friendica's Stable Branch
+    URL="https://raw.githubusercontent.com/friendica/friendica/stable/images/friendica.svg"
+    
+    if curl -s -L -f "$URL" -o "$TARGET"; then
+         echo "  ✓ OK"
     else
-        echo "  X Failed to fetch Mastodon icon."
-        # Create blank to prevent build crash
-        echo '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/></svg>' > "$MASTODON_TARGET"
+         echo "  X ERROR: Could not fetch Friendica icon."
+         echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"
     fi
 fi
 
