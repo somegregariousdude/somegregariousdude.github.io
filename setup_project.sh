@@ -1293,18 +1293,14 @@ echo "--- Updating Social Icons ---"
 for NAME in "${!SOCIAL_ICONS[@]}"; do
     SLUG="${SOCIAL_ICONS[$NAME]}"
     TARGET="$ICON_DIR/$NAME.svg"
-    if [ ! -f "$TARGET" ]; then
-        echo "Fetching Social: $NAME..."
-        URL="https://cdn.simpleicons.org/$SLUG"
-        if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
-    fi
+    echo "Fetching Social: $NAME..."
+    URL="https://cdn.simpleicons.org/$SLUG"
+    if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
 done
 TARGET="$ICON_DIR/friendica.svg"
-if [ ! -f "$TARGET" ]; then
-    echo "Fetching Special: friendica..."
-    URL="https://raw.githubusercontent.com/friendica/friendica/stable/images/friendica.svg"
-    if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch Friendica icon."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
-fi
+echo "Fetching Special: friendica..."
+URL="https://raw.githubusercontent.com/friendica/friendica/develop/images/friendica.svg"
+if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch Friendica icon."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
 echo "Icon generation complete."
 GENERATOR
 chmod +x generate_icons.sh

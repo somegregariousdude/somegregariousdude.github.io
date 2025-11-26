@@ -50,11 +50,6 @@ jobs:
           hugo-version: '0.152.2' # [Source: 177] Pinned to match local environment
           extended: true
 
-      # --- NEW STEP: Generate Icons ---
-      # This ensures SVG assets are downloaded before the site builds.
-      - name: Generate Icons
-        run: |
-          chmod +x generate_icons.sh
           ./generate_icons.sh
 
       - name: Build with Hugo
