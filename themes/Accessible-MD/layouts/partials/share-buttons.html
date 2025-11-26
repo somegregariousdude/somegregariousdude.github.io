@@ -1,69 +1,36 @@
-{{/* PARTIAL: share-buttons.html
-  PURPOSE: Privacy-respecting share buttons with Fediverse modal.
-  ORDER: Alphabetical (BlueSky, Facebook, Friendica, Mastodon, Reddit)
-*/}}
-
-{{/* DYNAMIC LOOKUP: Fetch handles from site params to avoid hardcoding */}}
 {{ $bluesky := index (where .Site.Params.social "name" "BlueSky") 0 }}
 {{ $mastodon := index (where .Site.Params.social "name" "Mastodon") 0 }}
 {{ $friendica := index (where .Site.Params.social "name" "Friendica") 0 }}
-
 <section class="share-card outlined-card">
   <h3>Share this</h3>
   <div class="share-buttons-row">
-    
-    {{/* 1. BLUESKY (Intent Link + Handle) */}}
-    {{/* Note: We default to empty string if handle is missing to prevent errors */}}
     <a href="https://bsky.app/intent/compose?text={{ .Title | urlquery }}%20{{ .Permalink | urlquery }}{{ if $bluesky }}%20via%20{{ $bluesky.handle | urlquery }}{{ end }}" 
        target="_blank" rel="noopener noreferrer" class="share-btn" aria-label="Share on BlueSky">
        {{ partial "icons/bluesky.svg" . }}
     </a>
-
-    {{/* 2. FACEBOOK */}}
     <a href="https://www.facebook.com/sharer/sharer.php?u={{ .Permalink | urlquery }}" 
        target="_blank" rel="noopener noreferrer" class="share-btn" aria-label="Share on Facebook">
        {{ partial "icons/facebook.svg" . }}
     </a>
-
-    {{/* 3. FRIENDICA (Modal + Handle) */}}
-    <button class="share-btn fediverse-btn" 
-            data-network="friendica" 
-            {{ if $friendica }}data-handle="{{ $friendica.handle }}"{{ end }}
-            aria-label="Share on Friendica">
+    <button class="share-btn fediverse-btn" data-network="friendica" 
+            {{ if $friendica }}data-handle="{{ $friendica.handle }}"{{ end }} aria-label="Share on Friendica" aria-haspopup="dialog">
        {{ partial "icons/friendica.svg" . }}
     </button>
-
-    {{/* 4. MASTODON (Modal + Handle) */}}
-    <button class="share-btn fediverse-btn" 
-            data-network="mastodon" 
-            {{ if $mastodon }}data-handle="{{ $mastodon.handle }}"{{ end }}
-            aria-label="Share on Mastodon">
+    <button class="share-btn fediverse-btn" data-network="mastodon" 
+            {{ if $mastodon }}data-handle="{{ $mastodon.handle }}"{{ end }} aria-label="Share on Mastodon" aria-haspopup="dialog">
        {{ partial "icons/mastodon.svg" . }}
     </button>
-
-    {{/* 5. REDDIT */}}
     <a href="https://reddit.com/submit?url={{ .Permalink | urlquery }}&title={{ .Title | urlquery }}" 
        target="_blank" rel="noopener noreferrer" class="share-btn" aria-label="Share on Reddit">
        {{ partial "icons/reddit.svg" . }}
     </a>
-
   </div>
 </section>
-
-{{/* THE MODAL (Hidden by default) */}}
 <dialog id="fedi-share-dialog" class="outlined-card">
   <form method="dialog">
     <h3>Share to the Fediverse</h3>
     <p>Enter your instance domain (e.g., <code>mastodon.social</code>):</p>
-    
-    <div class="form-group">
-      <label for="fedi-domain" class="sr-only">Instance Domain</label>
-      <input type="text" id="fedi-domain" placeholder="your-instance.com" required>
-    </div>
-    
-    <div class="dialog-actions">
-      <button value="cancel" class="button-secondary">Cancel</button>
-      <button id="fedi-go-btn" type="button" class="button-primary">Share</button>
-    </div>
+    <div class="form-group"><label for="fedi-domain" class="sr-only">Instance Domain</label><input type="text" id="fedi-domain" placeholder="your-instance.com" required></div>
+    <div class="dialog-actions"><button value="cancel" class="button-secondary">Cancel</button><button id="fedi-go-btn" type="button" class="button-primary">Share</button></div>
   </form>
 </dialog>
