@@ -1261,6 +1261,76 @@ cat <<EOT > "$THEME_ROOT/layouts/shortcodes/mastodon.html"
 {{ else }}<p class="error"><strong>Error:</strong> Missing 'host' or 'id'.</p>{{ end }}
 EOT
 
+
+# 8. GITHUB WORKFLOWS
+cat <<EOT > ".github/workflows/hugo.yml"
+# [Source: 178] CI/CD Pipeline
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.152.2'
+          extended: true
+
+      - name: Build with Hugo
+        run: hugo --minify --gc
+
+      - name: Build Search Index (Pagefind)
+        run: npx pagefind --site public
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    environment:
+      name: github-pages
+      url: \${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+EOT
+
 # 8. HELPER SCRIPTS
 cat <<'GENERATOR' > generate_icons.sh
 #!/bin/bash
@@ -1293,18 +1363,14 @@ echo "--- Updating Social Icons ---"
 for NAME in "${!SOCIAL_ICONS[@]}"; do
     SLUG="${SOCIAL_ICONS[$NAME]}"
     TARGET="$ICON_DIR/$NAME.svg"
-    if [ ! -f "$TARGET" ]; then
-        echo "Fetching Social: $NAME..."
-        URL="https://cdn.simpleicons.org/$SLUG"
-        if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
-    fi
+    echo "Fetching Social: $NAME..."
+    URL="https://cdn.simpleicons.org/$SLUG"
+    if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
 done
 TARGET="$ICON_DIR/friendica.svg"
-if [ ! -f "$TARGET" ]; then
-    echo "Fetching Special: friendica..."
-    URL="https://raw.githubusercontent.com/friendica/friendica/stable/images/friendica.svg"
-    if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch Friendica icon."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
-fi
+echo "Fetching Special: friendica..."
+URL="https://raw.githubusercontent.com/friendica/friendica/develop/images/friendica.svg"
+if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch Friendica icon."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
 echo "Icon generation complete."
 GENERATOR
 chmod +x generate_icons.sh
