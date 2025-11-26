@@ -14,12 +14,12 @@ h2 { font-size: 2rem;    font-weight: 600; } /* Headline Medium */
 h3 { font-size: 1.75rem; font-weight: 600; } /* Title Large */
 h4 { font-size: 1.5rem;  font-weight: 600; } /* Title Medium */
 h5 { font-size: 1.25rem; font-weight: 600; } /* Title Small */
-h6 { font-size: 1rem;    font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+h6 { font-size: 1.125rem;    font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
 /* Body Copy: Noto Sans */
 p {
   font-family: 'Noto Sans', sans-serif;
-  font-size: 1rem;
+  font-size: 1.125rem;
   line-height: 1.6;
   margin-bottom: 1rem;
   color: var(--md-sys-color-on-surface);

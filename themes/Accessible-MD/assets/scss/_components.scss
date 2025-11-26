@@ -95,3 +95,10 @@
   text-decoration: underline;
   text-decoration-color: var(--md-sys-color-primary);
 }
+
+/* [Patch] Mobile Profile Photo Fix */
+.u-photo {
+  max-width: 100%;
+  height: auto;
+  border-radius: 50%;
+}
