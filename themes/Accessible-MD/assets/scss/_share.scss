@@ -1,0 +1,101 @@
+.share-card {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  
+  h3 {
+    margin-top: 0;
+    font-size: 1.25rem;
+  }
+}
+
+.share-buttons-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  
+  &:hover {
+    background-color: rgba(var(--md-sys-color-primary), 0.1);
+    transform: scale(1.05);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+}
+
+/* Modal Styling */
+dialog#fedi-share-dialog {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  h3 {
+    margin-top: 0;
+  }
+  
+  .form-group {
+    margin: 16px 0;
+    
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: 8px;
+      background: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      font-size: 1rem;
+    }
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .button-primary {
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+  }
+  
+  .button-secondary {
+    background: transparent;
+    color: var(--md-sys-color-primary);
+    
+    &:hover {
+      background: rgba(var(--md-sys-color-primary), 0.1);
+    }
+  }
+}

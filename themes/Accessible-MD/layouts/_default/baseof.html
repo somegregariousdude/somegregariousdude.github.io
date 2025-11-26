@@ -15,7 +15,7 @@
   {{ partial "footer.html" . }}
 
   {{/* BUNDLE: Webmentions + YouTube + Menu + Copy Code */}}
-  {{ $js := slice (resources.Get "js/webmentions.js") (resources.Get "js/youtube-lite.js") (resources.Get "js/menu.js") (resources.Get "js/copy-code.js") | resources.Concat "js/main.js" | resources.Minify | resources.Fingerprint }}
+  {{ $js := slice (resources.Get "js/webmentions.js") (resources.Get "js/youtube-lite.js") (resources.Get "js/menu.js") (resources.Get "js/copy-code.js") (resources.Get "js/share.js") (resources.Get "js/share.js") (resources.Get "js/share.js") | resources.Concat "js/main.js" | resources.Minify | resources.Fingerprint }}
   <script src="{{ $js.RelPermalink }}" defer></script>
 </body>
 </html>

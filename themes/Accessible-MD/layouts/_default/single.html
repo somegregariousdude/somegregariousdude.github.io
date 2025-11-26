@@ -72,6 +72,7 @@
   </footer>
 </article>
 
+{{ partial "share-buttons.html" . }}
 {{ if .Params.show_webmentions }}
 <section id="webmentions" class="webmentions-container outlined-card" data-target="{{ .Permalink }}" aria-labelledby="mentions-heading">
   <h2 id="mentions-heading">Webmentions</h2>
