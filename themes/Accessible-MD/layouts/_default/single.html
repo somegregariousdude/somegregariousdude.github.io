@@ -29,35 +29,40 @@
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{/* POSSE: Smart Syndication Links (Text Only) */}}
+    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
     {{ if .Params.syndication }}
     <div class="syndication-container">
       <span class="syndication-label">Also on:</span>
-      <ul class="syndication-list" style="display: inline; padding: 0; list-style: none;">
+      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
         {{ range .Params.syndication }}
           {{ $synURL := . }}
           {{ $match := false }}
-          {{ $name := "" }}
+          {{ $data := dict }}
           
           {{/* LOOKUP */}}
           {{ range $.Site.Params.social }}
              {{ if in $synURL .url }}
                {{ $match = true }}
-               {{ $name = .name }}
+               {{ $data = . }}
              {{ end }}
           {{ end }}
 
-          <li style="display: inline; margin-right: 12px;">
-            <a href="{{ $synURL }}" class="u-syndication" rel="syndication">
-              {{ if $match }}
-                 {{ $name }}
-              {{ else }}
-                 {{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}
-              {{ end }}
-            </a>
-          </li>
+          <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
+            {{ if $match }}
+               {{/* Icon Block: Silent for screen readers */}}
+               {{ if $data.icon }}
+                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
+                   {{ partial (printf "icons/%s.svg" $data.icon) . }}
+                 </span>
+               {{ end }}
+               <span class="chip-label">{{ $data.name }}</span>
+            {{ else }}
+               {{/* Fallback for unknown sites */}}
+               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
+            {{ end }}
+          </a>
         {{ end }}
-      </ul>
+      </div>
     </div>
     {{ end }}
 
