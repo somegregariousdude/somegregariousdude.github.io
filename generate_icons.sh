@@ -30,6 +30,7 @@ declare -A SYSTEM_ICONS=(
     ["tags"]="label"
     ["content_copy"]="content_copy"
     ["check"]="check"
+    ["share"]="share"
 )
 
 echo "--- Updating System Icons ---"

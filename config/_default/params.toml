@@ -56,7 +56,7 @@
 
 [[social]]
   name = "Friendica"
-  handle = "thegregariousdragon"
+  handle = "@thegregariousdragon@social.trom.tf"
   url = "https://social.trom.tf/profile/thegregariousdragon"
   rel = "me"
   icon = "friendica"

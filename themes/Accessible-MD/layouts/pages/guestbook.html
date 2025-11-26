@@ -65,6 +65,7 @@
   </footer>
 </section>
 
+{{ partial "share-buttons.html" . }}
 <section id="webmentions" class="webmentions-container outlined-card h-feed" data-target="{{ .Site.BaseURL }}" aria-labelledby="guestbook-heading">
   <h2 id="guestbook-heading">Signatures</h2>
   <div class="webmention-explainer"><p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p></div>
