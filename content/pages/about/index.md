@@ -4,6 +4,7 @@ date: 2025-11-22T19:10:40-0800
 lastmod: 2025-11-26T01:35:00-08:00
 summary: "A little bit about me."
 show_webmentions: false
+tags: ["About"]
 ---
 ## **The Elevator Pitch**
 I’m Greg. I’m a gay, blind, middle-aged guy living in Burien, Washington. If you found this page looking for a corporate bio or some "thought leadership," you’ve definitely taken a wrong turn at the search bar. This is my digital living room—shoes off, please.
