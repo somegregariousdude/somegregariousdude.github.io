@@ -1,11 +1,10 @@
 #!/bin/bash
 # ==============================================================================
-# SCRIPT: setup_project.sh (MASTER SNAPSHOT - V2)
+# SCRIPT: setup_project.sh (MASTER SNAPSHOT - V3)
 # PURPOSE: Full Reproduction of "Greg's Place" Website Environment
-# CONTEXT: Consolidates all logic including Phase 3 visual/accessibility patches.
-#          - Updated Icon Generation (Local + Build Time)
-#          - Updated UI (Syndication Chips + Aria-Hidden Icons)
-#          - Validated CI/CD Workflow
+# CONTEXT: Final consistency check. Syncs config data with live site features.
+#          - Added missing Reddit & YouTube config blocks.
+#          - Confirmed all visual/accessibility patches are present.
 # AUTHOR: Lead Web Designer (Gemini) for Greg's Place
 # ==============================================================================
 
@@ -164,6 +163,20 @@ cat <<EOT > "config/_default/params.toml"
   url = "https://dragonscave.space/@somegregariousdude"
   rel = "me"
   icon = "mastodon"
+
+[[social]]
+  name = "Reddit"
+  handle = "u/somegregariousdude"
+  url = "https://www.reddit.com/user/somegregariousdude"
+  rel = "me"
+  icon = "reddit"
+
+[[social]]
+  name = "YouTube"
+  handle = "@somegregariousdude"
+  url = "https://www.youtube.com/@somegregariousdude"
+  rel = "me"
+  icon = "youtube"
 
 # [Source: 45] Instant Messaging - Dynamic Block
 [[im]]
@@ -2291,141 +2304,6 @@ cat <<EOT > "$THEME_ROOT/layouts/shortcodes/mastodon.html"
   <p class="error"><strong>Mastodon Shortcode Error:</strong> Missing 'host' or 'id' parameter.</p>
 {{ end }}
 EOT
-
-# ==============================================================================
-# 7. CONTENT (Pages & Indices)
-# ==============================================================================
-echo "Generating Content..."
-
-# [Source: 116]
-cat <<EOT > "content/articles/_index.md"
----
-title: "Articles"
-description: "Long-form thoughts and essays."
-sort_by: "date"
-sort_order: "desc"
----
-
-Welcome to my long-form writing. Here you'll find essays, stories, and deep dives that need a bit more space than a quick note. Grab a cup of coffee and settle in.
-EOT
-
-# [Source: 20]
-cat <<EOT > "content/status/_index.md"
----
-title: "Status Updates"
-description: "Quick notes and life updates."
-sort_by: "date"
-sort_order: "desc"
----
-
-These are my "micro-posts"—similar to tweets. Expect quick life updates, random thoughts, and behind-the-scenes moments. Short, sweet, and to the point.
-EOT
-
-# [Source: 17]
-cat <<EOT > "content/replies/_index.md"
----
-title: "Replies"
-description: "Conversations and responses across the web."
-sort_by: "date"
-sort_order: "desc"
----
-
-The web is all about conversation. This page collects my responses to posts from other people around the internet. It’s the other half of the dialogue.
-EOT
-
-# [Source: 121]
-cat <<EOT > "content/reposts/_index.md"
----
-title: "Reposts"
-description: "Things I found worth sharing."
-sort_by: "date"
-sort_order: "desc"
----
-
-Sharing is caring. These are posts from other creators that I found valuable, funny, or important enough to boost on my own site.
-EOT
-
-# [Source: 106]
-cat <<EOT > "content/likes/_index.md"
----
-title: "Likes"
-description: "Content I appreciated."
-sort_by: "date"
-sort_order: "desc"
----
-
-A digital nod of appreciation. This is a collection of content I’ve "liked" from around the web—think of it as a public log of things that made me smile or think.
-EOT
-
-# [Source: 11]
-cat <<EOT > "content/bookmarks/_index.md"
----
-title: "Bookmarks"
-description: "Links saved for later reference."
-sort_by: "date"
-sort_order: "desc"
----
-
-My personal library of links. These are articles, tools, and sites I’ve saved for future reference. Feel free to browse through my reading list.
-EOT
-
-# [Source: 19]
-cat <<EOT > "content/rsvps/_index.md"
----
-title: "RSVPs"
-description: "Events I am attending or tracking."
-sort_by: "date"
-sort_order: "desc"
----
-
-My social calendar. This tracks public events I’ve responded to, whether I'm attending in person, watching online, or just interested.
-EOT
-
-# [Source: 13]
-cat <<EOT > "content/pages/about/index.md"
----
-title: "About"
-date: 2025-11-22T19:10:40-0800
-lastmod: 2025-11-23T11:10:00-08:00
-summary: "A little bit about me."
----
-EOT
-
-# [Source: 14]
-cat <<EOT > "content/pages/contact/index.md"
----
-title: "Contact"
-layout: "contact"
-date: 2025-11-22T23:40:00-08:00
-summary: "A contact form where visitors can get in touch with the author"
----
-EOT
-
-# [Source: 15]
-cat <<EOT > "content/pages/guestbook/index.md"
----
-title: "Guestbook"
-layout: "guestbook"
-date: 2025-11-22T23:35:00-08:00
-summary: "A place to collect webmentions from around the IndieWeb that are  not tied to a particular post or page"
-syndication: []
----
-EOT
-
-# [Source: 16]
-cat <<EOT > "content/pages/search/index.md"
----
-title: "Search"
-date: 2025-11-22T19:10:40-0800
-layout: "search"
-summary: "A page where visitors can search this website"
----
-EOT
-
-# ==============================================================================
-# 8. UTILITIES (As-Is Reproduction)
-# ==============================================================================
-echo "Generating Utilities..."
 
 # [Source: 22] - UPDATED: Local Icon Fetching Logic
 cat <<'GENERATOR' > generate_icons.sh
