@@ -186,3 +186,30 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* [Patch] Safari Visibility Fix */
+@media (max-width: 768px) {
+  .nav-list {
+    /* VISIBILITY LOCK: Ensure it is completely hidden when closed */
+    visibility: hidden;
+    
+    /* Transition: Transform (slide) + Visibility (delayed hide) */
+    /* We delay hiding visibility (0.3s) so the slide animation finishes first */
+    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0), visibility 0s linear 0.3s;
+    
+    /* Safety: Ensure Safari treats this as a fixed layer */
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+  }
+
+  .nav-list.is-open {
+    /* VISIBILITY UNLOCK: Show immediately when open */
+    visibility: visible;
+    
+    /* Remove delay so it appears instantly as it slides in */
+    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0), visibility 0s linear 0s;
+    
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
