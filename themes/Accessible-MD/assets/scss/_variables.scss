@@ -1,55 +1,119 @@
 :root {
-  /* MD3 Dimension Tokens */
+  /* --- GLOBAL SHAPE & SPACING --- */
   --md-sys-shape-corner-medium: 12px;
-  --md-sys-spacing-base: 8px; /* [Source: 202] 8dp grid */
+  --md-sys-spacing-base: 8px;
   
-  /* DEFAULT THEME: "The Sound" [Source: 206] */
-  --md-sys-color-primary: #4A5D8A;       /* Slate Blue */
-  --md-sys-color-on-primary: #FFFFFF;
-  --md-sys-color-secondary: #4A7A7A;     /* Muted Teal */
-  --md-sys-color-tertiary: #A64B3B;      /* Pacific Salmon */
+  /* Shared Text Colors (White looks good on all these dark backgrounds) */
+  --md-sys-color-on-surface-dark: #E6E1E5;
+  --md-sys-color-outline-dark: #938F99;
+  --md-sys-color-outline-variant-dark: #49454F;
+}
+
+/* ==========================================================================
+   THEME 1: THE SOUND (Deep Midnight Blue)
+   ========================================================================== */
+:root {
+  /* Light Mode */
   --md-sys-color-surface: #FFFFFF;
   --md-sys-color-on-surface: #1C1B1F;
-  --md-sys-color-outline: #79747E;       /* For Outlined Cards */
+  --md-sys-color-outline: #79747E;
   --md-sys-color-outline-variant: #CAC4D0;
+  --md-sys-color-primary: #4A5D8A;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-secondary: #4A7A7A;
+  --md-sys-color-tertiary: #A64B3B;
 }
 
-/* THEME: The Market [Source: 207] */
-[data-theme="market"] {
-  --md-sys-color-primary: #4E342E;       /* Espresso */
-  --md-sys-color-secondary: #C62828;     /* Brick Red */
-  --md-sys-color-tertiary: #985E00;      /* Rainier Gold */
-}
-
-/* THEME: The Mountain [Source: 208] */
-[data-theme="mountain"] {
-  --md-sys-color-primary: #455A64;       /* Basalt Grey */
-  --md-sys-color-secondary: #00838F;     /* Glacial Cyan */
-  --md-sys-color-tertiary: #5E35B1;      /* Lupine Purple */
-}
-
-/* THEME: The Forest [Source: 209] */
-[data-theme="forest"] {
-  --md-sys-color-primary: #1B5E20;       /* Deep Evergreen */
-  --md-sys-color-secondary: #5D4037;     /* Cedar Brown */
-  --md-sys-color-tertiary: #33691E;      /* Fern Light Green */
-}
-
-/* THEME: The Sunset [Source: 210] */
-[data-theme="sunset"] {
-  --md-sys-color-primary: #311B92;       /* Deep Indigo */
-  --md-sys-color-secondary: #880E4F;     /* Twilight Plum */
-  --md-sys-color-tertiary: #BF360C;      /* Tangerine */
-}
-
-/* [Source: 211] Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   :root {
-    --md-sys-color-surface: #1C1B1F;
-    --md-sys-color-on-surface: #E6E1E5;
-    --md-sys-color-outline: #938F99; --md-sys-color-outline-variant: #49454F;
+    /* UNIQUE BACKGROUND: Deep Midnight Blue */
+    --md-sys-color-surface: #0F111A;
     
-    /* Inverted/Softer variants for dark mode contrast would go here */
-    --md-sys-color-primary: #B0C4DE; /* Light Steel Blue for contrast */
+    --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
+    --md-sys-color-outline: var(--md-sys-color-outline-dark);
+    --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
+    --md-sys-color-primary: #B0C4DE;
+    --md-sys-color-secondary: #A7C7C7;
+    --md-sys-color-tertiary: #FFB4A2;
+  }
+}
+
+/* ==========================================================================
+   THEME 2: THE MARKET (Deep Espresso)
+   ========================================================================== */
+[data-theme="market"] {
+  --md-sys-color-primary: #4E342E;
+  --md-sys-color-secondary: #C62828;
+  --md-sys-color-tertiary: #985E00;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="market"] {
+    /* UNIQUE BACKGROUND: Deep Espresso */
+    --md-sys-color-surface: #1A120F;
+    
+    --md-sys-color-primary: #D7CCC8;
+    --md-sys-color-secondary: #EF9A9A;
+    --md-sys-color-tertiary: #FFE082;
+  }
+}
+
+/* ==========================================================================
+   THEME 3: THE MOUNTAIN (Dark Slate)
+   ========================================================================== */
+[data-theme="mountain"] {
+  --md-sys-color-primary: #455A64;
+  --md-sys-color-secondary: #00838F;
+  --md-sys-color-tertiary: #5E35B1;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="mountain"] {
+    /* UNIQUE BACKGROUND: Dark Slate */
+    --md-sys-color-surface: #101416;
+    
+    --md-sys-color-primary: #B0BEC5;
+    --md-sys-color-secondary: #80DEEA;
+    --md-sys-color-tertiary: #B39DDB;
+  }
+}
+
+/* ==========================================================================
+   THEME 4: THE FOREST (Deepest Evergreen)
+   ========================================================================== */
+[data-theme="forest"] {
+  --md-sys-color-primary: #1B5E20;
+  --md-sys-color-secondary: #5D4037;
+  --md-sys-color-tertiary: #33691E;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="forest"] {
+    /* UNIQUE BACKGROUND: Deepest Evergreen */
+    --md-sys-color-surface: #0E140E;
+    
+    --md-sys-color-primary: #A5D6A7;
+    --md-sys-color-secondary: #BCAAA4;
+    --md-sys-color-tertiary: #C5E1A5;
+  }
+}
+
+/* ==========================================================================
+   THEME 5: THE SUNSET (Deep Plum)
+   ========================================================================== */
+[data-theme="sunset"] {
+  --md-sys-color-primary: #311B92;
+  --md-sys-color-secondary: #880E4F;
+  --md-sys-color-tertiary: #BF360C;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="sunset"] {
+    /* UNIQUE BACKGROUND: Deep Plum */
+    --md-sys-color-surface: #1A0F14;
+    
+    --md-sys-color-primary: #9FA8DA;
+    --md-sys-color-secondary: #F48FB1;
+    --md-sys-color-tertiary: #FFCC80;
   }
 }
