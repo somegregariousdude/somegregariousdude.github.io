@@ -312,3 +312,97 @@
               opacity 0.3s linear, 
               visibility 0s linear 0s;
 }
+
+/* [Patch] Fix Generic Card Hover (MD3 Strictness) */
+/* Static cards should NOT react to hover. Only interactive ones (feed-item) should. */
+.outlined-card:hover {
+  background-color: var(--md-sys-color-surface); /* Reset to base */
+  border-color: var(--md-sys-color-outline-variant); /* Reset to base */
+}
+
+/* Re-apply interaction ONLY for Feed Items (which have State Layers) */
+.feed-item:hover {
+  /* The State Layer mixin handles the tint, so we just ensure the border stays distinct */
+  border-color: var(--md-sys-color-outline);
+}
+
+/* [Patch] Webmention Layout (MD3 List Item) */
+.mention {
+  margin-bottom: 1rem;
+  padding: 16px;
+  /* Use a cleaner layout for comments */
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.mention-author {
+  /* Force the author block to just be the image context */
+  grid-column: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.mention-author img.u-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Circle Avatar */
+  object-fit: cover;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* The name and content live in the second column */
+.mention-content-wrapper {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+/* We need to target the generated HTML structure. 
+   Currently: .mention-author contains the link/name.
+   We might need to adjust this via CSS since we can't easily change the JS structure 
+   without breaking the script.
+   
+   Workaround: Flexbox the whole card.
+*/
+.mention {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mention-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--md-sys-color-on-surface);
+}
+
+.mention-author a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mention-author a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--md-sys-color-primary);
+}
+
+.mention-content {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface);
+  /* Indent slightly to align with text above? No, keep flush left on mobile. */
+}
+
+.mention time {
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+  margin-top: 4px;
+  display: block;
+}

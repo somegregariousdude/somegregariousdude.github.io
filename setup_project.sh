@@ -455,12 +455,15 @@ cat <<'EOF' > "README.md"
 
 An IndieWeb-focused, accessible static site built with Hugo.
 
-## 1. Key Features (v5 Upgrades)
+## 1. Key Features (v5.2)
 * **Accessibility First (WCAG 2.2 AA):**
-    * **Navigation Drawer:** A fully accessible mobile menu that traps focus, respects screen readers (Inert), and supports the Escape key.
-    * **Sticky Header:** Keeps navigation visible for low-vision users (with anchor scroll protection).
-    * **High Contrast:** "Outlined Card" design system.
-    * **Distinct Dark Modes:** 5 unique color themes that retain their identity in dark mode.
+    * **Navigation Drawer:** Mobile menu traps focus, respects screen readers (Inert), and supports Escape key.
+    * **Sticky Header:** Keeps navigation visible for low-vision users.
+    * **Toast Notifications:** Accessible status updates (Live Regions).
+* **Material Design 3 (Complete):**
+    * **Distinct Themes:** 5 unique color palettes for both Light (Tinted) and Dark (Deep) modes.
+    * **Elevation:** Sophisticated Surface Tones and Overlay system.
+    * **Shape & Motion:** Pill-shaped inputs, weighted easing curves, and tactile State Layers.
 * **Privacy:** Zero-tracking "Static Facades" for YouTube and social sharing.
 * **IndieWeb:** Native support for Webmentions, Microformats, and POSSE.
 
@@ -473,31 +476,31 @@ Use the `new_post.sh` script to generate content.
 | Type | Title | Folder Strategy | Notes |
 | :--- | :--- | :--- | :--- |
 | **articles** | **Required** | Slug (e.g., `/my-post/`) | Long-form essays. |
-| **bookmarks** | **Required** | Slug (e.g., `/cool-tool/`) | Saved links. Requires `bookmark_of`. |
+| **bookmarks** | **Required** | Slug (e.g., `/cool-tool/`) | Saved links. |
 | **status** | Optional | Timestamp* | Quick notes. |
 | **replies** | Optional | Timestamp* | Responses. Requires `reply_to`. |
 | **reposts** | Optional | Timestamp* | Shares. Requires `repost_of`. |
 | **likes** | Optional | Timestamp* | Appreciations. Requires `like_of`. |
-| **rsvps** | Optional | Timestamp* | Events. Requires `rsvp` status. |
+| **rsvps** | Optional | Timestamp* | Events. Requires `rsvp`. |
 
 ***Quirk:** If you omit the title for optional types, the script automatically creates a timestamp-based directory.
 
 ### Maintenance
-* **Rebuild Setup Script:** `./maintenance/update_setup.sh`
-    * Run this after modifying code to update the "Golden Master" `setup_project.sh`.
+* **Rebuild Setup Script:** `./update_setup.sh` (Root Directory)
+    * **Run this after ANY code change** to update the "Golden Master" backup.
 * **Generate Icons:** `./generate_icons.sh`
-    * Fetches SVGs at build time (Privacy).
+    * Fetches SVGs at build time.
 
 ## 3. Shortcode Reference
 
 ### YouTube (Lite Facade)
-Embeds a static thumbnail. Only loads the player on click (Privacy).
+Embeds a static thumbnail. Only loads the player on click.
 ```go
 {{< youtube "VIDEO_ID" "Descriptive Title" >}}
 ```
 
 ### Mastodon (Static Facade)
-Fetches the post content at **build time** and renders it as static HTML.
+Fetches content at **build time**.
 ```go
 {{< mastodon host="mastodon.social" id="123456789" >}}
 ```
@@ -508,23 +511,18 @@ Renders a responsive grid of images from the page bundle.
 {{< gallery match="images/*" >}}
 ```
 
-## 4. Installation (Reproduction)
-To reproduce this environment on a fresh machine, run the `setup_project.sh` script.
+## 4. Installation & Deployment
+* **Reproduction:** Run `./setup_project.sh` to rebuild this exact environment.
+* **Deployment:** Pushing to `main` triggers GitHub Actions (Hugo Build -> Pagefind Index -> Deploy).
 
-## 5. Deployment
-This site deploys via **GitHub Actions** to GitHub Pages.
-* **Trigger:** Push to `main`.
-* **Process:** Icon Generation -> Hugo Build (Minified) -> Pagefind Indexing -> Deploy.
-* **Domain:** `simplygregario.us` (CNAME is stored in `themes/Accessible-MD/static/`).
-
-## 6. License
+## 5. License
 * **Codebase:** MIT License.
 * **Content:** [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](http://creativecommons.org/licenses/by-sa/4.0/).
 EOF
 
 # File: project_context.txt
 cat <<'EOF' > "project_context.txt"
-# Project Context: Greg's Place (Master Spec v5.1)
+# Project Context: Greg's Place (Master Spec v5.2)
 
 ## CONFIGURATION SPECIFICATION & GLOBAL PARAMETERS
 This section defines the required structure for the `config/_default/` files.
@@ -534,67 +532,56 @@ All settings must include comments explaining their function and default values.
 * **Base URL:** `https://simplygregario.us`
 * **Title:** "Greg's Place"
 * **Theme:** "Accessible-MD"
-* **Language Code:** "en-us"
 * **Permalinks:**
     * `pages = "/:slug/"` (Critical: Ensures /about/ works at root).
-    * `articles = "/articles/:year-:month-:day/:slug/"`
-    * `bookmarks = "/bookmarks/:year-:month-:day/:slug/"`
-    * `status`, `replies`, `reposts`, `likes`, `rsvps` -> `/:year-:month-:day/:contentbasename/` (Timestamp-based).
-* **Pagination:** `pagerSize = 10`
-* **Outputs:** Home and Section must output `["HTML", "RSS", "JSON"]` for feed syndication.
+    * `articles`, `bookmarks` -> Slug-based.
+    * `status`, `replies`, etc. -> Timestamp-based.
+* **Outputs:** Home/Section must output `["HTML", "RSS", "JSON"]`.
 
 ### 2. Parameters (params.toml)
-* **[author]**: Name, Bio (H-Card), Photo (path to assets), Location.
-* **[webmentions]**: `username` (simplygregario.us), `show_webmentions` (true).
-* **[contact]**: `formAction` (Formspree URL).
+* **[author]**: Name, Bio (H-Card), Photo, Location.
+* **[webmentions]**: `username`, `show_webmentions`.
 * **[theme]**: Options: "sound", "market", "mountain", "forest", "sunset".
-* **Social & IM:** Display Strategy: Text-Only Links ("Name: @Handle") for maximum accessibility.
-
-### 3. Menus (menus.toml)
-* Structure: `[[main]]` array with 100-level weight spacing.
-* Order: Home (100) ... Search (1100).
-
-### 4. Markup (markup.toml)
-* **Security:** `unsafe = false` (Strict Security Policy).
-* **Parser:** `attribute = { block = true, title = true }` (Required for Accessible Table captions).
-* **Highlighting:** Monokai style, no line numbers.
+* **Social:** Display Strategy: Text-Only Links ("Name: @Handle") for accessibility.
 
 ---
 
 ## CORE ARCHITECTURE & PHILOSOPHY
 
-* **Priority:** Strict adherence to W3C Standards, WCAG 2.2 AA Accessibility, and IndieWeb principles.
-* **Privacy Strategy:** "Static Facades" for all embeds (YouTube, Mastodon). No tracking pixels on load.
-* **Asset Strategy:**
-    * **Icons:** Fetched at *build time* via `generate_icons.sh`. No runtime CDN calls.
-    * **CSS:** Processed via Hugo Pipes (LibSass).
-* **License Strategy:** Code = MIT. Content = CC BY-SA 4.0.
+* **Priority:** W3C Standards, WCAG 2.2 AA Accessibility, IndieWeb.
+* **Privacy:** "Static Facades" for all embeds. No tracking pixels on load.
+* **Regression Policy:**
+    * **Visuals:** "Outlined Card" metaphor (High Contrast Borders).
+    * **Accessibility:** Focus states must always be visible.
+    * **Integrity:** `setup_project.sh` must always reflect the current production state.
 
 ---
 
-## STYLING & UX (MATERIAL DESIGN 3)
+## STYLING & UX (MATERIAL DESIGN 3 - FULL IMPLEMENTATION)
 
 ### 1. Visual System
-* **Metaphor:** "Outlined Cards" (High contrast borders, no subtle shadows).
 * **Themes:** 5 Distinct Palettes defined in `_variables.scss`.
-    * **Light Mode:** High contrast (Dark on Light).
-    * **Dark Mode Strategy:** **Distinct Tinted Backgrounds**.
-        * Instead of a global charcoal, each theme uses a unique, deep surface color (e.g., Forest uses `#0E140E`).
-        * Text remains white `#E6E1E5` for > 15:1 contrast.
+    * **Light Mode:** High contrast. Backgrounds are **Tinted Off-Whites** (e.g., Mint Cream).
+    * **Dark Mode:** Backgrounds are **Deeply Tinted Surfaces** (e.g., Deep Evergreen). No generic charcoal.
+* **Elevation (Surface Tones):**
+    * **Dark Mode:** Uses Semi-transparent White Overlays.
+    * **Light Mode:** Uses **Primary Color Tints** + Soft Shadows.
+* **Shape:**
+    * **Inputs/Search:** Full "Pill" shape (28px radius).
+    * **Cards/Dialogs:** Medium rounded corners (12px - 16px).
 
 ### 2. Typography & Layout
-* **Sticky Header:** The header must use `position: sticky`.
-    * **Constraint:** Must use `scroll-padding-top` in `html` to prevent anchor links from being hidden behind the header.
-* **Mobile Navigation:** **Navigation Drawer** (Modal Side-Sheet).
-    * **Animation:** Slides in from Right.
-    * **Scrim:** Darkens background content.
-    * **Accessibility:** Must trap focus and support `Escape` key to close.
-    * **Safari Fix:** Must toggle `visibility: hidden` to prevent "ghost clicks" when closed.
+* **Typescale:**
+    * **Headlines:** Negative tracking (`-0.02em`) and tight leading (`1.12`).
+    * **Body:** Positive tracking (`0.01em`) and relaxed leading (`1.6`).
+* **Navigation:**
+    * **Desktop:** Sticky Top App Bar (requires `scroll-padding-top`).
+    * **Mobile:** **Navigation Drawer** (Modal Side-Sheet) with focus trapping (Inert).
 
-### 3. Images & Tables
-* **Image Engine:** Render Hook auto-generates WebP srcsets and wraps in `<figure>`.
-* **Profile Photo:** Must be constrained (`max-width: 100%`) to prevent mobile overflow.
-* **Tables:** Render Hook wraps tables in a scroll container for mobile safety.
+### 3. Interaction & Motion
+* **State Layers:** Interactive elements (Cards, Buttons, Links) use an overlay tint (8-12% opacity) on hover/focus instead of changing colors.
+* **Motion:** All animations use MD3 Standard Easing (`cubic-bezier(0.2, 0.0, 0, 1.0)`).
+* **Feedback:** "Copy Code" triggers an accessible **Toast Notification** (Live Region).
 
 ---
 
@@ -602,44 +589,29 @@ All settings must include comments explaining their function and default values.
 
 * **Principle:** Minimal, purposeful JS. No frameworks.
 * **Approved Modules:**
-    1.  **Menu:** Handles state toggling, Scrim clicks, and **Inert Attribute** management (preventing VoiceOver scroll leaks).
-    2.  **Webmentions:** Client-side fetch and HTML sanitization (strip scripts/styles).
-    3.  **Share Modal:** Native `<dialog>` element for Federated sharing (Mastodon/Friendica).
-    4.  **YouTube Facade:** Click-to-load iframe injection.
-    5.  **Copy Code:** Clipboard API integration.
-
----
-
-## CONTENT ARCHETYPES & FRONTMATTER
-
-* **Articles/Bookmarks:** Title Required. Folder = Slug.
-* **Microblog (Status, Replies):** Title Optional. Folder = Timestamp.
-* **IndieWeb Params:**
-    * `reply_to`, `like_of`, `repost_of`, `bookmark_of`, `rsvp`.
-* **Syndication:** `syndication = []` (List of URLs where the post was POSSE'd).
+    1.  **Menu:** Handles state toggling, Scrim clicks, and **Inert Attribute** management.
+    2.  **Webmentions:** Client-side fetch and HTML sanitization.
+    3.  **Share Modal:** Native `<dialog>` element.
+    4.  **Toast:** Live region management for status updates.
+    5.  **Search:** Pagefind (Client-side) with customized MD3 styling.
 
 ---
 
 ## DEVELOPMENT & AUTOMATION STANDARDS
 
 * **Source of Truth:** `setup_project.sh`
-    * This script must be **generated** from the live codebase using `maintenance/update_setup.sh`.
-    * Never edit `setup_project.sh` manually.
+    * Must be generated via `maintenance/update_setup.sh`.
 * **Content Creation:** `./new_post.sh [type] "Title"`
-    * Automatically handles directory structure logic.
-* **Icons:** `./generate_icons.sh`
-    * Fetches Material Symbols and Simple Icons to `assets/icons/`.
-* **Deployment:** GitHub Actions (Push to Main).
-    * Builds Hugo -> Indexes with Pagefind -> Deploys to Pages.
+* **Icons:** `./generate_icons.sh` (Build-time fetch).
+* **Deployment:** GitHub Actions -> Pagefind Indexing -> Pages.
 
 ---
 
 ## REGRESSION POLICY (STRICT)
 
-1.  **Accessibility:** Every interactive element must have a visible focus state (System ring or CSS border).
+1.  **Accessibility:** Every interactive element must have a visible focus state.
 2.  **Contrast:** No text may fall below 4.5:1 contrast in any theme or mode.
 3.  **Privacy:** No commit may introduce a third-party script tag or iframe that loads automatically.
-4.  **Integrity:** The `setup_project.sh` script must always be able to reproduce the site exactly as it exists in Production.
 EOF
 
 # File: new_post.sh
@@ -1302,6 +1274,100 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
               opacity 0.3s linear, 
               visibility 0s linear 0s;
+}
+
+/* [Patch] Fix Generic Card Hover (MD3 Strictness) */
+/* Static cards should NOT react to hover. Only interactive ones (feed-item) should. */
+.outlined-card:hover {
+  background-color: var(--md-sys-color-surface); /* Reset to base */
+  border-color: var(--md-sys-color-outline-variant); /* Reset to base */
+}
+
+/* Re-apply interaction ONLY for Feed Items (which have State Layers) */
+.feed-item:hover {
+  /* The State Layer mixin handles the tint, so we just ensure the border stays distinct */
+  border-color: var(--md-sys-color-outline);
+}
+
+/* [Patch] Webmention Layout (MD3 List Item) */
+.mention {
+  margin-bottom: 1rem;
+  padding: 16px;
+  /* Use a cleaner layout for comments */
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.mention-author {
+  /* Force the author block to just be the image context */
+  grid-column: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.mention-author img.u-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Circle Avatar */
+  object-fit: cover;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* The name and content live in the second column */
+.mention-content-wrapper {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+/* We need to target the generated HTML structure. 
+   Currently: .mention-author contains the link/name.
+   We might need to adjust this via CSS since we can't easily change the JS structure 
+   without breaking the script.
+   
+   Workaround: Flexbox the whole card.
+*/
+.mention {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mention-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--md-sys-color-on-surface);
+}
+
+.mention-author a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mention-author a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--md-sys-color-primary);
+}
+
+.mention-content {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface);
+  /* Indent slightly to align with text above? No, keep flush left on mobile. */
+}
+
+.mention time {
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+  margin-top: 4px;
+  display: block;
 }
 EOF
 
