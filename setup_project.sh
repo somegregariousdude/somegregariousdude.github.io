@@ -1,9 +1,8 @@
 #!/bin/bash
 # ==============================================================================
-# SCRIPT: setup_project.sh (MASTER SNAPSHOT - V4.2)
+# SCRIPT: setup_project.sh
 # PURPOSE: Full Reproduction of "Greg's Place"
-# RESTORED: Specific archetypes logic (Regression Fix).
-# ADDED: Generators for Search, Contact, and Guestbook pages.
+# GENERATED: Automatically via maintenance/update_setup.sh
 # ==============================================================================
 
 echo "Initializing Greg's Place..."
@@ -11,28 +10,26 @@ echo "Initializing Greg's Place..."
 # 1. DIRECTORY STRUCTURE
 mkdir -p config/_default
 THEME_ROOT="themes/Accessible-MD"
-mkdir -p "$THEME_ROOT/archetypes"
-mkdir -p "$THEME_ROOT/assets/scss"
-mkdir -p "$THEME_ROOT/assets/js"
-mkdir -p "$THEME_ROOT/assets/images"
-mkdir -p "$THEME_ROOT/layouts/_default/_markup"
-mkdir -p "$THEME_ROOT/layouts/partials/ui"
-mkdir -p "$THEME_ROOT/layouts/partials/icons"
-mkdir -p "$THEME_ROOT/layouts/pages"
-mkdir -p "$THEME_ROOT/layouts/shortcodes"
-mkdir -p "$THEME_ROOT/static"
+mkdir -p "$THEME_ROOT/archetypes" "$THEME_ROOT/assets/scss" "$THEME_ROOT/assets/js" "$THEME_ROOT/assets/images"
+mkdir -p "$THEME_ROOT/layouts/_default/_markup" "$THEME_ROOT/layouts/partials/ui" "$THEME_ROOT/layouts/partials/icons"
+mkdir -p "$THEME_ROOT/layouts/pages" "$THEME_ROOT/layouts/shortcodes" "$THEME_ROOT/static"
 mkdir -p content/articles content/status content/replies content/reposts content/likes content/bookmarks content/rsvps
 mkdir -p content/pages/about content/pages/contact content/pages/guestbook content/pages/search content/pages/accessibility
 mkdir -p .github/workflows
 
-# 2. CONFIGURATION
-cat <<EOT > "config/_default/hugo.toml"
+# 2. FILE REPRODUCTION
+# File: config/_default/hugo.toml
+cat <<'EOF' > "config/_default/hugo.toml"
 baseURL = "https://simplygregario.us"
 title = "Greg's Place"
 theme = "Accessible-MD"
 languageCode = "en-us"
+
+# Pagination [Source: 18]
 [pagination]
   pagerSize = 10
+
+# Permalinks [Source: 10-17]
 [permalinks]
   pages = "/:slug/"
   articles = "/articles/:year-:month-:day/:slug/"
@@ -42,488 +39,1847 @@ languageCode = "en-us"
   likes = "/likes/:year-:month-:day/:contentbasename/"
   bookmarks = "/bookmarks/:year-:month-:day/:contentbasename/"
   rsvps = "/rsvps/:year-:month-:day/:contentbasename/"
+
+# Outputs [Source: 19]
 [outputs]
   home = ["HTML", "RSS", "JSON"]
   section = ["HTML", "RSS", "JSON"]
+
+# Sass/SCSS [Source: 184]
 [css]
   [css.sass]
     enable = true
-EOT
+EOF
 
-cat <<EOT > "config/_default/params.toml"
+# File: config/_default/params.toml
+cat <<'EOF' > "config/_default/params.toml"
+# ==============================================================================
+# FILE: config/_default/params.toml
+# PURPOSE: Site-wide Variables and IndieWeb Configuration
+# CONTEXT: Source [20-47]
+# ==============================================================================
+
+# [Source: 21] Author Metadata for H-Card and SEO
 [author]
   name = "Gregory Lopez"
+  # [Source: 23] Short plain-text bio for H-Card meta tags.
   bio = "I'm a gay, blind, middle-aged guy from the Pacific Northwest. As an Apple and Linux fan, I enjoy tinkering with tech and coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. I also love good food, drinks, and laughter with friends, plus a little cannabis to keep things mellow."
+  # [Source: 24] Root-relative path to profile photo.
   photo = "images/profile_photo.jpg"
+
   [author.location]
     city = "Burien"
     state = "Washington"
     country = "USA"
+
+# [Source: 26] Webmention.io Integration
 [webmentions]
   enable = true
+  # [Source: 28] Global Default. Can be overridden in Frontmatter.
   show_webmentions = true
+  # [Source: 29] Must match the specific account name used on webmention.io.
   username = "simplygregario.us"
-  guestbookIntro = "Welcome to the Guestbook!"
+  guestbookIntro = ""
+
+# [Source: 31] Contact Form Settings
 [contact]
+  # [Source: 32] Formspree or similar URL
   formAction = "https://formspree.io/f/xblwegvw"
   intro = "Have a question or just want to say hi? Send me a message!"
+
+# [Source: 34] Visual Theming
 [theme]
+  # Options: "sound", "market", "mountain", "forest", "sunset"
   colorScheme = "forest"
+
+# [Source: 36] Social Media - Dynamic Block
+# Used by generate_icons.sh to fetch SVGs from Simple Icons.
+
 [[social]]
   name = "BlueSky"
   handle = "@somegregariousdude.bsky.social"
   url = "https://bsky.app/profile/somegregariousdude.bsky.social"
   rel = "nofollow"
   icon = "bluesky"
+
 [[social]]
   name = "Facebook"
   handle = "somegregariousdude"
   url = "https://facebook.com/somegregariousdude"
   rel = "nofollow"
   icon = "facebook"
+
 [[social]]
   name = "Friendica"
   handle = "@thegregariousdragon@social.trom.tf"
   url = "https://social.trom.tf/profile/thegregariousdragon"
   rel = "me"
   icon = "friendica"
+
 [[social]]
   name = "GitHub"
   handle = "somegregariousdude"
   url = "https://github.com/somegregariousdude"
   rel = "me"
   icon = "github"
+
 [[social]]
   name = "Mastodon"
   handle = "@somegregariousdude@dragonscave.space"
   url = "https://dragonscave.space/@somegregariousdude"
   rel = "me"
   icon = "mastodon"
+
 [[social]]
   name = "ReddIt"
   handle = "u/somegregariousdude"
   url = "https://reddit.com/u/somegregariousdude"
   rel = "nofollow"
   icon = "reddit"
+  
 [[social]]
   name = "YouTube"
   handle = "@somegregariousdude"
   url = "https://youtube.com/@somegregariousdude"
   rel = "nofollow"
   icon = "youtube"
+# [Source: 45] Instant Messaging - Dynamic Block
 [[im]]
   name = "Matrix"
   handle = "@gregarious:4d2.org"
   url = "https://matrix.to/#/@gregarious:4d2.org"
   rel = "nofollow"
   icon = "matrix"
+
 [[im]]
   name = "Messenger"
   handle = "@somegregariousdude"
   url = "https://m.me/somegregariousdude"
   rel = "nofollow"
   icon = "messenger"
+
 [[im]]
   name = "Signal"
   handle = "gregarious.42"
   url = "https://signal.me/#eu/UOIs6b3CzdqYravUXj1jihHuK-QLTKLWYBcjiUz4XGOfuyXGdQdExKbPH3633UxT"
   rel = "nofollow"
   icon = "signal"
-[[im]]
+  
+  [[im]]
   name = "Simplex Chat"
   handle = "Gregory Lopez"
   url = "https.smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
   rel = "nofollow"
   icon = "simplex"
-EOT
+EOF
 
-cat <<EOT > "config/_default/menus.toml"
-[[main]]
-  name = "Home"; url = "/"; weight = 100
-[[main]]
-  name = "About"; url = "/about/"; weight = 150
-[[main]]
-  name = "Articles"; url = "/articles/"; weight = 200
-[[main]]
-  name = "Status Updates"; url = "/status/"; weight = 300
-[[main]]
-  name = "Replies"; url = "/replies/"; weight = 400
-[[main]]
-  name = "Reposts"; url = "/reposts/"; weight = 500
-[[main]]
-  name = "Likes"; url = "/likes/"; weight = 600
-[[main]]
-  name = "Bookmarks"; url = "/bookmarks/"; weight = 700
-[[main]]
-  name = "RSVPs"; url = "/rsvps/"; weight = 800
-[[main]]
-  name = "Guestbook"; url = "/guestbook/"; weight = 900
-[[main]]
-  name = "Contact"; url = "/contact/"; weight = 1000
-[[main]]
-  name = "Search"; url = "/search/"; weight = 1100
-EOT
+# File: config/_default/menus.toml
+cat <<'EOF' > "config/_default/menus.toml"
+# ==============================================================================
+# FILE: config/_default/menus.toml
+# PURPOSE: Main Navigation Structure
+# CONTEXT: Source [48-62]
+# ==============================================================================
 
-cat <<EOT > "config/_default/markup.toml"
+[[main]]
+  name = "Home"
+  url = "/"
+  weight = 100
+
+[[main]]
+  # [Source: 52] Optional. Must appear between Home and Articles.
+  name = "About"
+  url = "/about/"
+  weight = 150
+
+[[main]]
+  name = "Articles"
+  url = "/articles/"
+  weight = 200
+
+[[main]]
+  name = "Status Updates"
+  url = "/status/"
+  weight = 300
+
+[[main]]
+  name = "Replies"
+  url = "/replies/"
+  weight = 400
+
+[[main]]
+  name = "Reposts"
+  url = "/reposts/"
+  weight = 500
+
+[[main]]
+  name = "Likes"
+  url = "/likes/"
+  weight = 600
+
+[[main]]
+  name = "Bookmarks"
+  url = "/bookmarks/"
+  weight = 700
+
+[[main]]
+  name = "RSVPs"
+  url = "/rsvps/"
+  weight = 800
+
+[[main]]
+  name = "Guestbook"
+  url = "/guestbook/"
+  weight = 900
+
+[[main]]
+  name = "Contact"
+  url = "/contact/"
+  weight = 1000
+
+[[main]]
+  name = "Search"
+  url = "/search/"
+  weight = 1100
+EOF
+
+# File: config/_default/markup.toml
+cat <<'EOF' > "config/_default/markup.toml"
+# [Source: 64] Strict Security Policy
 [goldmark]
   [goldmark.renderer]
     unsafe = false 
   [goldmark.parser]
     attribute = { block = true, title = true }
+
+# [Source: 65] Syntax Highlighting
 [highlight]
   style = "monokai"
   lineNos = false
   noClasses = false
-EOT
+EOF
 
-# 3. CONTENT ARCHETYPES (Restored Individual Definitions)
-cat <<EOT > "$THEME_ROOT/archetypes/default.md"
-+++
-title = "{{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
-lastmod = {{ .Date }}
-draft = true
-summary = ""
-show_webmentions = true
-+++
-EOT
+# File: package.json
+cat <<'EOF' > "package.json"
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "An IndieWeb-focused, accessible static site built with Hugo.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "pagefind": "^1.4.0"
+  }
+}
+EOF
 
-cat <<EOT > "$THEME_ROOT/archetypes/articles.md"
-+++
-title = "{{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
-lastmod = {{ .Date }}
-draft = true
-summary = ""
-tags = []
-syndication = []
-show_webmentions = true
-+++
-Write your article content here.
-EOT
+# File: package-lock.json
+cat <<'EOF' > "package-lock.json"
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "blog",
+      "version": "1.0.0",
+      "license": "ISC",
+      "devDependencies": {
+        "pagefind": "^1.4.0"
+      }
+    },
+    "node_modules/@pagefind/darwin-arm64": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@pagefind/darwin-arm64/-/darwin-arm64-1.4.0.tgz",
+      "integrity": "sha512-2vMqkbv3lbx1Awea90gTaBsvpzgRs7MuSgKDxW0m9oV1GPZCZbZBJg/qL83GIUEN2BFlY46dtUZi54pwH+/pTQ==",
+      "cpu": [
+        "arm64"
+      ],
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "darwin"
+      ]
+    },
+    "node_modules/@pagefind/darwin-x64": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@pagefind/darwin-x64/-/darwin-x64-1.4.0.tgz",
+      "integrity": "sha512-e7JPIS6L9/cJfow+/IAqknsGqEPjJnVXGjpGm25bnq+NPdoD3c/7fAwr1OXkG4Ocjx6ZGSCijXEV4ryMcH2E3A==",
+      "cpu": [
+        "x64"
+      ],
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "darwin"
+      ]
+    },
+    "node_modules/@pagefind/freebsd-x64": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@pagefind/freebsd-x64/-/freebsd-x64-1.4.0.tgz",
+      "integrity": "sha512-WcJVypXSZ+9HpiqZjFXMUobfFfZZ6NzIYtkhQ9eOhZrQpeY5uQFqNWLCk7w9RkMUwBv1HAMDW3YJQl/8OqsV0Q==",
+      "cpu": [
+        "x64"
+      ],
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "freebsd"
+      ]
+    },
+    "node_modules/@pagefind/linux-arm64": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@pagefind/linux-arm64/-/linux-arm64-1.4.0.tgz",
+      "integrity": "sha512-PIt8dkqt4W06KGmQjONw7EZbhDF+uXI7i0XtRLN1vjCUxM9vGPdtJc2mUyVPevjomrGz5M86M8bqTr6cgDp1Uw==",
+      "cpu": [
+        "arm64"
+      ],
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "linux"
+      ]
+    },
+    "node_modules/@pagefind/linux-x64": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@pagefind/linux-x64/-/linux-x64-1.4.0.tgz",
+      "integrity": "sha512-z4oddcWwQ0UHrTHR8psLnVlz6USGJ/eOlDPTDYZ4cI8TK8PgwRUPQZp9D2iJPNIPcS6Qx/E4TebjuGJOyK8Mmg==",
+      "cpu": [
+        "x64"
+      ],
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "linux"
+      ]
+    },
+    "node_modules/@pagefind/windows-x64": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@pagefind/windows-x64/-/windows-x64-1.4.0.tgz",
+      "integrity": "sha512-NkT+YAdgS2FPCn8mIA9bQhiBs+xmniMGq1LFPDhcFn0+2yIUEiIG06t7bsZlhdjknEQRTSdT7YitP6fC5qwP0g==",
+      "cpu": [
+        "x64"
+      ],
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "win32"
+      ]
+    },
+    "node_modules/pagefind": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/pagefind/-/pagefind-1.4.0.tgz",
+      "integrity": "sha512-z2kY1mQlL4J8q5EIsQkLzQjilovKzfNVhX8De6oyE6uHpfFtyBaqUpcl/XzJC/4fjD8vBDyh1zolimIcVrCn9g==",
+      "dev": true,
+      "license": "MIT",
+      "bin": {
+        "pagefind": "lib/runner/bin.cjs"
+      },
+      "optionalDependencies": {
+        "@pagefind/darwin-arm64": "1.4.0",
+        "@pagefind/darwin-x64": "1.4.0",
+        "@pagefind/freebsd-x64": "1.4.0",
+        "@pagefind/linux-arm64": "1.4.0",
+        "@pagefind/linux-x64": "1.4.0",
+        "@pagefind/windows-x64": "1.4.0"
+      }
+    }
+  }
+}
+EOF
 
-cat <<EOT > "$THEME_ROOT/archetypes/status.md"
-+++
-title = "{{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
-lastmod = {{ .Date }}
-draft = false
-summary = ""
-tags = []
-syndication = []
-+++
-Write your status update here.
-EOT
+# File: .gitignore
+cat <<'EOF' > ".gitignore"
+# Build Artifacts
+/public
+/resources
 
-cat <<EOT > "$THEME_ROOT/archetypes/replies.md"
-+++
-title = "Reply to {{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
-lastmod = {{ .Date }}
-draft = false
-summary = ""
-reply_to = "" 
-tags = []
-syndication = []
-+++
-EOT
+# Environment & Dependencies
+.DS_Store
+.env
+node_modules/
 
-cat <<EOT > "$THEME_ROOT/archetypes/reposts.md"
-+++
-title = "Repost: {{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
-lastmod = {{ .Date }}
-draft = false
-repost_of = ""
-tags = []
-syndication = []
-+++
-EOT
+# Hugo Cache
+.hugo_build.lock
+package-lock.json
+# Build error log
+errors.txt
+EOF
 
-cat <<EOT > "$THEME_ROOT/archetypes/likes.md"
-+++
-title = "Like: {{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
-lastmod = {{ .Date }}
-draft = false
-like_of = ""
-tags = []
-syndication = []
-+++
-EOT
+# File: CNAME
+cat <<'EOF' > "CNAME"
+simplygregario.us
+EOF
 
-cat <<EOT > "$THEME_ROOT/archetypes/bookmarks.md"
-+++
-title = "{{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
-lastmod = {{ .Date }}
-draft = false
-summary = ""
-bookmark_of = ""
-tags = []
-syndication = []
-+++
-EOT
+# File: LICENSE
+cat <<'EOF' > "LICENSE"
+MIT License
 
-cat <<EOT > "$THEME_ROOT/archetypes/rsvps.md"
-+++
-title = "RSVP: {{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
-lastmod = {{ .Date }}
-draft = false
-summary = ""
-reply_to = ""
-rsvp = "yes"
-tags = []
-syndication = []
-+++
-EOT
+Copyright (c) 2025 Gregory Lopez
 
-# 4. CORE CONTENT PAGES (Including Utility Pages)
-cat <<EOT > "content/pages/accessibility/index.md"
----
-title: "Accessibility"
-date: 2025-11-26T03:30:00-08:00
-layout: "page"
-summary: "My commitment to an open, usable web."
-show_webmentions: false
----
-## **The Philosophy**
-Let’s be real: I’m blind. I use a screen reader every single day. I know exactly how frustrating it is when a website is nothing but a soup of unlabelled buttons and low-contrast text.
-When I built **Greg's Place**, accessibility wasn't an afterthought or a compliance checklist—it was the foundation. My goal is simple: this site should work perfectly for everyone, regardless of how you browse the web. Whether you’re using NVDA, VoiceOver, a braille display, or just really cranked-up text magnification, you are welcome here.
-## **The Standards**
-I target **WCAG 2.2 Level AA** compliance. To achieve this, I’ve made some specific design choices:
-* **Semantic HTML:** Everything is built with proper heading structures and landmarks so you can navigate by rotor or shortcut keys without getting a headache.
-* **High Contrast:** I use an "Outlined Card" design system that relies on distinct borders rather than subtle shadows.
-* **Privacy Facades:** Video embeds (like YouTube) are static images until you click them. This prevents keyboard traps and keeps third-party tracking scripts off your back.
-* **No "Mouse-Only" Nonsense:** If you can click it, you can tab to it.
-## **The Reality Check**
-This is a personal site, not a corporate enterprise. I am the design team, the dev team, and the QA department. While I test everything thoroughly with my own tools, bugs happen. Updates break things. Sometimes I just mess up.
-## **Feedback**
-If you hit a barrier, please tell me. I don’t want to just "log the ticket"—I want to fix it.
-* **Contact Me:** Drop me a line via the [Contact Page](/contact/).
-* **The Details:** If you can, tell me what browser or assistive tech you were using when things went sideways.
-Let’s keep the web open.
-EOT
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-cat <<EOT > "content/pages/about/index.md"
----
-title: "About"
-date: 2025-11-22T19:10:40-0800
-lastmod: 2025-11-26T01:35:00-08:00
-summary: "A little bit about me."
-show_webmentions: false
----
-## **The Elevator Pitch**
-I’m Greg. I’m a gay, blind, middle-aged guy living in Burien, Washington. If you found this page looking for a corporate bio or some "thought leadership," you’ve definitely taken a wrong turn at the search bar. This is my digital living room—shoes off, please.
-## **The Geekery**
-I’m an unapologetic tech tinkerer. I straddle the line between Apple fanboy and Linux power user, mostly because I enjoy things that work *and* things I can break. Being blind, I experience the web differently than most. I built this site to be strictly accessible (WCAG 2.2 AA) not just because it’s the right thing to do, but because I know exactly how frustrating it is when the internet decides to be an obstacle course.
-## **The Vibe**
-Culturally, I’m pretty much permanently parked in a timeline that stretches from the 1970s straight through the late 2000s. I do occasionally dip a toe into modern media if it’s genuinely good, but I’m mostly here for the golden era. My movie night is a chaotic mix of action, comedy, and sci-fi—think *Die Hard*, *Ghostbusters*, or *The Matrix* playing on repeat. If it has practical effects or a plot hole big enough to drive a DeLorean through, I’m watching it.
-My playlist is even less disciplined. It’s a constant battleground where Mötley Crüe and Def Leppard fight for dominance against Dr. Dre, Madonna, and Daft Punk. I also devour audiobooks and podcasts at a rate that probably concerns my service provider, mostly so I can pretend I’m multitasking while I mess with my latest project.
-{{< youtube "UFX3gQHIroU" "Janet Jackson - Escapade" >}}
-## **Fuel & Chill**
-While my soul belongs to the holy trinity of burgers, tacos, and pizza, my appetite wanders the globe. I’m just as happy diving into a spicy Indian curry, Mediterranean hummus, or a bowl of pho as I am wrecking a plate of nachos. That said, I will politely (or impolitely) decline blue cheese and Brussels sprouts. Life is too short for moldy cheese and tiny, bitter cabbages.
-To unwind, I enjoy good drinks, laughter with friends, and a little cannabis to keep those Pacific Northwest chill vibes authentic.
-## **Wander Around**
-Feel free to poke around. You can read my [Articles](/articles/) if you have some time to kill, check the [Status Updates](/status/) for my random brain noise, or sign the [Guestbook](/guestbook/) so I know I'm not just shouting into the void.
-EOT
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-cat <<EOT > "content/pages/contact/index.md"
----
-title: "Contact"
-layout: "contact"
-date: 2025-11-22T23:40:00-08:00
-summary: "A contact form where visitors can get in touch with the author"
----
-EOT
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+EOF
 
-cat <<EOT > "content/pages/guestbook/index.md"
----
-title: "Guestbook"
-layout: "guestbook"
-date: 2025-11-22T23:35:00-08:00
-summary: "A place to collect webmentions from around the IndieWeb that are not tied to a particular post or page"
-syndication: []
----
-EOT
+# File: README.md
+cat <<'EOF' > "README.md"
+# Greg's Place
 
-cat <<EOT > "content/pages/search/index.md"
----
-title: "Search"
-date: 2025-11-22T19:10:40-0800
-layout: "search"
-summary: "A page where visitors can search this website"
----
-EOT
+An IndieWeb-focused, accessible static site built with Hugo.
 
-# 5. SCSS STYLES
-cat <<EOT > "$THEME_ROOT/assets/scss/_variables.scss"
+## Key Features
+* **Accessibility First (WCAG 2.2 AA):**
+    * High Contrast "Outlined Card" design.
+    * **Navigation Drawer:** A fully accessible mobile menu that traps focus and respects screen readers.
+    * **Sticky Header:** Keeps navigation visible for low-vision users.
+    * **Distinct Dark Modes:** 5 unique color themes that retain their identity in dark mode.
+* **Privacy:** Zero-tracking "Static Facades" for YouTube and social sharing.
+* **IndieWeb:** Native support for Webmentions, Microformats, and POSSE.
+
+## Usage
+* **New Content:** `./new_post.sh [type] "Title"`
+* **Local Dev:** `hugo server`
+* **Reproduction:** Run `./setup_project.sh` to rebuild this exact environment.
+
+## License
+MIT License. Content CC BY-SA 4.0.
+EOF
+
+# File: project_context.txt
+cat <<'EOF' > "project_context.txt"
+# Project Context: Greg's Place (Updated)
+
+## CONFIGURATION SPECIFICATION & GLOBAL PARAMETERS
+* Base URL: `https://simplygregario.us`
+* Theme: "Accessible-MD"
+* Language: "en-us"
+* **Permalinks:**
+    * `pages = "/:slug/"` (Root level)
+    * `articles`, `bookmarks` -> Slug-based.
+    * `status`, `replies`, etc. -> Timestamp-based.
+
+## CORE ARCHITECTURE & PHILOSOPHY
+* **Priority:** W3C Standards, WCAG 2.2 AA, IndieWeb.
+* **Privacy:** Strict "Static Facade" policy (No tracking iframes).
+* **Regression Policy:**
+    * **Visuals:** "Outlined Card" metaphor (High Contrast Borders).
+    * **Accessibility:** Focus states must always be visible.
+    * **Scripts:** `setup_project.sh` must always reflect the current production state.
+
+## STYLING & UX (UPDATED)
+### 1. Visual System
+* **Themes:** 5 Distinct Palettes (Sound, Market, Mountain, Forest, Sunset).
+    * **Light Mode:** Dark Colors on Light Background (>4.5:1).
+    * **Dark Mode:** Pastel Colors on **Tinted Dark Backgrounds** (Unique to each theme).
+    * **Contrast:** Code blocks and UI elements must maintain contrast in all modes.
+
+### 2. Navigation & Layout
+* **Desktop:** Top App Bar (Row of Links).
+* **Mobile:** **Navigation Drawer** (Modal Side-Sheet).
+    * Must use `inert` to trap focus.
+    * Must use a Scrim (Backdrop) to close.
+    * Must support `Escape` key.
+* **Header Behavior:** **Sticky** (Always visible).
+    * Requires `scroll-padding-top` to prevent anchor overlap.
+
+## JAVASCRIPT POLICY
+* **Principle:** Minimal, purposeful JS.
+* **Approved:**
+    * **Menu:** Focus trapping, state toggling, inert management.
+    * **Webmentions:** Fetch and sanitize.
+    * **Sharing:** Native Intent URLs and Fediverse Modals.
+    * **Search:** Pagefind (Client-side).
+
+## AUTOMATION
+* `setup_project.sh`: The Source of Truth. Rebuilds the site from scratch.
+* `new_post.sh`: Handles content generation.
+* `generate_icons.sh`: Fetches assets at build time (Privacy).
+EOF
+
+# File: new_post.sh
+cat <<'EOF' > "new_post.sh"
+#!/bin/bash
+# ==============================================================================
+# SCRIPT: new_post.sh
+# PURPOSE: Automate content creation with dynamic directory naming (Slug vs Timestamp)
+# CONTEXT: Source [156-169] - Scripting & Automation Standards
+# AUTHOR: Lead Web Designer (Gemini) for Greg's Place
+# ==============================================================================
+
+# Check for arguments
+if [ -z "$1" ]; then
+  echo "Error: Content Type is required."
+  echo "Usage: ./new_post.sh [type] \"[optional title]\""
+  echo "Types: articles, status, replies, reposts, likes, bookmarks, rsvps"
+  exit 1
+fi
+
+TYPE=$1
+TITLE=$2
+
+# Normalize Type (remove trailing slashes if present)
+TYPE=${TYPE%/}
+
+# ------------------------------------------------------------------------------
+# LOGIC BLOCK: Validate Title Requirements
+# [Source: 166] Articles & Bookmarks: Title is Required.
+# ------------------------------------------------------------------------------
+if [[ "$TYPE" == "articles" || "$TYPE" == "bookmarks" ]]; then
+  if [ -z "$TITLE" ]; then
+    echo "Error: Title is REQUIRED for '$TYPE'."
+    exit 1
+  fi
+fi
+
+# ------------------------------------------------------------------------------
+# LOGIC BLOCK: Determine Directory Name
+# ------------------------------------------------------------------------------
+
+DIR_NAME=""
+
+if [ -n "$TITLE" ]; then
+  # [Source: 166, 168] If Title provided: Use slug-based directory.
+  # Convert title to slug (lowercase, replace spaces/symbols with hyphens)
+  # Standardizing on a simple sed/tr chain for portability.
+  SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed -e 's/[^a-z0-9]/-/g' -e 's/-\+/-/g' -e 's/^-\|-$//g')
+  DIR_NAME="$SLUG"
+else
+  # [Source: 169] If Title omitted: Use Timestamp-based directory.
+  # Format: YYYY-MM-DD-HHMM
+  TIMESTAMP=$(date +%Y-%m-%d-%H%M)
+  DIR_NAME="$TIMESTAMP"
+fi
+
+# ------------------------------------------------------------------------------
+# LOGIC BLOCK: Execute Hugo Command
+# [Source: 82] All content files must use "Leaf Bundles" (directory + index.md).
+# ------------------------------------------------------------------------------
+
+TARGET_PATH="$TYPE/$DIR_NAME/index.md"
+
+echo "Creating new $TYPE..."
+echo "Path: content/$TARGET_PATH"
+
+# Execute Hugo new command
+# We explicitly set --kind to ensure the correct archetype is used from the theme.
+hugo new content "$TARGET_PATH" --kind "$TYPE"
+
+echo "Done."
+EOF
+
+# File: generate_icons.sh
+cat <<'EOF' > "generate_icons.sh"
+#!/bin/bash
+# ==============================================================================
+# SCRIPT: generate_icons.sh (LOCAL ASSET BUILDER)
+# PURPOSE: Fetch SVGs at build time and save locally.
+#          - System Icons: Material Symbols
+#          - Social Icons: Simple Icons + Official Repos
+# ==============================================================================
+
+ICON_DIR="themes/Accessible-MD/layouts/partials/icons"
+mkdir -p "$ICON_DIR"
+
+# 1. System Icons (Material Symbols)
+declare -A SYSTEM_ICONS=(
+    ["search"]="search"
+    ["menu"]="menu"
+    ["close"]="close"
+    ["home"]="home"
+    ["articles"]="article"
+    ["status"]="chat_bubble"
+    ["replies"]="reply"
+    ["reposts"]="repeat"
+    ["likes"]="favorite"
+    ["bookmarks"]="bookmark"
+    ["rsvps"]="event"
+    ["guestbook"]="import_contacts"
+    ["contact"]="mail"
+    ["about"]="info"
+    ["pages"]="description"
+    ["categories"]="category" 
+    ["tags"]="label"
+    ["content_copy"]="content_copy"
+    ["check"]="check"
+    ["share"]="share"
+)
+
+echo "--- Updating System Icons ---"
+for NAME in "${!SYSTEM_ICONS[@]}"; do
+    MATERIAL_NAME="${SYSTEM_ICONS[$NAME]}"
+    TARGET="$ICON_DIR/$NAME.svg"
+    
+    if [ ! -f "$TARGET" ]; then
+        echo "Fetching System: $NAME..."
+        URL="https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/${MATERIAL_NAME}/materialsymbolsoutlined/${MATERIAL_NAME}_24px.svg"
+        curl -s -L -f "$URL" -o "$TARGET" || echo "  X Failed to fetch $NAME"
+    fi
+done
+
+# 2. Standard Social Icons (Simple Icons CDN)
+# Maps your params.toml 'icon' keys to Simple Icons slugs
+# NOTE: Slugs must be lowercase (e.g. 'reddit', 'youtube')
+# REMOVED: Friendica (Not reliable on Simple Icons yet)
+declare -A SOCIAL_ICONS=(
+    ["bluesky"]="bluesky"
+    ["facebook"]="facebook"
+    ["github"]="github"
+    ["mastodon"]="mastodon"
+    ["matrix"]="matrix"
+    ["messenger"]="messenger"
+    ["reddit"]="reddit"
+    ["signal"]="signal"
+    ["simplex"]="simplex"
+    ["youtube"]="youtube"
+)
+
+echo "--- Updating Social Icons ---"
+for NAME in "${!SOCIAL_ICONS[@]}"; do
+    SLUG="${SOCIAL_ICONS[$NAME]}"
+    TARGET="$ICON_DIR/$NAME.svg"
+    
+    # Force check: Try to fetch even if file exists, to ensure content is valid
+    echo "Fetching Social: $NAME..."
+    URL="https://cdn.simpleicons.org/$SLUG"
+    
+    if curl -s -L -f "$URL" -o "$TARGET"; then
+         echo "  ✓ OK"
+    else
+         echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."
+         # Fallback: Empty square
+         echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"
+    fi
+done
+
+# 3. Special Case: Friendica (Official Repo - Develop Branch)
+# Simple Icons does not reliably host Friendica. We fetch from the official repo.
+NAME="friendica"
+TARGET="$ICON_DIR/$NAME.svg"
+
+echo "Fetching Special: $NAME..."
+# Using 'develop' branch which is the active default for assets
+URL="https://raw.githubusercontent.com/friendica/friendica/develop/images/friendica.svg"
+
+if curl -s -L -f "$URL" -o "$TARGET"; then
+     echo "  ✓ OK"
+else
+     echo "  X ERROR: Could not fetch Friendica icon. Creating fallback."
+     echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"
+fi
+
+echo "Icon generation complete."
+EOF
+
+# File: debug_server.sh
+cat <<'EOF' > "debug_server.sh"
+#!/bin/bash
+# ==============================================================================
+# SCRIPT: debug_server.sh
+# PURPOSE: Run Hugo in background and trap all errors to a file
+# USAGE: ./debug_server.sh
+# ==============================================================================
+
+LOG_FILE="errors.txt"
+
+# 1. Cleanup: Stop any existing Hugo servers to free up Port 1313
+# We silence the output in case no server is running.
+pkill hugo > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo "Stopped previous Hugo instance."
+fi
+
+# 2. Setup: clear the old log file so you see fresh errors only
+echo "--- New Session: $(date) ---" > "$LOG_FILE"
+
+echo "Starting Hugo Server..."
+
+# 3. Execution:
+# -D -E -F: Your standard Drafts/Expired/Future flags
+# --disableFastRender: Ensures full rebuilds (slower but more accurate for errors)
+# --gc: Garbage Collection (Matches your build pipeline Source [181])
+# --printI18nWarnings: catch missing translation strings
+# > "$LOG_FILE" 2>&1: Redirects BOTH stdout and stderr to the text file
+hugo server \
+  --disableFastRender \
+  -D -E -F \
+  --gc \
+  --printI18nWarnings \
+  > "$LOG_FILE" 2>&1 &
+
+# Capture the Process ID of the last command (Hugo)
+HUGO_PID=$!
+
+echo "✅ Hugo is running in the background (PID: $HUGO_PID)."
+echo "📄 Logs are being captured in '$LOG_FILE'."
+echo "To stop the server, run: kill $HUGO_PID"
+EOF
+
+# File: .github/workflows/hugo.yml
+cat <<'EOF' > ".github/workflows/hugo.yml"
+# [Source: 178] CI/CD Pipeline
+name: Deploy to GitHub Pages
+
+on:
+  # Trigger on Push to Main (Deployment)
+  push:
+    branches: ["main"]
+  
+  # Trigger on PR to Main (Validation - Enables Status Checks)
+  pull_request:
+    branches: ["main"]
+  
+  # Allows manual run from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+# [Source: 176] Development & Environment
+jobs:
+  # Build Job
+  build:
+    runs-on: ubuntu-latest # [Source: 180]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # [Source: 177] NodeJS (LTS)
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.152.2' # [Source: 177] Pinned to match local environment
+          extended: true
+
+      # [Note] Icon Generation is now handled locally. 
+      # We assume icons are committed to the repository.
+
+      - name: Build with Hugo
+        # [Source: 181] Garbage Collection and Minification enabled
+        run: hugo --minify --gc
+
+      - name: Build Search Index (Pagefind)
+        # [Source: 182] Client-side search indexing
+        run: npx pagefind --site public
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  # Deployment Job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    # [Fix] Only deploy when pushing to main. Skips deployment on Pull Requests.
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # [Source: 183]
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_base.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_base.scss"
+body {
+  margin: 0;
+  font-family: 'Noto Sans', sans-serif;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Noto Serif', serif;
+  margin-top: 0;
+}
+
+/* [Source: 194] Focus Appearance - High Contrast */
+:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* [Source: 193] Skip Link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  padding: 8px;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* [Patch] Sticky Header Anchor Offset */
+html {
+  scroll-padding-top: 100px;
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_components.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
+.outlined-card {
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  padding: 16px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.outlined-card:hover {
+  border-color: var(--md-sys-color-outline);
+  background-color: rgba(var(--md-sys-color-primary), 0.05); /* Faked opacity */
+}
+
+/* Chips [Source: 111] */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+  gap: 8px; /* Space between icon and text */
+}
+
+.chip-icon svg, .brand-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  display: block;
+}
+
+.social-links, .im-links {
+  list-style: none;
+  padding: 0;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+/* Webmentions [Refactored for Phase 02i] */
+.webmentions-container {
+  margin-top: 24px; /* Gap between Post Card and Mentions Card */
+  /* Old border styles removed since it is now a card */
+}
+
+/* Header Layouts */
+.headline-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.headline-row h1 {
+  margin: 0;
+}
+
+.chip-icon-only {
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 50%;
+  padding: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--md-sys-color-primary);
+}
+
+.chip-icon-only:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.1);
+}
+
+.feed-header .headline-row {
+  margin-bottom: 4px;
+}
+
+.headline-row h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.headline-row a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.headline-row a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--md-sys-color-primary);
+}
+
+/* [Patch] Mobile Profile Photo Fix */
+.u-photo {
+  max-width: 100%;
+  height: auto;
+  border-radius: 50%;
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_images.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_images.scss"
+/* --- MD3 Images & Galleries --- */
+
+/* Single Image Wrapper */
+.md-figure {
+  margin: 2rem 0;
+  display: block;
+}
+
+/* The Image Itself */
+.md-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--md-sys-shape-corner-medium);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface);
+}
+
+/* Captions */
+.md-figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-outline);
+  font-family: 'Noto Sans', sans-serif;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Gallery Grid (Responsive Masonry-ish) */
+.md-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 2rem 0;
+}
+
+.gallery-item {
+  display: block;
+  border-radius: var(--md-sys-shape-corner-medium);
+  overflow: hidden;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: border-color 0.2s, transform 0.2s;
+  aspect-ratio: 1 / 1; /* Force square thumbnails */
+}
+
+.gallery-item:hover, .gallery-item:focus-visible {
+  border-color: var(--md-sys-color-primary);
+  transform: scale(1.02);
+  outline: none;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_layout.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_layout.scss"
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.site-header {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface);
+  position: sticky; top: 0; z-index: 100; max-height: 100vh; overflow-y: auto; /* For z-index context */
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.site-title {
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+}
+
+/* --- Desktop Navigation (Default) --- */
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+  font-weight: 500;
+}
+
+.nav-list a[aria-current="page"] {
+  color: var(--md-sys-color-primary);
+  border-bottom: 2px solid var(--md-sys-color-primary);
+}
+
+/* --- Mobile Toggle Button --- */
+.menu-toggle {
+  display: none; /* Hidden on Desktop */
+  background: none;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--md-sys-color-primary);
+}
+
+.menu-toggle .icon-box svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  display: block;
+}
+
+/* --- Mobile Responsive States --- */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block; /* Show button */
+  }
+
+  .site-header {
+    padding-bottom: 8px;
+  }
+
+  #main-nav {
+    width: 100%; /* Force new line */
+    margin-top: 16px;
+  }
+
+  /* Hidden State */
+  .nav-list {
+    display: none; 
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding-bottom: 16px;
+  }
+
+  /* Expanded State (Toggled via JS) */
+  .nav-list.is-open {
+    display: flex;
+    animation: slideDown 0.2s ease-out;
+  }
+
+  .nav-list li {
+    width: 100%;
+  }
+
+  .nav-list a {
+    display: block;
+    padding: 12px;
+    background-color: rgba(var(--md-sys-color-primary), 0.05);
+    border-radius: 8px;
+  }
+  
+  .nav-list a:hover {
+     background-color: rgba(var(--md-sys-color-primary), 0.1);
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.site-footer {
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  margin-top: 32px;
+  padding: 16px 0;
+}
+
+.feed-item {
+  margin-bottom: 16px;
+}
+
+/* Section Intro (Added Phase 02o) */
+.section-intro {
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface);
+  max-width: 65ch; /* Optimal reading width for introductory text */
+}
+
+/* [Patch] MD3 Navigation Drawer Upgrade */
+@media (max-width: 768px) {
+  /* The Drawer Itself */
+  .nav-list {
+    display: block; /* Always exist in DOM for transitions */
+    position: fixed;
+    top: 0;
+    right: 0; /* Slide in from Right */
+    width: 300px; /* Standard MD3 width */
+    max-width: 80%;
+    height: 100vh;
+    background-color: var(--md-sys-color-surface);
+    border-left: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: -4px 0 12px rgba(0,0,0,0.2); /* Scrim shadow */
+    padding: 72px 16px 24px 16px; /* Top padding to clear close button space */
+    z-index: 1000;
+    
+    /* Animation State: Closed */
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0); /* MD3 Standard Easing */
+    overflow-y: auto;
+  }
+
+  /* Animation State: Open */
+  .nav-list.is-open {
+    display: block;
+    transform: translateX(0);
+  }
+
+  /* The Backdrop (Scrim) */
+  /* We use the ::before pseudo-element on the nav container when open */
+  #main-nav.has-scrim::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s;
+  }
+
+  /* Close Button visibility */
+  .menu-toggle {
+    position: relative;
+    z-index: 1001; /* Above the drawer so it can toggle back */
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* [Patch] Safari Visibility Fix */
+@media (max-width: 768px) {
+  .nav-list {
+    /* VISIBILITY LOCK: Ensure it is completely hidden when closed */
+    visibility: hidden;
+    
+    /* Transition: Transform (slide) + Visibility (delayed hide) */
+    /* We delay hiding visibility (0.3s) so the slide animation finishes first */
+    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0), visibility 0s linear 0.3s;
+    
+    /* Safety: Ensure Safari treats this as a fixed layer */
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+  }
+
+  .nav-list.is-open {
+    /* VISIBILITY UNLOCK: Show immediately when open */
+    visibility: visible;
+    
+    /* Remove delay so it appears instantly as it slides in */
+    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0), visibility 0s linear 0s;
+    
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_mastodon.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_mastodon.scss"
+/* Mastodon Static Facade */
+/* Extends .outlined-card logic but specific to social embeds */
+
+.mastodon-card {
+  /* Inherits base .outlined-card styles from _components.scss */
+  max-width: 600px;
+  margin: 2rem auto;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.mastodon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.mastodon-author {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.mastodon-author img.u-photo {
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+.author-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.author-meta a {
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+}
+
+.author-meta a:hover {
+  text-decoration: underline;
+}
+
+.p-nickname {
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+}
+
+.mastodon-logo {
+  color: var(--md-sys-color-primary);
+  width: 24px;
+  height: 24px;
+}
+
+.mastodon-logo svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.mastodon-card .e-content {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.mastodon-card .e-content p {
+  margin-bottom: 0.5rem;
+}
+
+.mastodon-card .e-content a {
+  color: var(--md-sys-color-secondary);
+  word-break: break-all;
+}
+
+.mastodon-media {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mastodon-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background-color: rgba(0,0,0,0.05);
+}
+
+.mastodon-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-top: 12px;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+}
+
+.mastodon-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.button-small {
+  text-decoration: none;
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+}
+
+.button-small:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.1);
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 4px;
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_share.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_share.scss"
+.share-card {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  
+  h3 {
+    margin-top: 0;
+    font-size: 1.25rem;
+  }
+}
+
+.share-buttons-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  
+  &:hover {
+    background-color: rgba(var(--md-sys-color-primary), 0.1);
+    transform: scale(1.05);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+}
+
+/* Modal Styling */
+dialog#fedi-share-dialog {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  h3 {
+    margin-top: 0;
+  }
+  
+  .form-group {
+    margin: 16px 0;
+    
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: 8px;
+      background: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      font-size: 1rem;
+    }
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .button-primary {
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+  }
+  
+  .button-secondary {
+    background: transparent;
+    color: var(--md-sys-color-primary);
+    
+    &:hover {
+      background: rgba(var(--md-sys-color-primary), 0.1);
+    }
+  }
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_typography.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_typography.scss"
+/* TYPE SCALE & MD3 MAPPINGS */
+
+/* Headings: Noto Serif */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Noto Serif', serif;
+  color: var(--md-sys-color-on-surface);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem;  font-weight: 700; margin-top: 0; } /* Headline Large */
+h2 { font-size: 2rem;    font-weight: 600; } /* Headline Medium */
+h3 { font-size: 1.75rem; font-weight: 600; } /* Title Large */
+h4 { font-size: 1.5rem;  font-weight: 600; } /* Title Medium */
+h5 { font-size: 1.25rem; font-weight: 600; } /* Title Small */
+h6 { font-size: 1.125rem;    font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Body Copy: Noto Sans */
+p {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Links */
+a {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+}
+
+/* Horizontal Rule (Thematic Break) */
+hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--md-sys-color-outline-variant);
+  margin: 2rem 0;
+  width: 100%;
+}
+
+/* Blockquotes */
+blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid var(--md-sys-color-primary);
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  font-style: italic;
+  border-radius: 0 var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0;
+}
+blockquote p:last-child { margin-bottom: 0; }
+
+/* Lists */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+li::marker {
+  color: var(--md-sys-color-secondary); /* Theme flavor for bullets */
+}
+
+/* Inline Code */
+code {
+  font-family: monospace;
+  background-color: var(--md-sys-color-outline-variant); /* High contrast background */
+  color: var(--md-sys-color-on-surface);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+th, td {
+  padding: 12px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  text-align: left;
+}
+th {
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  font-weight: 700;
+}
+
+/* Code Blocks (Pre) */
+/* The outer container is handled by the Render Hook wrapper, but we style the 'pre' here */
+pre {
+  background-color: #272822; /* Monokai Background (Matches markup.toml) */
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: var(--md-sys-shape-corner-medium);
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* Copy Button Wrapper (Generated by Render Hook) */
+.code-block-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.code-block-wrapper pre {
+  margin-bottom: 0; /* Wrapper handles margin */
+}
+
+.copy-code-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  color: var(--md-sys-color-primary);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s, background-color 0.2s;
+  z-index: 2;
+}
+
+.copy-code-btn:hover, .copy-code-btn:focus-visible {
+  opacity: 1;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+.copy-code-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* --- Accessible Tables (Phase 02q) --- */
+
+.table-wrapper {
+  overflow-x: auto; /* Horizontal scroll on mobile */
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  /* Reset border since wrapper handles the outer stroke */
+  border: none; 
+}
+
+.md-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: 12px 16px;
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  color: var(--md-sys-color-primary);
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.md-table th, 
+.md-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  white-space: nowrap; /* Prevents awkward wrapping on mid-size screens */
+}
+
+.md-table th {
+  background-color: var(--md-sys-color-surface);
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  text-align: left;
+}
+
+.md-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Zebra striping for readability */
+.md-table tbody tr:nth-child(even) {
+  background-color: rgba(var(--md-sys-color-primary), 0.02);
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_variables.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_variables.scss"
 :root {
+  /* --- GLOBAL SHAPE & SPACING --- */
   --md-sys-shape-corner-medium: 12px;
   --md-sys-spacing-base: 8px;
-  --md-sys-color-primary: #4A5D8A;
-  --md-sys-color-on-primary: #FFFFFF;
-  --md-sys-color-secondary: #4A7A7A;
-  --md-sys-color-tertiary: #E98A78;
+  
+  /* Shared Text Colors (White looks good on all these dark backgrounds) */
+  --md-sys-color-on-surface-dark: #E6E1E5;
+  --md-sys-color-outline-dark: #938F99;
+  --md-sys-color-outline-variant-dark: #49454F;
+}
+
+/* ==========================================================================
+   THEME 1: THE SOUND (Deep Midnight Blue)
+   ========================================================================== */
+:root {
+  /* Light Mode */
   --md-sys-color-surface: #FFFFFF;
   --md-sys-color-on-surface: #1C1B1F;
   --md-sys-color-outline: #79747E;
   --md-sys-color-outline-variant: #CAC4D0;
+  --md-sys-color-primary: #4A5D8A;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-secondary: #4A7A7A;
+  --md-sys-color-tertiary: #A64B3B;
 }
-[data-theme="market"] { --md-sys-color-primary: #4E342E; --md-sys-color-secondary: #C62828; --md-sys-color-tertiary: #F9A825; }
-[data-theme="mountain"] { --md-sys-color-primary: #455A64; --md-sys-color-secondary: #00838F; --md-sys-color-tertiary: #7E57C2; }
-[data-theme="forest"] { --md-sys-color-primary: #1B5E20; --md-sys-color-secondary: #5D4037; --md-sys-color-tertiary: #8BC34A; }
-[data-theme="sunset"] { --md-sys-color-primary: #311B92; --md-sys-color-secondary: #880E4F; --md-sys-color-tertiary: #FF6D00; }
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --md-sys-color-surface: #1C1B1F;
-    --md-sys-color-on-surface: #E6E1E5;
-    --md-sys-color-outline: #938F99;
+    /* UNIQUE BACKGROUND: Deep Midnight Blue */
+    --md-sys-color-surface: #0F111A;
+    
+    --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
+    --md-sys-color-outline: var(--md-sys-color-outline-dark);
+    --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
     --md-sys-color-primary: #B0C4DE;
+    --md-sys-color-secondary: #A7C7C7;
+    --md-sys-color-tertiary: #FFB4A2;
   }
 }
-EOT
 
-cat <<EOT > "$THEME_ROOT/assets/scss/_base.scss"
-body { margin: 0; font-family: 'Noto Sans', sans-serif; background-color: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); line-height: 1.5; }
-h1, h2, h3, h4 { font-family: 'Noto Serif', serif; margin-top: 0; }
-:focus-visible { outline: 3px solid var(--md-sys-color-primary); outline-offset: 2px; }
-.skip-link { position: absolute; top: -100px; left: 0; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); padding: 8px; z-index: 9999; }
-.skip-link:focus { top: 0; }
-EOT
-
-cat <<EOT > "$THEME_ROOT/assets/scss/_typography.scss"
-h1, h2, h3, h4, h5, h6 { font-family: 'Noto Serif', serif; color: var(--md-sys-color-on-surface); margin-top: 2rem; margin-bottom: 1rem; line-height: 1.2; }
-h1 { font-size: 2.5rem; font-weight: 700; margin-top: 0; }
-h2 { font-size: 2rem; font-weight: 600; }
-h3 { font-size: 1.75rem; font-weight: 600; }
-h4 { font-size: 1.5rem; font-weight: 600; }
-h5 { font-size: 1.25rem; font-weight: 600; }
-h6 { font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-p { font-family: 'Noto Sans', sans-serif; font-size: 1rem; line-height: 1.6; margin-bottom: 1rem; color: var(--md-sys-color-on-surface); }
-a { color: var(--md-sys-color-primary); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
-a:hover { text-decoration-thickness: 2px; background-color: rgba(var(--md-sys-color-primary), 0.05); }
-hr { border: 0; height: 1px; background-color: var(--md-sys-color-outline-variant); margin: 2rem 0; width: 100%; }
-blockquote { margin: 1.5rem 0; padding: 1rem 1.5rem; border-left: 4px solid var(--md-sys-color-primary); background-color: rgba(var(--md-sys-color-primary), 0.05); font-style: italic; border-radius: 0 var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0; }
-blockquote p:last-child { margin-bottom: 0; }
-ul, ol { margin-bottom: 1rem; padding-left: 2rem; }
-li { margin-bottom: 0.5rem; line-height: 1.6; }
-li::marker { color: var(--md-sys-color-secondary); }
-code { font-family: monospace; background-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface); padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.9em; }
-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
-th, td { padding: 12px; border: 1px solid var(--md-sys-color-outline-variant); text-align: left; }
-th { background-color: rgba(var(--md-sys-color-primary), 0.05); font-weight: 700; }
-pre { background-color: #272822; color: #f8f8f2; padding: 1rem; border-radius: var(--md-sys-shape-corner-medium); overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid var(--md-sys-color-outline-variant); }
-pre code { background-color: transparent; color: inherit; padding: 0; }
-.code-block-wrapper { position: relative; margin-bottom: 1.5rem; }
-.code-block-wrapper pre { margin-bottom: 0; }
-.copy-code-btn { position: absolute; top: 8px; right: 8px; background-color: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); color: var(--md-sys-color-primary); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0.5; transition: opacity 0.2s, background-color 0.2s; z-index: 2; }
-.copy-code-btn:hover, .copy-code-btn:focus-visible { opacity: 1; background-color: var(--md-sys-color-outline-variant); }
-.copy-code-btn svg { width: 18px; height: 18px; fill: currentColor; }
-.table-wrapper { overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-sys-shape-corner-medium); }
-.md-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; border: none; }
-.md-table caption { caption-side: top; text-align: left; padding: 12px 16px; font-family: 'Noto Serif', serif; font-weight: 700; color: var(--md-sys-color-primary); background-color: rgba(var(--md-sys-color-primary), 0.05); border-bottom: 1px solid var(--md-sys-color-outline-variant); }
-.md-table th, .md-table td { padding: 12px 16px; border-bottom: 1px solid var(--md-sys-color-outline-variant); white-space: nowrap; }
-.md-table th { background-color: var(--md-sys-color-surface); font-weight: 600; color: var(--md-sys-color-on-surface); text-align: left; }
-.md-table tr:last-child td { border-bottom: none; }
-.md-table tbody tr:nth-child(even) { background-color: rgba(var(--md-sys-color-primary), 0.02); }
-EOT
-
-cat <<EOT > "$THEME_ROOT/assets/scss/_layout.scss"
-.container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
-.site-header { padding: 16px 0; border-bottom: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); position: relative; }
-.header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-.site-title { font-family: 'Noto Serif', serif; font-weight: 700; font-size: 1.25rem; text-decoration: none; color: var(--md-sys-color-on-surface); }
-.nav-list { list-style: none; padding: 0; margin: 0; display: flex; gap: 16px; flex-wrap: wrap; }
-.nav-list a { text-decoration: none; color: var(--md-sys-color-on-surface); font-weight: 500; }
-.nav-list a[aria-current="page"] { color: var(--md-sys-color-primary); border-bottom: 2px solid var(--md-sys-color-primary); }
-.menu-toggle { display: none; background: none; border: 1px solid var(--md-sys-color-outline); border-radius: 8px; cursor: pointer; padding: 8px; color: var(--md-sys-color-primary); }
-.menu-toggle .icon-box svg { width: 24px; height: 24px; fill: currentColor; display: block; }
-@media (max-width: 768px) {
-  .menu-toggle { display: block; }
-  .site-header { padding-bottom: 8px; }
-  #main-nav { width: 100%; margin-top: 16px; }
-  .nav-list { display: none; flex-direction: column; gap: 8px; width: 100%; padding-bottom: 16px; }
-  .nav-list.is-open { display: flex; animation: slideDown 0.2s ease-out; }
-  .nav-list li { width: 100%; }
-  .nav-list a { display: block; padding: 12px; background-color: rgba(var(--md-sys-color-primary), 0.05); border-radius: 8px; }
-  .nav-list a:hover { background-color: rgba(var(--md-sys-color-primary), 0.1); }
+/* ==========================================================================
+   THEME 2: THE MARKET (Deep Espresso)
+   ========================================================================== */
+[data-theme="market"] {
+  --md-sys-color-primary: #4E342E;
+  --md-sys-color-secondary: #C62828;
+  --md-sys-color-tertiary: #985E00;
 }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-.site-footer { border-top: 1px solid var(--md-sys-color-outline-variant); margin-top: 32px; padding: 16px 0; }
-.feed-item { margin-bottom: 16px; }
-.section-intro { margin-bottom: 24px; font-size: 1.1rem; line-height: 1.6; color: var(--md-sys-color-on-surface); max-width: 65ch; }
-EOT
 
-cat <<EOT > "$THEME_ROOT/assets/scss/_components.scss"
-.outlined-card { background-color: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-sys-shape-corner-medium); padding: 16px; transition: background-color 0.2s ease, border-color 0.2s ease; }
-.outlined-card:hover { border-color: var(--md-sys-color-outline); background-color: rgba(var(--md-sys-color-primary), 0.05); }
-.chip { display: inline-flex; align-items: center; border: 1px solid var(--md-sys-color-outline); border-radius: 8px; padding: 4px 8px; font-size: 0.875rem; margin-bottom: 8px; gap: 8px; }
-.chip-icon svg, .brand-icon svg { width: 18px; height: 18px; fill: currentColor; display: block; }
-.social-links, .im-links { list-style: none; padding: 0; }
-.social-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-.webmentions-container { margin-top: 24px; }
-.headline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-.headline-row h1 { margin: 0; }
-.chip-icon-only { border: 1px solid var(--md-sys-color-outline); border-radius: 50%; padding: 8px; display: inline-flex; justify-content: center; align-items: center; width: 20px; height: 20px; color: var(--md-sys-color-primary); }
-.chip-icon-only:hover { background-color: rgba(var(--md-sys-color-primary), 0.1); }
-.feed-header .headline-row { margin-bottom: 4px; }
-.headline-row h2 { margin: 0; font-size: 1.25rem; line-height: 1.3; }
-.headline-row a { text-decoration: none; color: inherit; }
-.headline-row a:hover { text-decoration: underline; text-decoration-color: var(--md-sys-color-primary); }
-EOT
+@media (prefers-color-scheme: dark) {
+  [data-theme="market"] {
+    /* UNIQUE BACKGROUND: Deep Espresso */
+    --md-sys-color-surface: #1A120F;
+    
+    --md-sys-color-primary: #D7CCC8;
+    --md-sys-color-secondary: #EF9A9A;
+    --md-sys-color-tertiary: #FFE082;
+  }
+}
 
-cat <<EOT > "$THEME_ROOT/assets/scss/_images.scss"
-.md-figure { margin: 2rem 0; display: block; }
-.md-image { max-width: 100%; height: auto; display: block; border-radius: var(--md-sys-shape-corner-medium); border: 1px solid var(--md-sys-color-outline-variant); background-color: var(--md-sys-color-surface); }
-.md-figcaption { margin-top: 0.75rem; font-size: 0.9rem; color: var(--md-sys-color-outline); font-family: 'Noto Sans', sans-serif; text-align: center; font-style: italic; }
-.md-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 2rem 0; }
-.gallery-item { display: block; border-radius: var(--md-sys-shape-corner-medium); overflow: hidden; border: 1px solid var(--md-sys-color-outline-variant); transition: border-color 0.2s, transform 0.2s; aspect-ratio: 1 / 1; }
-.gallery-item:hover, .gallery-item:focus-visible { border-color: var(--md-sys-color-primary); transform: scale(1.02); outline: none; }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-EOT
+/* ==========================================================================
+   THEME 3: THE MOUNTAIN (Dark Slate)
+   ========================================================================== */
+[data-theme="mountain"] {
+  --md-sys-color-primary: #455A64;
+  --md-sys-color-secondary: #00838F;
+  --md-sys-color-tertiary: #5E35B1;
+}
 
-cat <<EOT > "$THEME_ROOT/assets/scss/_youtube.scss"
-.youtube-lite { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer; background-color: #000; display: flex; align-items: center; justify-content: center; padding: 0; }
-.youtube-lite img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.3s ease; }
-.youtube-lite:hover img, .youtube-lite:focus-visible img { opacity: 1; }
-.youtube-lite .play-button { position: absolute; width: 68px; height: 48px; background-color: rgba(33, 33, 33, 0.8); border-radius: 12px; z-index: 1; transition: background-color 0.2s ease; display: flex; align-items: center; justify-content: center; }
-.youtube-lite:hover .play-button, .youtube-lite:focus-visible .play-button { background-color: #f00; }
-.youtube-lite .play-button::before { content: ""; border-style: solid; border-width: 10px 0 10px 20px; border-color: transparent transparent transparent #fff; }
-.youtube-lite iframe { width: 100%; height: 100%; border: none; }
-EOT
+@media (prefers-color-scheme: dark) {
+  [data-theme="mountain"] {
+    /* UNIQUE BACKGROUND: Dark Slate */
+    --md-sys-color-surface: #101416;
+    
+    --md-sys-color-primary: #B0BEC5;
+    --md-sys-color-secondary: #80DEEA;
+    --md-sys-color-tertiary: #B39DDB;
+  }
+}
 
-cat <<EOT > "$THEME_ROOT/assets/scss/_mastodon.scss"
-.mastodon-card { max-width: 600px; margin: 2rem auto; font-family: 'Noto Sans', sans-serif; }
-.mastodon-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
-.mastodon-author { display: flex; gap: 12px; align-items: center; }
-.mastodon-author img.u-photo { border-radius: 50%; object-fit: cover; background-color: var(--md-sys-color-outline-variant); }
-.author-meta { display: flex; flex-direction: column; line-height: 1.2; }
-.author-meta a { text-decoration: none; color: var(--md-sys-color-on-surface); }
-.author-meta a:hover { text-decoration: underline; }
-.p-nickname { font-size: 0.85rem; color: var(--md-sys-color-outline); }
-.mastodon-logo { color: var(--md-sys-color-primary); width: 24px; height: 24px; }
-.mastodon-logo svg { width: 100%; height: 100%; fill: currentColor; }
-.mastodon-card .e-content { font-size: 1rem; line-height: 1.5; margin-bottom: 1rem; }
-.mastodon-card .e-content p { margin-bottom: 0.5rem; }
-.mastodon-card .e-content a { color: var(--md-sys-color-secondary); word-break: break-all; }
-.mastodon-media { display: grid; gap: 8px; margin-bottom: 1rem; border-radius: 8px; overflow: hidden; }
-.mastodon-media img { width: 100%; height: auto; display: block; background-color: rgba(0,0,0,0.05); }
-.mastodon-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--md-sys-color-outline-variant); padding-top: 12px; font-size: 0.85rem; color: var(--md-sys-color-outline); }
-.mastodon-stats { display: flex; gap: 16px; }
-.button-small { text-decoration: none; color: var(--md-sys-color-primary); font-weight: 600; }
-.button-small:hover { background-color: rgba(var(--md-sys-color-primary), 0.1); padding: 4px 8px; margin: -4px -8px; border-radius: 4px; }
-EOT
+/* ==========================================================================
+   THEME 4: THE FOREST (Deepest Evergreen)
+   ========================================================================== */
+[data-theme="forest"] {
+  --md-sys-color-primary: #1B5E20;
+  --md-sys-color-secondary: #5D4037;
+  --md-sys-color-tertiary: #33691E;
+}
 
-cat <<EOT > "$THEME_ROOT/assets/scss/_share.scss"
-.share-card { margin-top: 2rem; margin-bottom: 2rem; h3 { margin-top: 0; font-size: 1.25rem; } }
-.share-buttons-row { display: flex; gap: 12px; flex-wrap: wrap; }
-.share-btn { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--md-sys-color-outline); background-color: transparent; color: var(--md-sys-color-primary); cursor: pointer; transition: background-color 0.2s, transform 0.2s; &:hover { background-color: rgba(var(--md-sys-color-primary), 0.1); transform: scale(1.05); } svg { width: 24px; height: 24px; fill: currentColor; } }
-dialog#fedi-share-dialog { border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-sys-shape-corner-medium); background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); padding: 24px; max-width: 400px; width: 90%; &::backdrop { background: rgba(0, 0, 0, 0.5); } h3 { margin-top: 0; } .form-group { margin: 16px 0; } input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--md-sys-color-outline); background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); } .dialog-actions { display: flex; justify-content: flex-end; gap: 12px; } button { padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer; font-weight: 600; } .button-primary { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); } .button-secondary { background: transparent; color: var(--md-sys-color-primary); } }
-EOT
+@media (prefers-color-scheme: dark) {
+  [data-theme="forest"] {
+    /* UNIQUE BACKGROUND: Deepest Evergreen */
+    --md-sys-color-surface: #0E140E;
+    
+    --md-sys-color-primary: #A5D6A7;
+    --md-sys-color-secondary: #BCAAA4;
+    --md-sys-color-tertiary: #C5E1A5;
+  }
+}
 
-cat <<EOT > "$THEME_ROOT/assets/scss/main.scss"
+/* ==========================================================================
+   THEME 5: THE SUNSET (Deep Plum)
+   ========================================================================== */
+[data-theme="sunset"] {
+  --md-sys-color-primary: #311B92;
+  --md-sys-color-secondary: #880E4F;
+  --md-sys-color-tertiary: #BF360C;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="sunset"] {
+    /* UNIQUE BACKGROUND: Deep Plum */
+    --md-sys-color-surface: #1A0F14;
+    
+    --md-sys-color-primary: #9FA8DA;
+    --md-sys-color-secondary: #F48FB1;
+    --md-sys-color-tertiary: #FFCC80;
+  }
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_youtube.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_youtube.scss"
+.youtube-lite {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* Override generic card padding */
+}
+
+.youtube-lite img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.youtube-lite:hover img,
+.youtube-lite:focus-visible img {
+  opacity: 1;
+}
+
+/* Play Button */
+.youtube-lite .play-button {
+  position: absolute;
+  width: 68px;
+  height: 48px;
+  background-color: rgba(33, 33, 33, 0.8);
+  border-radius: 12px;
+  z-index: 1;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.youtube-lite:hover .play-button,
+.youtube-lite:focus-visible .play-button {
+  background-color: #f00; /* YouTube Red */
+}
+
+.youtube-lite .play-button::before {
+  content: "";
+  border-style: solid;
+  border-width: 10px 0 10px 20px;
+  border-color: transparent transparent transparent #fff;
+}
+
+/* Iframe (Loaded State) */
+.youtube-lite iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/main.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/main.scss"
 @import "variables";
 @import "base";
 @import "typography";
@@ -533,253 +1889,950 @@ cat <<EOT > "$THEME_ROOT/assets/scss/main.scss"
 @import "mastodon";
 @import "images";
 @import "share";
-EOT
+EOF
 
-# 6. JAVASCRIPT MODULES
-cat <<EOT > "$THEME_ROOT/assets/js/menu.js"
-document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.getElementById('menu-toggle');
-    const menu = document.getElementById('main-menu');
-    if (!toggle || !menu) return;
-    toggle.addEventListener('click', () => {
-        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-        toggle.setAttribute('aria-expanded', !isExpanded);
-        menu.classList.toggle('is-open');
-        const label = isExpanded ? "Open Menu" : "Close Menu";
-        toggle.setAttribute('aria-label', label);
-    });
-});
-EOT
-
-cat <<EOT > "$THEME_ROOT/assets/js/copy-code.js"
+# File: themes/Accessible-MD/assets/js/copy-code.js
+cat <<'EOF' > "themes/Accessible-MD/assets/js/copy-code.js"
 document.addEventListener('DOMContentLoaded', () => {
     const copyButtons = document.querySelectorAll('.copy-code-btn');
+
     copyButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             const pre = btn.nextElementSibling;
             const code = pre.querySelector('code');
             const text = code.innerText;
+
             navigator.clipboard.writeText(text).then(() => {
+                // Success Feedback
                 const originalIcon = btn.innerHTML;
+                
+                // Temporary Checkmark (We assume check.svg exists or use emoji fallback if needed, 
+                // but we will fetch the SVG in step 5)
                 btn.innerHTML = '<span role="img" aria-label="Copied">✓</span>'; 
                 btn.setAttribute('aria-label', 'Copied!');
+                
                 setTimeout(() => {
                     btn.innerHTML = originalIcon;
                     btn.setAttribute('aria-label', 'Copy code to clipboard');
                 }, 2000);
-            }).catch(err => { console.error('Failed to copy:', err); });
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
         });
     });
 });
-EOT
+EOF
 
-cat <<EOT > "$THEME_ROOT/assets/js/youtube-lite.js"
+# File: themes/Accessible-MD/assets/js/menu.js
+cat <<'EOF' > "themes/Accessible-MD/assets/js/menu.js"
 document.addEventListener('DOMContentLoaded', () => {
-    const players = document.querySelectorAll('.youtube-lite');
-    players.forEach(player => {
-        player.addEventListener('click', (e) => loadVideo(player));
-        player.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadVideo(player); }
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('main-menu');
+    const navContainer = document.getElementById('main-nav');
+    
+    // Targets to hide from VoiceOver when menu is open
+    const mainContent = document.getElementById('main-content');
+    const footer = document.querySelector('.site-footer');
+
+    if (!toggle || !menu) return;
+
+    // Helper: Close Menu
+    function closeMenu() {
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open Menu');
+        menu.classList.remove('is-open');
+        navContainer.classList.remove('has-scrim');
+        
+        // Restore scrolling and accessibility
+        document.body.style.overflow = ''; 
+        if (mainContent) mainContent.removeAttribute('inert');
+        if (footer) footer.removeAttribute('inert');
+    }
+
+    // Helper: Open Menu
+    function openMenu() {
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Close Menu');
+        menu.classList.add('is-open');
+        navContainer.classList.add('has-scrim');
+        
+        // Lock scrolling and hide background content from VoiceOver
+        document.body.style.overflow = 'hidden';
+        if (mainContent) mainContent.setAttribute('inert', '');
+        if (footer) footer.setAttribute('inert', '');
+    }
+
+    // 1. Toggle Click
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        if (isExpanded) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    // 2. Click Outside (Scrim) to Close
+    document.addEventListener('click', (e) => {
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        if (isExpanded && !menu.contains(e.target) && !toggle.contains(e.target)) {
+            closeMenu();
+        }
+    });
+
+    // 3. Escape Key to Close
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+            closeMenu();
+            toggle.focus();
+        }
+    });
+});
+EOF
+
+# File: themes/Accessible-MD/assets/js/share.js
+cat <<'EOF' > "themes/Accessible-MD/assets/js/share.js"
+document.addEventListener('DOMContentLoaded', () => {
+    const dialog = document.getElementById('fedi-share-dialog');
+    const fediBtns = document.querySelectorAll('.fediverse-btn');
+    const goBtn = document.getElementById('fedi-go-btn');
+    const input = document.getElementById('fedi-domain');
+    
+    let activeHandle = ''; // Store the handle of the network clicked
+
+    if (!dialog) return;
+
+    let currentTitle = document.title;
+    let currentUrl = window.location.href;
+
+    // 1. Open Modal & Capture Handle
+    fediBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Read the handle specific to this button (Friendica vs Mastodon)
+            activeHandle = btn.dataset.handle || '';
+            
+            dialog.showModal();
+            input.focus();
         });
     });
-    function loadVideo(wrapper) {
-        if (wrapper.dataset.loaded) return;
-        const id = wrapper.dataset.id;
-        const title = wrapper.getAttribute('aria-label');
-        const iframe = document.createElement('iframe');
-        iframe.setAttribute('src', \`https://www.youtube-nocookie.com/embed/\${id}?autoplay=1\`);
-        iframe.setAttribute('title', title);
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-        iframe.setAttribute('allowfullscreen', '');
-        wrapper.innerHTML = '';
-        wrapper.appendChild(iframe);
-        wrapper.dataset.loaded = 'true';
-    }
-});
-EOT
 
-cat <<EOT > "$THEME_ROOT/assets/js/webmentions.js"
+    // 2. Handle "Go"
+    goBtn.addEventListener('click', () => {
+        const domain = input.value.trim();
+        if (!domain) return;
+
+        // Construct Text: "Title URL via @handle"
+        let text = `${currentTitle} ${currentUrl}`;
+        if (activeHandle) {
+            text += ` via ${activeHandle}`;
+        }
+
+        // Generic Fediverse Share URL Pattern
+        const shareUrl = `https://${domain}/share?text=${encodeURIComponent(text)}`;
+        
+        window.open(shareUrl, '_blank', 'noopener,noreferrer');
+        dialog.close();
+    });
+});
+EOF
+
+# File: themes/Accessible-MD/assets/js/webmentions.js
+cat <<'EOF' > "themes/Accessible-MD/assets/js/webmentions.js"
+/**
+ * Webmention Logic
+ * Context: Source [214] Minimal, purposeful JS.
+ * Refactored: Phase 02j (Robustness Patch)
+ */
+
 (function() {
     const container = document.getElementById('webmentions');
     if (!container) return;
+
     const target = container.dataset.target;
     const list = document.getElementById('webmentions-list');
     const itemsPerPage = 20;
     let currentPage = 1;
     let allMentions = [];
+
     const apiUrl = 'https://webmention.io/api/mentions.jf2?target=' + encodeURIComponent(target);
-    fetch(apiUrl).then(response => {
+
+    fetch(apiUrl)
+        .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
-        }).then(data => {
+        })
+        .then(data => {
+            // [Patch] Filter out completely empty/malformed items
             allMentions = (data.children || []).filter(item => {
                 const hasContent = item.content && (item.content.text || item.content.html);
                 const hasAuthor = item.author && item.author.name;
                 return hasContent || hasAuthor;
             });
-            if (allMentions.length === 0) { list.innerHTML = '<p>No mentions yet. Be the first!</p>'; return; }
+            
+            if (allMentions.length === 0) {
+                list.innerHTML = '<p>No mentions yet. Be the first!</p>';
+                return;
+            }
+
             renderPage(1);
-        }).catch(error => { list.innerHTML = '<p class="error">Unable to load conversation at this time.</p>'; console.error('Webmention Fetch Error:', error); });
+        })
+        .catch(error => {
+            list.innerHTML = '<p class="error">Unable to load conversation at this time.</p>';
+            console.error('Webmention Fetch Error:', error);
+        });
+
     function renderPage(page) {
         list.innerHTML = '';
+        
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const pageItems = allMentions.slice(start, end);
+
         pageItems.forEach(item => {
             const article = document.createElement('article');
             article.className = 'mention h-cite outlined-card';
             article.innerHTML = buildMentionHTML(item);
             list.appendChild(article);
         });
-        if (allMentions.length > itemsPerPage) { renderPaginationControls(page); }
+
+        if (allMentions.length > itemsPerPage) {
+            renderPaginationControls(page);
+        }
     }
+
     function renderPaginationControls(page) {
         const totalPages = Math.ceil(allMentions.length / itemsPerPage);
         const nav = document.createElement('nav');
         nav.className = 'pagination-controls';
         nav.ariaLabel = "Webmention Pagination";
+
         if (page > 1) {
             const prev = document.createElement('button');
-            prev.innerText = 'Previous'; prev.className = 'button-secondary';
-            prev.onclick = () => { currentPage--; renderPage(currentPage); list.focus(); };
+            prev.innerText = 'Previous';
+            prev.className = 'button-secondary';
+            prev.onclick = () => { 
+                currentPage--; 
+                renderPage(currentPage);
+                list.focus(); 
+            };
             nav.appendChild(prev);
         }
+
         if (page < totalPages) {
             const next = document.createElement('button');
-            next.innerText = 'Next'; next.className = 'button-secondary';
-            next.onclick = () => { currentPage++; renderPage(currentPage); list.focus(); };
+            next.innerText = 'Next';
+            next.className = 'button-secondary';
+            next.onclick = () => { 
+                currentPage++; 
+                renderPage(currentPage);
+                list.focus();
+            };
             nav.appendChild(next);
         }
+        
         list.appendChild(nav);
     }
+
     function buildMentionHTML(item) {
         const author = item.author || {};
         const name = author.name || 'Anonymous';
-        const authorLink = author.url ? \`<a href="\${author.url}" class="p-name u-url" rel="nofollow">\${name}</a>\` : \`<span class="p-name">\${name}</span>\`;
+        // [Patch] Handle missing URLs to prevent broken/internal links
+        const authorLink = author.url 
+            ? `<a href="${author.url}" class="p-name u-url" rel="nofollow">${name}</a>`
+            : `<span class="p-name">${name}</span>`;
+            
         const content = sanitize(item.content ? item.content.html || item.content.text : '');
+        
+        // [Patch] Handle missing dates
         let timeHtml = '';
         if (item.published) {
             const dateStr = new Date(item.published).toLocaleDateString();
-            if (dateStr !== 'Invalid Date') { timeHtml = \`<time class="dt-published">\${dateStr}</time>\`; }
+            if (dateStr !== 'Invalid Date') {
+                timeHtml = `<time class="dt-published">${dateStr}</time>`;
+            }
         }
-        return \`<div class="mention-author u-author h-card"><img src="\${author.photo || '/images/default-avatar.png'}" alt="" class="u-photo">\${authorLink}</div><div class="mention-content p-content">\${content}</div>\${timeHtml}\`;
+        
+        return `
+            <div class="mention-author u-author h-card">
+                <img src="${author.photo || '/images/default-avatar.png'}" alt="" class="u-photo">
+                ${authorLink}
+            </div>
+            <div class="mention-content p-content">
+                ${content}
+            </div>
+            ${timeHtml}
+        `;
     }
+
     function sanitize(html) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
+        
         const forbidden = ['script', 'iframe', 'object', 'style', 'link', 'meta'];
-        forbidden.forEach(tag => { const elements = doc.querySelectorAll(tag); elements.forEach(el => el.remove()); });
+        forbidden.forEach(tag => {
+            const elements = doc.querySelectorAll(tag);
+            elements.forEach(el => el.remove());
+        });
+
         const allElements = doc.querySelectorAll('*');
         allElements.forEach(el => {
             Array.from(el.attributes).forEach(attr => {
-                if (attr.name.startsWith('on') || (attr.name === 'href' && attr.value.toLowerCase().startsWith('javascript:'))) { el.removeAttribute(attr.name); }
+                if (attr.name.startsWith('on') || 
+                   (attr.name === 'href' && attr.value.toLowerCase().startsWith('javascript:'))) {
+                    el.removeAttribute(attr.name);
+                }
             });
         });
+
         return doc.body.innerHTML;
     }
 })();
-EOT
+EOF
 
-cat <<EOT > "$THEME_ROOT/assets/js/share.js"
+# File: themes/Accessible-MD/assets/js/youtube-lite.js
+cat <<'EOF' > "themes/Accessible-MD/assets/js/youtube-lite.js"
 document.addEventListener('DOMContentLoaded', () => {
-    const dialog = document.getElementById('fedi-share-dialog');
-    const fediBtns = document.querySelectorAll('.fediverse-btn');
-    const goBtn = document.getElementById('fedi-go-btn');
-    const input = document.getElementById('fedi-domain');
-    let activeHandle = ''; 
-    if (!dialog) return;
-    let currentTitle = document.title;
-    let currentUrl = window.location.href;
-    fediBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            activeHandle = btn.dataset.handle || '';
-            dialog.showModal();
-            input.focus();
+    const players = document.querySelectorAll('.youtube-lite');
+
+    players.forEach(player => {
+        // Handle Mouse Click
+        player.addEventListener('click', (e) => loadVideo(player));
+
+        // Handle Keyboard (Enter/Space)
+        player.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                loadVideo(player);
+            }
         });
     });
-    goBtn.addEventListener('click', () => {
-        const domain = input.value.trim();
-        if (!domain) return;
-        let text = \`\${currentTitle} \${currentUrl}\`;
-        if (activeHandle) { text += \` via \${activeHandle}\`; }
-        const shareUrl = \`https://\${domain}/share?text=\${encodeURIComponent(text)}\`;
-        window.open(shareUrl, '_blank', 'noopener,noreferrer');
-        dialog.close();
-    });
+
+    function loadVideo(wrapper) {
+        if (wrapper.dataset.loaded) return;
+
+        const id = wrapper.dataset.id;
+        const title = wrapper.getAttribute('aria-label');
+        
+        // [Source: 191] Call API only on click
+        // Using youtube-nocookie for extra privacy
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('src', `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`);
+        iframe.setAttribute('title', title);
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', '');
+        
+        // Clear thumbnail and play button
+        wrapper.innerHTML = '';
+        wrapper.appendChild(iframe);
+        wrapper.dataset.loaded = 'true';
+    }
 });
-EOT
+EOF
 
-# 7. HTML LAYOUTS
-cat <<EOT > "$THEME_ROOT/layouts/partials/ui/chip.html"
-{{ \$type := .Type }}
-{{ \$iconName := .Type }}
-{{ \$vibe := "Icon" }}
-{{ \$label := .Type | humanize }}
-{{ if eq .Layout "guestbook" }}{{ \$iconName = "guestbook" }}{{ end }}
-{{ if eq .Layout "contact" }}{{ \$iconName = "contact" }}{{ end }}
-{{ if eq .Layout "search" }}{{ \$iconName = "search" }}{{ end }}
-{{ if eq .Title "About" }}{{ \$iconName = "about" }}{{ end }}
-{{ if eq \$iconName "status" }}{{ \$vibe = "Bubble" }}{{ end }}
-{{ if eq \$iconName "replies" }}{{ \$vibe = "Reply" }}{{ end }}
-{{ if eq \$iconName "reposts" }}{{ \$vibe = "Repeat" }}{{ end }}
-{{ if eq \$iconName "likes" }}{{ \$vibe = "Heart" }}{{ end }}
-{{ if eq \$iconName "bookmarks" }}{{ \$vibe = "Bookmark" }}{{ end }}
-{{ if eq \$iconName "rsvps" }}{{ \$vibe = "Event" }}{{ end }}
-{{ if eq \$iconName "articles" }}{{ \$vibe = "Article" }}{{ end }}
-{{ if eq \$iconName "pages" }}{{ \$vibe = "Page" }}{{ end }}
-{{ if eq \$iconName "categories" }}{{ \$vibe = "Category" }}{{ end }}
-{{ if eq \$iconName "tags" }}{{ \$vibe = "Tag" }}{{ end }}
-{{ if eq \$iconName "guestbook" }}{{ \$vibe = "Book" }}{{ end }}
-{{ if eq \$iconName "contact" }}{{ \$vibe = "Envelope" }}{{ end }}
-{{ if eq \$iconName "search" }}{{ \$vibe = "Magnifier" }}{{ end }}
-{{ if eq \$iconName "about" }}{{ \$vibe = "Info" }}{{ end }}
-<div class="chip chip-icon-only">
-  <span class="chip-icon" role="img" aria-label="{{ \$vibe }}">
-    {{ partial (printf "icons/%s.svg" \$iconName) . }}
-  </span>
-</div>
-EOT
+# File: themes/Accessible-MD/layouts/index.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/index.html"
+{{ define "main" }}
+<section class="feed-stream">
 
-cat <<EOT > "$THEME_ROOT/layouts/partials/ui/social-link.html"
-<li>
-  <a href="{{ .url }}" rel="{{ .rel }}" class="u-url social-link" style="text-decoration: none;">
-    {{ if .icon }}
-      <span class="brand-icon" aria-hidden="true" style="color: var(--md-sys-color-primary); display: flex; align-items: center;">
-        {{ partial (printf "icons/%s.svg" .icon) . }}
-      </span>
+  {{/* 1. AUTHOR PROFILE CARD (Top of Page) */}}
+  <article class="h-card profile-card outlined-card" style="margin-bottom: 2rem;">
+    <h1 class="p-name">{{ .Site.Params.author.name }}</h1>
+    
+    {{/* Profile Photo */}}
+    {{ $avatar := resources.Get .Site.Params.author.photo }}
+    {{ if $avatar }}
+      {{ $avatar := $avatar.Fill "500x500 Center webp" }}
+      <img class="u-photo" src="{{ $avatar.RelPermalink }}" alt="Profile Photo" width="{{ $avatar.Width }}" height="{{ $avatar.Height }}">
+    {{ else }}
+      <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
     {{ end }}
-    <span class="brand-name" style="font-weight: 600; color: var(--md-sys-color-primary);">{{ .name }}</span>
-    <span class="brand-handle" style="color: var(--md-sys-color-on-surface); opacity: 0.8; margin-left: 4px;">{{ .handle }}</span>
-  </a>
-</li>
-EOT
 
-cat <<EOT > "$THEME_ROOT/layouts/partials/social-meta.html"
+    <p class="p-note">{{ .Site.Params.author.bio }}</p>
+
+    <div class="profile-meta">
+      <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
+      <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+    </div>
+    
+    <h2>Social Media</h2>
+    <ul class="social-links">
+      {{ range .Site.Params.social }}
+        {{ partial "ui/social-link.html" . }}
+      {{ end }}
+    </ul>
+
+    {{ if .Site.Params.im }}
+    <h2>Messaging Services</h2>
+    <ul class="im-links">
+      {{ range .Site.Params.im }}
+        {{ partial "ui/social-link.html" . }}
+      {{ end }}
+    </ul>
+    {{ end }}
+  </article>
+
+  {{/* 2. FEED SECTION TITLE */}}
+  <h1>Latest Updates</h1>
+
+  {{/* 3. FEED LOGIC */}}
+  {{ $allowed_sections := slice "articles" "status" "replies" "reposts" "likes" "bookmarks" "rsvps" }}
+  {{ $feed := where .Site.RegularPages "Section" "in" $allowed_sections }}
+  {{ $paginator := .Paginate $feed }}
+
+  <div class="post-feed">
+    {{ range $paginator.Pages }}
+      <article class="feed-item outlined-card h-entry">
+        <header class="feed-header">
+          <div class="headline-row">
+            {{ partial "ui/chip.html" . }}
+            <h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2>
+          </div>
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
+        </header>
+        <div class="feed-content p-summary">
+          {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | plainify | truncate 500 }}{{ end }}
+        </div>
+        <a href="{{ .Permalink }}" class="u-url">Read More</a>
+      </article>
+    {{ else }}
+      <div class="outlined-card">
+        <h3>No updates found.</h3>
+        <p>The stream is currently quiet.</p>
+      </div>
+    {{ end }}
+  </div>
+
+  {{ template "_internal/pagination.html" . }}
+</section>
+{{ end }}
+EOF
+
+# File: themes/Accessible-MD/layouts/index.json
+cat <<'EOF' > "themes/Accessible-MD/layouts/index.json"
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "{{ .Site.Title }}",
+    "home_page_url": "{{ .Site.BaseURL }}",
+    "feed_url": "{{ .Permalink }}",
+    "items": [
+        {{ range $index, $element := .Site.RegularPages }}{{ if $index }},{{ end }}
+        {
+            "id": "{{ .Permalink }}",
+            "url": "{{ .Permalink }}",
+            "title": "{{ .Title }}",
+            "content_html": {{ .Content | jsonify }},
+            "date_published": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
+        }
+        {{ end }}
+    ]
+}
+EOF
+
+# File: themes/Accessible-MD/layouts/404.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/404.html"
+{{ define "main" }}
+<section class="error-page outlined-card">
+  <h1>404: Page Not Found</h1>
+  <p>Sorry, the page you are looking for has moved or does not exist.</p>
+
+  <div class="recovery-actions">
+    <a href="/" class="button-primary">Back to Home</a>
+    
+    <div class="search-recovery">
+      <p>Or try searching for it:</p>
+      <div id="search"></div>
+    </div>
+  </div>
+</section>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="/pagefind/pagefind-ui.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
+{{ end }}
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/baseof.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/baseof.html"
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  {{ partial "header.html" . }}
+
+  <main id="main-content" role="main" class="container">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  {{ partial "footer.html" . }}
+
+  {{/* BUNDLE: Webmentions + YouTube + Menu + Copy Code */}}
+  {{ $js := slice (resources.Get "js/webmentions.js") (resources.Get "js/youtube-lite.js") (resources.Get "js/menu.js") (resources.Get "js/copy-code.js") (resources.Get "js/share.js") (resources.Get "js/share.js") (resources.Get "js/share.js") | resources.Concat "js/main.js" | resources.Minify | resources.Fingerprint }}
+  <script src="{{ $js.RelPermalink }}" defer></script>
+</body>
+</html>
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/list.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/list.html"
+{{ define "main" }}
+<section class="list-feed h-feed">
+  <div class="headline-row">
+     {{ partial "ui/chip.html" . }}
+     <h1 class="p-name">{{ .Title }}</h1>
+  </div>
+
+  {{/* NEW: Section Intro (Blurb) */}}
+  {{ with .Content }}
+  <div class="section-intro p-summary">
+    {{ . }}
+  </div>
+  {{ end }}
+  
+  <div class="post-feed">
+    {{ range .Paginator.Pages }}
+      <article class="feed-item outlined-card h-entry {{ .Type }}">
+        {{/* Hidden Author for Feed Items */}}
+        <div style="display: none;" class="p-author h-card">
+           <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+        </div>
+
+        <header class="feed-header">
+          <div class="headline-row">
+            {{ partial "ui/chip.html" . }}
+            <h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2>
+          </div>
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
+        </header>
+
+        {{ if .Params.reply_to }}<div class="context-mini">↪ Replying to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to | truncate 40 }}</a></div>{{ end }}
+        {{ if .Params.like_of }}<div class="context-mini">♥ Liked <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of | truncate 40 }}</a></div>{{ end }}
+        {{ if .Params.repost_of }}<div class="context-mini">↻ Reposted <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of | truncate 40 }}</a></div>{{ end }}
+        {{ if .Params.bookmark_of }}<div class="context-mini">🔖 Bookmarked <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of | truncate 40 }}</a></div>{{ end }}
+        {{ if .Params.rsvp }}<div class="context-mini">📅 RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span></div>{{ end }}
+
+        <div class="feed-content p-summary">
+          {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | truncate 500 }}{{ end }}
+        </div>
+      </article>
+    {{ end }}
+  </div>
+  {{ template "_internal/pagination.html" . }}
+</section>
+{{ end }}
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/list.json
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/list.json"
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "{{ .Title }} | {{ .Site.Title }}",
+    "home_page_url": "{{ .Site.BaseURL }}",
+    "feed_url": "{{ .Permalink }}",
+    "items": [
+        {{ range $index, $element := .Paginator.Pages }}{{ if $index }},{{ end }}
+        {
+            "id": "{{ .Permalink }}",
+            "url": "{{ .Permalink }}",
+            "title": "{{ .Title }}",
+            "content_html": {{ .Content | jsonify }},
+            "date_published": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
+        }
+        {{ end }}
+    ]
+}
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/single.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
+{{ define "main" }}
+<article class="single-post h-entry outlined-card">
+  
+  {{/* MICROFORMATS: Hidden Author Block */}}
+  <div style="display: none;" class="p-author h-card">
+    <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+    <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+  </div>
+
+  <header class="post-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">{{ .Title }}</h1>
+    </div>
+    <a href="{{ .Permalink }}" class="u-url" style="text-decoration: none; color: inherit;">
+      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+        {{ .Date.Format "January 2, 2006" }}
+      </time>
+    </a>
+  </header>
+
+  {{/* CONTEXT BLOCKS */}}
+  {{ if .Params.reply_to }}<div class="context-block reply-context"><p>Replying to: <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
+  {{ if .Params.like_of }}<div class="context-block like-context"><p>Liked: <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of }}</a></p></div>{{ end }}
+  {{ if .Params.repost_of }}<div class="context-block repost-context"><p>Reposted: <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of }}</a></p></div>{{ end }}
+  {{ if .Params.bookmark_of }}<div class="context-block bookmark-context"><p>Bookmarked: <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of }}</a></p></div>{{ end }}
+  {{ if and .Params.rsvp .Params.reply_to }}<div class="context-block rsvp-context"><p>RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span> to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
+
+  <div class="e-content">{{ .Content }}</div>
+
+  <footer class="post-footer">
+    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
+    {{ if .Params.syndication }}
+    <div class="syndication-container">
+      <span class="syndication-label">Also on:</span>
+      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+        {{ range .Params.syndication }}
+          {{ $synURL := . }}
+          {{ $match := false }}
+          {{ $data := dict }}
+          
+          {{/* LOOKUP */}}
+          {{ range $.Site.Params.social }}
+             {{ if in $synURL .url }}
+               {{ $match = true }}
+               {{ $data = . }}
+             {{ end }}
+          {{ end }}
+
+          <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
+            {{ if $match }}
+               {{/* Icon Block: Silent for screen readers */}}
+               {{ if $data.icon }}
+                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
+                   {{ partial (printf "icons/%s.svg" $data.icon) . }}
+                 </span>
+               {{ end }}
+               <span class="chip-label">{{ $data.name }}</span>
+            {{ else }}
+               {{/* Fallback for unknown sites */}}
+               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
+            {{ end }}
+          </a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+
+    {{ if .Params.tags }}
+    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{ end }}
+  </footer>
+</article>
+
+{{ partial "share-buttons.html" . }}
+{{ if .Params.show_webmentions }}
+<section id="webmentions" class="webmentions-container outlined-card" data-target="{{ .Permalink }}" aria-labelledby="mentions-heading">
+  <h2 id="mentions-heading">Webmentions</h2>
+  
+  {{/* NEW: Webmention Explainer (Restored) */}}
+  <div class="webmention-explainer">
+    <p>Have your say. Write a post on your own site and link to <code>{{ .Permalink }}</code> to appear here!</p>
+  </div>
+
+  <div id="webmentions-list"><p>Loading...</p></div>
+</section>
+{{ end }}
+{{ end }}
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/rss.xml
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/rss.xml"
+<rss version="2.0" 
+     xmlns:atom="http://www.w3.org/2005/Atom" 
+     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+     xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>{{ if eq  .Title  .Site.Title }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ if ne  .Title  .Site.Title }}{{ .Title }} | {{ end }}{{ .Site.Title }}</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>{{ .Site.LanguageCode }}</language>
+    {{ if .Site.Params.author.name }}<managingEditor>{{ .Site.Params.author.name }}</managingEditor>{{ end }}
+    {{ if .Site.Params.author.name }}<webMaster>{{ .Site.Params.author.name }}</webMaster>{{ end }}
+    {{ if .Site.Copyright }}<copyright>{{ .Site.Copyright }}</copyright>{{ end }}
+    {{ if not .Date.IsZero }}<lastBuildDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
+    {{ with .OutputFormats.Get "RSS" }}
+        {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
+    {{ end }}
+    
+    {{/* RANGE: Iterate over regular pages in this section */}}
+    {{ range .Pages }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      {{ with .Site.Params.author.name }}<author>{{ . }}</author>{{ end }}
+      <guid>{{ .Permalink }}</guid>
+      <description>{{ .Summary | transform.XMLEscape | safeHTML }}</description>
+      
+      {{/* FEATURE: Full Content */}}
+      <content:encoded>{{ .Content | transform.XMLEscape | safeHTML }}</content:encoded>
+      
+      {{/* FEATURE: Media/Featured Image Detection */}}
+      {{/* Logic: Grab the first image found in the page bundle */}}
+      {{ $img := .Resources.GetMatch "**.jpg" }}
+      {{ if not $img }}{{ $img = .Resources.GetMatch "**.png" }}{{ end }}
+      {{ if not $img }}{{ $img = .Resources.GetMatch "**.webp" }}{{ end }}
+      
+      {{ with $img }}
+        {{ $rssImg := .Resize "1200x jpeg" }}
+        <media:content url="{{ $rssImg.Permalink }}" type="image/jpeg" medium="image" width="{{ $rssImg.Width }}" height="{{ $rssImg.Height }}"/>
+      {{ end }}
+    </item>
+    {{ end }}
+  </channel>
+</rss>
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/search.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/search.html"
+{{ define "main" }}
+<section class="search-page outlined-card h-entry">
+  {{/* Hidden Metadata for Parsers */}}
+  <div style="display: none;">
+     <div class="p-author h-card">
+       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+     </div>
+     <a href="{{ .Permalink }}" class="u-url"></a>
+     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     <span class="p-category">Search</span>
+  </div>
+
+  <header class="page-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      {{/* Hardcoded P-Name */}}
+      <h1 class="p-name">Search</h1>
+    </div>
+  </header>
+  
+  <div id="search" role="search"></div>
+</section>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>window.addEventListener('DOMContentLoaded', (event) => { new PagefindUI({ element: "#search", showSubResults: true }); });</script>
+{{ end }}
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/_markup/render-codeblock.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-codeblock.html"
+<div class="code-block-wrapper">
+  <button class="copy-code-btn" aria-label="Copy code to clipboard">
+    {{ partial "icons/content_copy.svg" . }}
+  </button>
+  <pre{{ if .Attributes }} {{ .Attributes | safeHTMLAttr }}{{ end }}><code>{{ .Inner }}</code></pre>
+</div>
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/_markup/render-image.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-image.html"
+{{- $img := .Page.Resources.GetMatch .Destination -}}
+{{- $alt := .PlainText | default "" -}}
+{{- $caption := .Title | default "" -}}
+
+<figure class="md-figure {{ if not $img }}md-figure-remote{{ end }}">
+  {{- if $img -}}
+    {{/* LOCAL IMAGE PROCESSING */}}
+    {{- $tiny := $img.Resize "480x webp" -}}
+    {{- $small := $img.Resize "800x webp" -}}
+    {{- $medium := $img.Resize "1200x webp" -}}
+    
+    <img 
+      class="md-image"
+      src="{{ $small.RelPermalink }}" 
+      srcset="
+        {{ $tiny.RelPermalink }} 480w,
+        {{ $small.RelPermalink }} 800w,
+        {{ $medium.RelPermalink }} 1200w"
+      sizes="(max-width: 600px) 100vw, 800px"
+      alt="{{ $alt }}"
+      loading="lazy"
+      width="{{ $img.Width }}"
+      height="{{ $img.Height }}"
+    >
+  {{- else -}}
+    {{/* REMOTE IMAGE FALLBACK */}}
+    <img 
+      class="md-image" 
+      src="{{ .Destination | safeURL }}" 
+      alt="{{ $alt }}" 
+      title="{{ $caption }}"
+      loading="lazy"
+    >
+  {{- end -}}
+
+  {{- if $caption -}}
+    <figcaption class="md-figcaption">{{ $caption | safeHTML }}</figcaption>
+  {{- end -}}
+</figure>
+EOF
+
+# File: themes/Accessible-MD/layouts/_default/_markup/render-table.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-table.html"
+<div class="table-wrapper">
+  <table class="md-table">
+    {{- with .Attributes.caption }}
+      <caption>{{ . }}</caption>
+    {{- end }}
+    <thead>
+      {{- range .THead }}
+        <tr>
+          {{- range . }}
+            <th scope="col" {{ with .Alignment }}style="text-align:{{ . }}"{{ end }}>
+              {{- .Text -}}
+            </th>
+          {{- end }}
+        </tr>
+      {{- end }}
+    </thead>
+    <tbody>
+      {{- range .TBody }}
+        <tr>
+          {{- range . }}
+            <td {{ with .Alignment }}style="text-align:{{ . }}"{{ end }}>
+              {{- .Text -}}
+            </td>
+          {{- end }}
+        </tr>
+      {{- end }}
+    </tbody>
+  </table>
+</div>
+EOF
+
+# File: themes/Accessible-MD/layouts/partials/head.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/head.html"
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+{{ hugo.Generator }}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+
+{{/* INDIEWEB DISCOVERY */}}
+{{ with .Site.Params.webmentions.username }}
+<link rel="webmention" href="https://webmention.io/{{ . }}/webmention" />
+<link rel="pingback" href="https://webmention.io/{{ . }}/xmlrpc" />
+{{ end }}
+{{ if .Site.Params.authorization_endpoint }}<link rel="authorization_endpoint" href="{{ .Site.Params.authorization_endpoint }}">{{ end }}
+{{ if .Site.Params.token_endpoint }}<link rel="token_endpoint" href="{{ .Site.Params.token_endpoint }}">{{ end }}
+{{ if .Site.Params.micropub }}<link rel="micropub" href="{{ .Site.Params.micropub }}">{{ end }}
+
+{{ $opts := dict "transpiler" "libsass" "targetPath" "css/style.css" }}
+{{ $style := resources.Get "scss/main.scss" | css.Sass $opts | resources.Minify | resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $style.RelPermalink }}">
+{{ partial "social-meta.html" . }}
+EOF
+
+# File: themes/Accessible-MD/layouts/partials/header.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/header.html"
+<header role="banner" class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="site-title">{{ .Site.Title }}</a>
+    
+    <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Open Menu">
+      <span class="icon-box">
+        {{ partial "icons/menu.svg" . }}
+      </span>
+    </button>
+
+    <nav role="navigation" aria-label="Main Navigation" id="main-nav">
+      <ul id="main-menu" class="nav-list">
+        {{ range .Site.Menus.main }}
+        <li>
+          <a href="{{ .URL }}" {{ if or (eq .URL $.RelPermalink) (eq .URL $.Permalink) }}aria-current="page"{{ end }}>
+            {{ .Name }}
+          </a>
+        </li>
+        {{ end }}
+      </ul>
+    </nav>
+  </div>
+</header>
+EOF
+
+# File: themes/Accessible-MD/layouts/partials/footer.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/footer.html"
+<footer role="contentinfo" class="site-footer">
+  <div class="container">
+    <p>&copy; {{ now.Year }} {{ .Site.Params.author.name }}</p>
+    <p>
+  Content licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+  <span aria-hidden="true" style="margin: 0 8px;">|</span>
+  <a href="/accessibility/">Accessibility</a>
+</p>
+  </div>
+</footer>
+EOF
+
+# File: themes/Accessible-MD/layouts/partials/social-meta.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/social-meta.html"
+{{/* =======================================================================
+   PARTIAL: social-meta.html
+   PURPOSE: Generates Open Graph & Twitter Cards for rich social sharing.
+   LOGIC: Auto-detects featured images or falls back to author photo.
+   ======================================================================= */}}
+
+{{/* 1. BASIC METADATA */}}
 <meta property="og:title" content="{{ .Title }}">
 <meta property="og:description" content="{{ .Summary | default .Site.Params.author.bio | truncate 160 }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:site_name" content="{{ .Site.Title }}">
-{{ \$img := .Resources.GetMatch "*feature*" }}
-{{ if not \$img }}{{ \$img = .Resources.GetMatch "*cover*" }}{{ end }}
-{{ if not \$img }}{{ \$img = .Resources.GetMatch "*.jpg" }}{{ end }}
-{{ if not \$img }}{{ \$img = .Resources.GetMatch "*.png" }}{{ end }}
-{{ if not \$img }}{{ \$img = resources.Get .Site.Params.author.photo }}{{ end }}
-{{ if \$img }}
-  {{ \$socialImg := \$img.Fill "1200x630 Center webp" }}
-  <meta property="og:image" content="{{ \$socialImg.Permalink }}">
-  <meta property="og:image:width" content="{{ \$socialImg.Width }}">
-  <meta property="og:image:height" content="{{ \$socialImg.Height }}">
+
+{{/* 2. IMAGE DETECTION LOGIC */}}
+{{/* Priority: 1. "feature" in name, 2. "cover" in name, 3. Any image, 4. Profile Photo */}}
+{{ $img := .Resources.GetMatch "*feature*" }}
+{{ if not $img }}{{ $img = .Resources.GetMatch "*cover*" }}{{ end }}
+{{ if not $img }}{{ $img = .Resources.GetMatch "*.jpg" }}{{ end }}
+{{ if not $img }}{{ $img = .Resources.GetMatch "*.png" }}{{ end }}
+
+{{/* Fallback: Site Author Photo */}}
+{{ if not $img }}
+  {{ $img = resources.Get .Site.Params.author.photo }}
+{{ end }}
+
+{{/* 3. GENERATE IMAGE TAGS */}}
+{{ if $img }}
+  {{/* Resize to recommended OG dimensions (1200x630) for best crop */}}
+  {{ $socialImg := $img.Fill "1200x630 Center webp" }}
+  
+  <meta property="og:image" content="{{ $socialImg.Permalink }}">
+  <meta property="og:image:width" content="{{ $socialImg.Width }}">
+  <meta property="og:image:height" content="{{ $socialImg.Height }}">
+  
+  {{/* Twitter/Fediverse Card Style */}}
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="{{ \$socialImg.Permalink }}">
+  <meta name="twitter:image" content="{{ $socialImg.Permalink }}">
 {{ else }}
+  {{/* Absolute fail-safe if no images exist at all */}}
   <meta name="twitter:card" content="summary">
 {{ end }}
+
+{{/* 4. TWITTER/FEDIVERSE TITLE & DESC */}}
 <meta name="twitter:title" content="{{ .Title }}">
 <meta name="twitter:description" content="{{ .Summary | default .Site.Params.author.bio | truncate 160 }}">
-EOT
+EOF
 
-cat <<EOT > "$THEME_ROOT/layouts/partials/share-buttons.html"
+# File: themes/Accessible-MD/layouts/partials/share-buttons.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/share-buttons.html"
 {{ $bluesky := index (where .Site.Params.social "name" "BlueSky") 0 }}
 {{ $mastodon := index (where .Site.Params.social "name" "Mastodon") 0 }}
 {{ $friendica := index (where .Site.Params.social "name" "Friendica") 0 }}
@@ -816,389 +2869,259 @@ cat <<EOT > "$THEME_ROOT/layouts/partials/share-buttons.html"
     <div class="dialog-actions"><button value="cancel" class="button-secondary">Cancel</button><button id="fedi-go-btn" type="button" class="button-primary">Share</button></div>
   </form>
 </dialog>
-EOT
+EOF
 
-cat <<EOT > "$THEME_ROOT/layouts/partials/head.html"
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
-{{ hugo.Generator }}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
-{{ with .Site.Params.webmentions.username }}
-<link rel="webmention" href="https://webmention.io/{{ . }}/webmention" />
-<link rel="pingback" href="https://webmention.io/{{ . }}/xmlrpc" />
+# File: themes/Accessible-MD/layouts/partials/ui/chip.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/ui/chip.html"
+{{ $type := .Type }}
+{{ $iconName := .Type }}
+{{ $vibe := "Icon" }}
+{{ $label := .Type | humanize }}
+
+{{/* 1. Override Type for Special Pages */}}
+{{ if eq .Layout "guestbook" }}
+  {{ $iconName = "guestbook" }}
 {{ end }}
-{{ if .Site.Params.authorization_endpoint }}<link rel="authorization_endpoint" href="{{ .Site.Params.authorization_endpoint }}">{{ end }}
-{{ if .Site.Params.token_endpoint }}<link rel="token_endpoint" href="{{ .Site.Params.token_endpoint }}">{{ end }}
-{{ if .Site.Params.micropub }}<link rel="micropub" href="{{ .Site.Params.micropub }}">{{ end }}
-{{ \$opts := dict "transpiler" "libsass" "targetPath" "css/style.css" }}
-{{ \$style := resources.Get "scss/main.scss" | css.Sass \$opts | resources.Minify | resources.Fingerprint }}
-<link rel="stylesheet" href="{{ \$style.RelPermalink }}">
-{{ partial "social-meta.html" . }}
-EOT
+{{ if eq .Layout "contact" }}
+  {{ $iconName = "contact" }}
+{{ end }}
+{{ if eq .Layout "search" }}
+  {{ $iconName = "search" }}
+{{ end }}
+{{ if eq .Title "About" }}
+  {{ $iconName = "about" }}
+{{ end }}
 
-cat <<EOT > "$THEME_ROOT/layouts/partials/header.html"
-<header role="banner" class="site-header">
-  <div class="container header-inner">
-    <a href="/" class="site-title">{{ .Site.Title }}</a>
-    <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Open Menu">
-      <span class="icon-box">{{ partial "icons/menu.svg" . }}</span>
-    </button>
-    <nav role="navigation" aria-label="Main Navigation" id="main-nav">
-      <ul id="main-menu" class="nav-list">
-        {{ range .Site.Menus.main }}
-        <li><a href="{{ .URL }}" {{ if or (eq .URL $.RelPermalink) (eq .URL $.Permalink) }}aria-current="page"{{ end }}>{{ .Name }}</a></li>
-        {{ end }}
-      </ul>
-    </nav>
-  </div>
-</header>
-EOT
+{{/* 2. Map Icons to Vibe Descriptors */}}
+{{ if eq $iconName "status" }}{{ $vibe = "Bubble" }}{{ end }}
+{{ if eq $iconName "replies" }}{{ $vibe = "Reply" }}{{ end }}
+{{ if eq $iconName "reposts" }}{{ $vibe = "Repeat" }}{{ end }}
+{{ if eq $iconName "likes" }}{{ $vibe = "Heart" }}{{ end }}
+{{ if eq $iconName "bookmarks" }}{{ $vibe = "Bookmark" }}{{ end }}
+{{ if eq $iconName "rsvps" }}{{ $vibe = "Event" }}{{ end }}
+{{ if eq $iconName "articles" }}{{ $vibe = "Article" }}{{ end }}
+{{ if eq $iconName "pages" }}{{ $vibe = "Page" }}{{ end }}
+{{ if eq $iconName "categories" }}{{ $vibe = "Category" }}{{ end }}
+{{ if eq $iconName "tags" }}{{ $vibe = "Tag" }}{{ end }}
+{{ if eq $iconName "guestbook" }}{{ $vibe = "Book" }}{{ end }}
+{{ if eq $iconName "contact" }}{{ $vibe = "Envelope" }}{{ end }}
+{{ if eq $iconName "search" }}{{ $vibe = "Magnifier" }}{{ end }}
+{{ if eq $iconName "about" }}{{ $vibe = "Info" }}{{ end }}
 
-cat <<EOT > "$THEME_ROOT/layouts/partials/footer.html"
-<footer role="contentinfo" class="site-footer">
-  <div class="container">
-    <p>&copy; {{ now.Year }} {{ .Site.Params.author.name }}</p>
-    <p>
-      Content licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
-      <span aria-hidden="true" style="margin: 0 8px;">|</span>
-      <a href="/accessibility/">Accessibility</a>
-    </p>
-  </div>
-</footer>
-EOT
-
-cat <<EOT > "$THEME_ROOT/layouts/_default/_markup/render-image.html"
-{{- \$img := .Page.Resources.GetMatch .Destination -}}
-{{- \$alt := .PlainText | default "" -}}
-{{- \$caption := .Title | default "" -}}
-<figure class="md-figure {{ if not \$img }}md-figure-remote{{ end }}">
-  {{- if \$img -}}
-    {{- \$tiny := \$img.Resize "480x webp" -}}
-    {{- \$small := \$img.Resize "800x webp" -}}
-    {{- \$medium := \$img.Resize "1200x webp" -}}
-    <img class="md-image" src="{{ \$small.RelPermalink }}" srcset="{{ \$tiny.RelPermalink }} 480w, {{ \$small.RelPermalink }} 800w, {{ \$medium.RelPermalink }} 1200w" sizes="(max-width: 600px) 100vw, 800px" alt="{{ \$alt }}" loading="lazy" width="{{ \$img.Width }}" height="{{ \$img.Height }}">
-  {{- else -}}
-    <img class="md-image" src="{{ .Destination | safeURL }}" alt="{{ \$alt }}" title="{{ \$caption }}" loading="lazy">
-  {{- end -}}
-  {{- if \$caption -}}<figcaption class="md-figcaption">{{ \$caption | safeHTML }}</figcaption>{{- end -}}
-</figure>
-EOT
-
-cat <<EOT > "$THEME_ROOT/layouts/_default/_markup/render-table.html"
-<div class="table-wrapper">
-  <table class="md-table">
-    {{- with .Attributes.caption }}<caption>{{ . }}</caption>{{- end }}
-    <thead>{{- range .THead }}<tr>{{- range . }}<th scope="col" {{ with .Alignment }}style="text-align:{{ . }}"{{ end }}>{{- .Text -}}</th>{{- end }}</tr>{{- end }}</thead>
-    <tbody>{{- range .TBody }}<tr>{{- range . }}<td {{ with .Alignment }}style="text-align:{{ . }}"{{ end }}>{{- .Text -}}</td>{{- end }}</tr>{{- end }}</tbody>
-  </table>
+<div class="chip chip-icon-only">
+  <span class="chip-icon" role="img" aria-label="{{ $vibe }}">
+    {{ partial (printf "icons/%s.svg" $iconName) . }}
+  </span>
 </div>
-EOT
+EOF
 
-cat <<EOT > "$THEME_ROOT/layouts/_default/_markup/render-codeblock.html"
-<div class="code-block-wrapper">
-  <button class="copy-code-btn" aria-label="Copy code to clipboard">{{ partial "icons/content_copy.svg" . }}</button>
-  <pre{{ if .Attributes }} {{ .Attributes | safeHTMLAttr }}{{ end }}><code>{{ .Inner }}</code></pre>
-</div>
-EOT
-
-cat <<EOT > "$THEME_ROOT/layouts/_default/baseof.html"
-<!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}">
-<head>
-  {{ partial "head.html" . }}
-</head>
-<body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
-  {{ partial "header.html" . }}
-  <main id="main-content" role="main" class="container">
-    {{ block "main" . }}{{ end }}
-  </main>
-  {{ partial "footer.html" . }}
-  {{ \$js := slice (resources.Get "js/webmentions.js") (resources.Get "js/youtube-lite.js") (resources.Get "js/menu.js") (resources.Get "js/copy-code.js") (resources.Get "js/share.js") | resources.Concat "js/main.js" | resources.Minify | resources.Fingerprint }}
-  <script src="{{ \$js.RelPermalink }}" defer></script>
-</body>
-</html>
-EOT
-
-cat <<EOT > "$THEME_ROOT/layouts/index.html"
-{{ define "main" }}
-<section class="feed-stream">
-  <article class="h-card profile-card outlined-card" style="margin-bottom: 2rem;">
-    <h1 class="p-name">{{ .Site.Params.author.name }}</h1>
-    {{ \$avatar := resources.Get .Site.Params.author.photo }}
-    {{ if \$avatar }}
-      {{ \$avatar := \$avatar.Fill "500x500 Center webp" }}
-      <img class="u-photo" src="{{ \$avatar.RelPermalink }}" alt="Profile Photo" width="{{ \$avatar.Width }}" height="{{ \$avatar.Height }}">
-    {{ else }}
-      <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
+# File: themes/Accessible-MD/layouts/partials/ui/social-link.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/ui/social-link.html"
+<li>
+  <a href="{{ .url }}" rel="{{ .rel }}" class="u-url social-link" style="text-decoration: none;">
+    {{/* Icon Block: aria-hidden="true" ensures this is invisible to screen readers */}}
+    {{ if .icon }}
+      <span class="brand-icon" aria-hidden="true" style="color: var(--md-sys-color-primary); display: flex; align-items: center;">
+        {{ partial (printf "icons/%s.svg" .icon) . }}
+      </span>
     {{ end }}
-    <p class="p-note">{{ .Site.Params.author.bio }}</p>
-    <div class="profile-meta"><span class="p-locality">{{ .Site.Params.author.location.city }}</span>, <span class="p-region">{{ .Site.Params.author.location.state }}</span></div>
-    <h2>Social Media</h2><ul class="social-links">{{ range .Site.Params.social }}{{ partial "ui/social-link.html" . }}{{ end }}</ul>
-    {{ if .Site.Params.im }}<h2>Messaging Services</h2><ul class="im-links">{{ range .Site.Params.im }}{{ partial "ui/social-link.html" . }}{{ end }}</ul>{{ end }}
-  </article>
-  <h1>Latest Updates</h1>
-  {{ \$allowed_sections := slice "articles" "status" "replies" "reposts" "likes" "bookmarks" "rsvps" }}
-  {{ \$feed := where .Site.RegularPages "Section" "in" \$allowed_sections }}
-  {{ \$paginator := .Paginate \$feed }}
-  <div class="post-feed">
-    {{ range \$paginator.Pages }}
-      <article class="feed-item outlined-card h-entry">
-        <header class="feed-header">
-          <div class="headline-row">{{ partial "ui/chip.html" . }}<h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2></div>
-          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 02, 2006" }}</time>
-        </header>
-        <div class="feed-content p-summary">{{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | plainify | truncate 500 }}{{ end }}</div>
-        <a href="{{ .Permalink }}" class="u-url">Read More</a>
-      </article>
-    {{ else }}
-      <div class="outlined-card"><h3>No updates found.</h3><p>The stream is currently quiet.</p></div>
-    {{ end }}
-  </div>
-  {{ template "_internal/pagination.html" . }}
-</section>
-{{ end }}
-EOT
 
-cat <<EOT > "$THEME_ROOT/layouts/index.json"
-{
-    "version": "https://jsonfeed.org/version/1",
-    "title": "{{ .Site.Title }}",
-    "home_page_url": "{{ .Site.BaseURL }}",
-    "feed_url": "{{ .Permalink }}",
-    "items": [
-        {{ range \$index, \$element := .Site.RegularPages }}{{ if \$index }},{{ end }}
-        {
-            "id": "{{ .Permalink }}",
-            "url": "{{ .Permalink }}",
-            "title": "{{ .Title }}",
-            "content_html": {{ .Content | jsonify }},
-            "date_published": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
-        }
-        {{ end }}
-    ]
-}
-EOT
+    <span class="brand-name" style="font-weight: 600; color: var(--md-sys-color-primary);">{{ .name }}</span>
+    
+    {{/* Handle */}}
+    <span class="brand-handle" style="color: var(--md-sys-color-on-surface); opacity: 0.8; margin-left: 4px;">{{ .handle }}</span>
+  </a>
+</li>
+EOF
 
-cat <<EOT > "$THEME_ROOT/layouts/_default/list.html"
-{{ define "main" }}
-<section class="list-feed h-feed">
-  <div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">{{ .Title }}</h1></div>
-  {{ with .Content }}<div class="section-intro p-summary">{{ . }}</div>{{ end }}
-  <div class="post-feed">
-    {{ range .Paginator.Pages }}
-      <article class="feed-item outlined-card h-entry {{ .Type }}">
-        <div style="display: none;" class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
-        <header class="feed-header">
-          <div class="headline-row">{{ partial "ui/chip.html" . }}<h2 class="p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title }}</a></h2></div>
-          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 02, 2006" }}</time>
-        </header>
-        {{ if .Params.reply_to }}<div class="context-mini">↪ Replying to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.like_of }}<div class="context-mini">♥ Liked <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.repost_of }}<div class="context-mini">↻ Reposted <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.bookmark_of }}<div class="context-mini">🔖 Bookmarked <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.rsvp }}<div class="context-mini">📅 RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span></div>{{ end }}
-        <div class="feed-content p-summary">{{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | truncate 500 }}{{ end }}</div>
-      </article>
-    {{ end }}
-  </div>
-  {{ template "_internal/pagination.html" . }}
-</section>
-{{ end }}
-EOT
+# File: themes/Accessible-MD/layouts/shortcodes/gallery.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/gallery.html"
+{{ $match := .Get "match" | default "gallery/*" }}
+{{ $images := .Page.Resources.Match $match }}
 
-cat <<EOT > "$THEME_ROOT/layouts/_default/rss.xml"
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">
-  <channel>
-    <title>{{ if eq  .Title  .Site.Title }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
-    <link>{{ .Permalink }}</link>
-    <description>{{ if ne  .Title  .Site.Title }}{{ .Title }} | {{ end }}{{ .Site.Title }}</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>{{ .Site.LanguageCode }}</language>
-    {{ if not .Date.IsZero }}<lastBuildDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
-    {{ with .OutputFormats.Get "RSS" }}{{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}{{ end }}
-    {{ range .Pages }}
-    <item>
-      <title>{{ .Title }}</title>
-      <link>{{ .Permalink }}</link>
-      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      <guid>{{ .Permalink }}</guid>
-      <description>{{ .Summary | transform.XMLEscape | safeHTML }}</description>
-      <content:encoded>{{ .Content | transform.XMLEscape | safeHTML }}</content:encoded>
-      {{ \$img := .Resources.GetMatch "**.jpg" }}{{ if not \$img }}{{ \$img = .Resources.GetMatch "**.png" }}{{ end }}
-      {{ with \$img }}{{ \$rssImg := .Resize "1200x jpeg" }}<media:content url="{{ \$rssImg.Permalink }}" type="image/jpeg" medium="image" width="{{ \$rssImg.Width }}" height="{{ \$rssImg.Height }}"/>{{ end }}
-    </item>
-    {{ end }}
-  </channel>
-</rss>
-EOT
-
-cat <<EOT > "$THEME_ROOT/layouts/_default/single.html"
-{{ define "main" }}
-<article class="single-post h-entry outlined-card">
-  <div style="display: none;" class="p-author h-card">
-    <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
-    <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
-  </div>
-  <header class="post-header">
-    <div class="headline-row">
-      {{ partial "ui/chip.html" . }}
-      <h1 class="p-name">{{ .Title }}</h1>
-    </div>
-    <a href="{{ .Permalink }}" class="u-url" style="text-decoration: none; color: inherit;">
-      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-        {{ .Date.Format "January 2, 2006" }}
-      </time>
+{{ if $images }}
+<div class="md-gallery-grid">
+  {{ range $images }}
+    {{ $thumb := .Fill "600x600 Center webp" }}
+    
+    {{/* ACCESSIBILITY LOGIC: */}}
+    {{/* 1. Check 'alt' in params. 2. Check 'title'. 3. Fallback to Name. */}}
+    {{ $altText := .Params.alt | default .Title | default .Name }}
+    
+    <a href="{{ .RelPermalink }}" class="gallery-item" target="_blank" aria-label="View full size: {{ $altText }}">
+      <img 
+        src="{{ $thumb.RelPermalink }}" 
+        alt="{{ $altText }}" 
+        width="{{ $thumb.Width }}" 
+        height="{{ $thumb.Height }}"
+        loading="lazy"
+      >
     </a>
-  </header>
-  {{ if .Params.reply_to }}<div class="context-block reply-context"><p>Replying to: <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
-  {{ if .Params.like_of }}<div class="context-block like-context"><p>Liked: <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of }}</a></p></div>{{ end }}
-  {{ if .Params.repost_of }}<div class="context-block repost-context"><p>Reposted: <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of }}</a></p></div>{{ end }}
-  {{ if .Params.bookmark_of }}<div class="context-block bookmark-context"><p>Bookmarked: <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of }}</a></p></div>{{ end }}
-  {{ if and .Params.rsvp .Params.reply_to }}<div class="context-block rsvp-context"><p>RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span> to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
-  <div class="e-content">{{ .Content }}</div>
-  <footer class="post-footer">
-    {{ if .Params.syndication }}
-    <div class="syndication-container">
-      <span class="syndication-label">Also on:</span>
-      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-        {{ range .Params.syndication }}
-          {{ \$synURL := . }}
-          {{ \$match := false }}
-          {{ \$data := dict }}
-          {{ range \$.Site.Params.social }}
-             {{ if in \$synURL .url }}
-               {{ \$match = true }}
-               {{ \$data = . }}
+  {{ end }}
+</div>
+{{ else }}
+  <p class="error">No images found for gallery match: {{ $match }}</p>
+{{ end }}
+EOF
+
+# File: themes/Accessible-MD/layouts/shortcodes/mastodon.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/mastodon.html"
+{{ $host := .Get "host" }}
+{{ $id := .Get "id" }}
+
+{{ if and $host $id }}
+  {{ $apiURL := printf "https://%s/api/v1/statuses/%s" $host $id }}
+  
+  {{/* Fetch Data with Error Handling */}}
+  {{ $data := dict }}
+  {{ $response := resources.GetRemote $apiURL }}
+  
+  {{ if $response }}
+    {{ if eq $response.StatusCode 200 }}
+      {{ $data = $response.Content | transform.Unmarshal }}
+    {{ else }}
+      <div class="mastodon-card error outlined-card">
+        <p><strong>Error:</strong> Could not fetch Mastodon post (Status {{ $response.StatusCode }}).</p>
+        <p><a href="https://{{ $host }}/@{{ $id }}">View Original on {{ $host }}</a></p>
+      </div>
+    {{ end }}
+  {{ else }}
+    <div class="mastodon-card error outlined-card">
+      <p><strong>Error:</strong> Unable to reach Mastodon instance ({{ $host }}).</p>
+    </div>
+  {{ end }}
+
+  {{/* Render Card if Data Exists */}}
+  {{ if $data }}
+    <article class="mastodon-card outlined-card" lang="{{ $data.language | default "en" }}">
+      
+      {{/* HEADER: Author Info */}}
+      <header class="mastodon-header">
+        <div class="mastodon-author">
+          {{/* PROXY AVATAR: Download image to serve locally for privacy */}}
+          {{ $avatar := resources.GetRemote $data.account.avatar }}
+          {{ if $avatar }}
+             {{/* Check for valid image resource before processing */}}
+             {{ if $avatar.Err }}
+               <div class="u-photo-placeholder">?</div>
+             {{ else }}
+               <img src="{{ $avatar.RelPermalink }}" alt="" class="u-photo" width="48" height="48" loading="lazy">
              {{ end }}
+          {{ else }}
+             <div class="u-photo-placeholder">?</div>
           {{ end }}
-          <a href="{{ \$synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
-            {{ if \$match }}
-               {{ if \$data.icon }}<span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">{{ partial (printf "icons/%s.svg" \$data.icon) . }}</span>{{ end }}
-               <span class="chip-label">{{ \$data.name }}</span>
-            {{ else }}
-               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}</span>
+          
+          <div class="author-meta">
+            <a href="{{ $data.account.url }}" class="p-name u-url" target="_blank" rel="noopener noreferrer">
+              <strong>{{ $data.account.display_name | default $data.account.username }}</strong>
+            </a>
+            <span class="p-nickname">@{{ $data.account.username }}@{{ $host }}</span>
+          </div>
+        </div>
+        
+        <div class="mastodon-logo" aria-label="Mastodon Post">
+          {{ partial "icons/mastodon.svg" . }}
+        </div>
+      </header>
+
+      {{/* BODY: Content */}}
+      <div class="e-content">
+        {{ $data.content | safeHTML }}
+      </div>
+
+      {{/* MEDIA: Image Grid */}}
+      {{ if $data.media_attachments }}
+      <div class="mastodon-media">
+        {{ range $data.media_attachments }}
+          {{ if eq .type "image" }}
+            {{/* PROXY MEDIA: Download content images */}}
+            {{ $img := resources.GetRemote .url }}
+            {{ if $img }}
+              {{ if not $img.Err }}
+                <img src="{{ $img.RelPermalink }}" alt="{{ .description | default "Attached image" }}" loading="lazy">
+              {{ end }}
             {{ end }}
-          </a>
+          {{ end }}
         {{ end }}
       </div>
-    </div>
-    {{ end }}
-    {{ if .Params.tags }}<ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>{{ end }}
-  </footer>
-</article>
-{{ partial "share-buttons.html" . }}
-{{ if .Params.show_webmentions }}
-<section id="webmentions" class="webmentions-container outlined-card" data-target="{{ .Permalink }}" aria-labelledby="mentions-heading">
-  <h2 id="mentions-heading">Webmentions</h2>
-  <div class="webmention-explainer"><p>Have your say. Write a post on your own site and link to <code>{{ .Permalink }}</code> to appear here!</p></div>
-  <div id="webmentions-list"><p>Loading...</p></div>
-</section>
-{{ end }}
-{{ end }}
-EOT
+      {{ end }}
 
-cat <<EOT > "$THEME_ROOT/layouts/_default/search.html"
-{{ define "main" }}
-<section class="search-page outlined-card h-entry">
-  <div style="display: none;">
-     <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a><img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}"></div>
-     <a href="{{ .Permalink }}" class="u-url"></a><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time><span class="p-category">Search</span>
-  </div>
-  <header class="page-header">
-    <div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">Search</h1></div>
-  </header>
-  <div id="search" role="search"></div>
-</section>
-<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
-<script src="/pagefind/pagefind-ui.js"></script>
-<script>window.addEventListener('DOMContentLoaded', (event) => { new PagefindUI({ element: "#search", showSubResults: true }); });</script>
-{{ end }}
-EOT
+      {{/* FOOTER: Meta & Stats */}}
+      <footer class="mastodon-footer">
+        <time class="dt-published" datetime="{{ $data.created_at }}">
+          {{ dateFormat "Jan 02, 2006" $data.created_at }}
+        </time>
+        <div class="mastodon-stats">
+          <span>↩ {{ $data.replies_count }}</span>
+          <span>↻ {{ $data.reblogs_count }}</span>
+          <span>♥ {{ $data.favourites_count }}</span>
+        </div>
+        <a href="{{ $data.url }}" class="button-small" target="_blank" rel="noopener noreferrer">View Original</a>
+      </footer>
+    </article>
+  {{ end }}
 
-cat <<EOT > "$THEME_ROOT/layouts/404.html"
-{{ define "main" }}
-<section class="error-page outlined-card">
-  <h1>404: Page Not Found</h1>
-  <p>Sorry, the page you are looking for has moved or does not exist.</p>
-  <div class="recovery-actions">
-    <a href="/" class="button-primary">Back to Home</a>
-    <div class="search-recovery"><p>Or try searching for it:</p><div id="search"></div></div>
-  </div>
-</section>
-<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
-<script src="/pagefind/pagefind-ui.js"></script>
-<script>window.addEventListener('DOMContentLoaded', (event) => { new PagefindUI({ element: "#search", showSubResults: true }); });</script>
+{{ else }}
+  <p class="error"><strong>Mastodon Shortcode Error:</strong> Missing 'host' or 'id' parameter.</p>
 {{ end }}
-EOT
+EOF
 
-cat <<EOT > "$THEME_ROOT/layouts/pages/guestbook.html"
-{{ define "main" }}
-<section class="guestbook-page outlined-card h-entry">
-  <div style="display: none;">
-     <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a><img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}"></div>
-     <a href="{{ .Permalink }}" class="u-url"></a><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time><span class="p-category">Guestbook</span>
-  </div>
-  <header class="page-header">
-    <div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">Guestbook</h1></div>
-    <p class="p-summary">{{ .Site.Params.webmentions.guestbookIntro }}</p>
-  </header>
-  <div class="e-content">{{ .Content }}</div>
-  <footer class="post-footer">
-    {{ if .Params.syndication }}
-    <div class="syndication-container">
-      <span class="syndication-label">Also on:</span>
-      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-        {{ range .Params.syndication }}
-          {{ \$synURL := . }}
-          {{ \$match := false }}
-          {{ \$data := dict }}
-          {{ range \$.Site.Params.social }}
-             {{ if in \$synURL .url }}
-               {{ \$match = true }}
-               {{ \$data = . }}
-             {{ end }}
-          {{ end }}
-          <a href="{{ \$synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
-            {{ if \$match }}
-               {{ if \$data.icon }}<span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">{{ partial (printf "icons/%s.svg" \$data.icon) . }}</span>{{ end }}
-               <span class="chip-label">{{ \$data.name }}</span>
-            {{ else }}
-               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "\$1" \$synURL }}</span>
-            {{ end }}
-          </a>
-        {{ end }}
-      </div>
-    </div>
-    {{ end }}
-    {{ if .Params.tags }}<ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>{{ end }}
-  </footer>
-</section>
-{{ partial "share-buttons.html" . }}
-<section id="webmentions" class="webmentions-container outlined-card h-feed" data-target="{{ .Site.BaseURL }}" aria-labelledby="guestbook-heading">
-  <h2 id="guestbook-heading">Signatures</h2>
-  <div class="webmention-explainer"><p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p></div>
-  <div id="webmentions-list"><p>Loading recent signatures...</p></div>
-</section>
-{{ end }}
-EOT
+# File: themes/Accessible-MD/layouts/shortcodes/youtube.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/youtube.html"
+{{ $id := .Get 0 }}
+{{ $title := .Get 1 | default "Play Video" }}
 
-cat <<EOT > "$THEME_ROOT/layouts/pages/contact.html"
+<div class="youtube-lite outlined-card" 
+     data-id="{{ $id }}" 
+     role="button" 
+     tabindex="0" 
+     aria-label="{{ $title }}"
+     title="{{ $title }}">
+  
+  <img src="https://img.youtube.com/vi/{{ $id }}/maxresdefault.jpg" 
+       alt="Video Thumbnail" 
+       loading="lazy">
+  
+  <div class="play-button" aria-hidden="true"></div>
+</div>
+EOF
+
+# File: themes/Accessible-MD/layouts/pages/contact.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/pages/contact.html"
 {{ define "main" }}
 <section class="contact-page outlined-card h-entry">
+  {{/* Hidden Metadata for Parsers */}}
   <div style="display: none;">
-     <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a><img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}"></div>
-     <a href="{{ .Permalink }}" class="u-url"></a><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time><span class="p-category">Contact Form</span>
+     <div class="p-author h-card">
+       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+     </div>
+     <a href="{{ .Permalink }}" class="u-url"></a>
+     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     <span class="p-category">Contact Form</span>
   </div>
+
   <header class="page-header">
-    <div class="headline-row">{{ partial "ui/chip.html" . }}<h1 class="p-name">Contact Me</h1></div>
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      {{/* Hardcoded P-Name */}}
+      <h1 class="p-name">Contact Me</h1>
+    </div>
     <p class="p-summary">{{ .Site.Params.contact.intro }}</p>
   </header>
+
   <div class="e-content">{{ .Content }}</div>
-  {{ if .Params.tags }}<footer class="post-footer"><ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul></footer>{{ end }}
+
+  {{ if .Params.tags }}
+  <footer class="post-footer">
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>
+      {{ end }}
+    </ul>
+  </footer>
+  {{ end }}
+
   <form action="{{ .Site.Params.contact.formAction }}" method="POST" class="contact-form" aria-label="Contact Form">
     <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" required></div>
     <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" required></div>
@@ -1207,198 +3130,388 @@ cat <<EOT > "$THEME_ROOT/layouts/pages/contact.html"
   </form>
 </section>
 {{ end }}
-EOT
+EOF
 
-cat <<EOT > "$THEME_ROOT/layouts/shortcodes/youtube.html"
-{{ \$id := .Get 0 }}{{ \$title := .Get 1 | default "Play Video" }}
-<div class="youtube-lite outlined-card" data-id="{{ \$id }}" role="button" tabindex="0" aria-label="{{ \$title }}" title="{{ \$title }}">
-  <img src="https://img.youtube.com/vi/{{ \$id }}/maxresdefault.jpg" alt="Video Thumbnail" loading="lazy">
-  <div class="play-button" aria-hidden="true"></div>
-</div>
-EOT
+# File: themes/Accessible-MD/layouts/pages/guestbook.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/pages/guestbook.html"
+{{ define "main" }}
+<section class="guestbook-page outlined-card h-entry">
+  {{/* Hidden Metadata */}}
+  <div style="display: none;">
+     <div class="p-author h-card">
+       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+     </div>
+     <a href="{{ .Permalink }}" class="u-url"></a>
+     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     <span class="p-category">Guestbook</span>
+  </div>
 
-cat <<EOT > "$THEME_ROOT/layouts/shortcodes/gallery.html"
-{{ \$match := .Get "match" | default "gallery/*" }}
-{{ \$images := .Page.Resources.Match \$match }}
-{{ if \$images }}
-<div class="md-gallery-grid">
-  {{ range \$images }}
-    {{ \$thumb := .Fill "600x600 Center webp" }}
-    {{ \$altText := .Params.alt | default .Title | default .Name }}
-    <a href="{{ .RelPermalink }}" class="gallery-item" target="_blank" aria-label="View full size: {{ \$altText }}">
-      <img src="{{ \$thumb.RelPermalink }}" alt="{{ \$altText }}" width="{{ \$thumb.Width }}" height="{{ \$thumb.Height }}" loading="lazy">
-    </a>
-  {{ end }}
-</div>
-{{ else }}<p class="error">No images found for gallery match: {{ \$match }}</p>{{ end }}
-EOT
+  <header class="page-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">Guestbook</h1>
+    </div>
+    <p class="p-summary">{{ .Site.Params.webmentions.guestbookIntro }}</p>
+  </header>
 
-cat <<EOT > "$THEME_ROOT/layouts/shortcodes/mastodon.html"
-{{ \$host := .Get "host" }}{{ \$id := .Get "id" }}
-{{ if and \$host \$id }}
-  {{ \$apiURL := printf "https://%s/api/v1/statuses/%s" \$host \$id }}
-  {{ \$data := dict }}{{ \$response := resources.GetRemote \$apiURL }}
-  {{ if \$response }}{{ if eq \$response.StatusCode 200 }}{{ \$data = \$response.Content | transform.Unmarshal }}{{ else }}<div class="mastodon-card error outlined-card"><p><strong>Error:</strong> Could not fetch Mastodon post.</p></div>{{ end }}{{ else }}<div class="mastodon-card error outlined-card"><p><strong>Error:</strong> Unable to reach Mastodon.</p></div>{{ end }}
-  {{ if \$data }}
-    <article class="mastodon-card outlined-card" lang="{{ \$data.language | default "en" }}">
-      <header class="mastodon-header">
-        <div class="mastodon-author">
-          {{ \$avatar := resources.GetRemote \$data.account.avatar }}
-          {{ if \$avatar }}{{ if \$avatar.Err }}<div class="u-photo-placeholder">?</div>{{ else }}<img src="{{ \$avatar.RelPermalink }}" alt="" class="u-photo" width="48" height="48" loading="lazy">{{ end }}{{ else }}<div class="u-photo-placeholder">?</div>{{ end }}
-          <div class="author-meta"><a href="{{ \$data.account.url }}" class="p-name u-url" target="_blank"><strong>{{ \$data.account.display_name | default \$data.account.username }}</strong></a><span class="p-nickname">@{{ \$data.account.username }}@{{ \$host }}</span></div>
-        </div>
-        <div class="mastodon-logo" aria-label="Mastodon Post">{{ partial "icons/mastodon.svg" . }}</div>
-      </header>
-      <div class="e-content">{{ \$data.content | safeHTML }}</div>
-      {{ if \$data.media_attachments }}<div class="mastodon-media">{{ range \$data.media_attachments }}{{ if eq .type "image" }}{{ \$img := resources.GetRemote .url }}{{ if \$img }}{{ if not \$img.Err }}<img src="{{ \$img.RelPermalink }}" alt="{{ .description }}" loading="lazy">{{ end }}{{ end }}{{ end }}{{ end }}</div>{{ end }}
-      <footer class="mastodon-footer">
-        <time class="dt-published" datetime="{{ \$data.created_at }}">{{ dateFormat "Jan 02, 2006" \$data.created_at }}</time>
-        <div class="mastodon-stats"><span>↩ {{ \$data.replies_count }}</span><span>↻ {{ \$data.reblogs_count }}</span><span>♥ {{ \$data.favourites_count }}</span></div>
-        <a href="{{ \$data.url }}" class="button-small" target="_blank">View Original</a>
-      </footer>
-    </article>
-  {{ end }}
-{{ else }}<p class="error"><strong>Error:</strong> Missing 'host' or 'id'.</p>{{ end }}
-EOT
+  <div class="e-content">{{ .Content }}</div>
+
+  <footer class="post-footer">
+    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
+    {{ if .Params.syndication }}
+    <div class="syndication-container">
+      <span class="syndication-label">Also on:</span>
+      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+        {{ range .Params.syndication }}
+          {{ $synURL := . }}
+          {{ $match := false }}
+          {{ $data := dict }}
+          
+          {{/* LOOKUP */}}
+          {{ range $.Site.Params.social }}
+             {{ if in $synURL .url }}
+               {{ $match = true }}
+               {{ $data = . }}
+             {{ end }}
+          {{ end }}
+
+          <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
+            {{ if $match }}
+               {{/* Icon Block: Silent for screen readers */}}
+               {{ if $data.icon }}
+                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
+                   {{ partial (printf "icons/%s.svg" $data.icon) . }}
+                 </span>
+               {{ end }}
+               <span class="chip-label">{{ $data.name }}</span>
+            {{ else }}
+               {{/* Fallback for unknown sites */}}
+               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
+            {{ end }}
+          </a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+
+    {{ if .Params.tags }}
+    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{ end }}
+  </footer>
+</section>
+
+{{ partial "share-buttons.html" . }}
+<section id="webmentions" class="webmentions-container outlined-card h-feed" data-target="{{ .Site.BaseURL }}" aria-labelledby="guestbook-heading">
+  <h2 id="guestbook-heading">Signatures</h2>
+  <div class="webmention-explainer"><p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p></div>
+  <div id="webmentions-list"><p>Loading recent signatures...</p></div>
+</section>
+{{ end }}
+EOF
+
+# File: themes/Accessible-MD/archetypes/default.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/default.md"
++++
+title = "{{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+# [Source: 126] Required for SEO and RSS feed freshness.
+lastmod = {{ .Date }}
+draft = true
+# [Source: 127] Required for Homepage display.
+summary = ""
+# [Source: 128] Optional: Set to false to hide webmentions for this specific post.
+show_webmentions = true
++++
+EOF
+
+# File: themes/Accessible-MD/archetypes/articles.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/articles.md"
++++
+title = "{{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+lastmod = {{ .Date }}
+draft = true
+summary = ""
+tags = []
+syndication = []
+show_webmentions = true
++++
+
+Write your article content here.
+EOF
+
+# File: themes/Accessible-MD/archetypes/bookmarks.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/bookmarks.md"
++++
+title = "{{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+lastmod = {{ .Date }}
+draft = false
+summary = ""
+# [Source: 133] Target URL is required for Bookmarks.
+bookmark_of = ""
+tags = []
+syndication = []
++++
+EOF
+
+# File: themes/Accessible-MD/archetypes/likes.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/likes.md"
++++
+title = "Like: {{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+lastmod = {{ .Date }}
+draft = false
+# [Source: 131] Target URL is required for Likes.
+like_of = ""
+tags = []
+syndication = []
++++
+EOF
+
+# File: themes/Accessible-MD/archetypes/replies.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/replies.md"
++++
+title = "Reply to {{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+lastmod = {{ .Date }}
+draft = false
+summary = ""
+# [Source: 130] Target URL is required for Replies.
+reply_to = "" 
+tags = []
+syndication = []
++++
+EOF
+
+# File: themes/Accessible-MD/archetypes/reposts.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/reposts.md"
++++
+title = "Repost: {{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+lastmod = {{ .Date }}
+draft = false
+# [Source: 132] Target URL is required for Reposts.
+repost_of = ""
+tags = []
+syndication = []
++++
+EOF
+
+# File: themes/Accessible-MD/archetypes/rsvps.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/rsvps.md"
++++
+title = "RSVP: {{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+lastmod = {{ .Date }}
+draft = false
+summary = ""
+# [Source: 130] Target URL (the event you are replying to).
+reply_to = ""
+# [Source: 134] RSVP Status: "yes", "no", or "maybe".
+rsvp = "yes"
+tags = []
+syndication = []
++++
+EOF
+
+# File: themes/Accessible-MD/archetypes/status.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/status.md"
++++
+title = "{{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+lastmod = {{ .Date }}
+draft = false
+# [Source: 90] If summary is missing, theme will truncate first 500 chars.
+summary = ""
+tags = []
+syndication = []
++++
+
+Write your status update here.
+EOF
+
+# File: content/pages/about/index.md
+cat <<'EOF' > "content/pages/about/index.md"
+---
+title: "About"
+date: 2025-11-22T19:10:40-0800
+lastmod: 2025-11-26T01:35:00-08:00
+summary: "A little bit about me."
+show_webmentions: false
+tags: ["About"]
+---
+## **The Elevator Pitch**
+I’m Greg. I’m a gay, blind, middle-aged guy living in Burien, Washington. If you found this page looking for a corporate bio or some "thought leadership," you’ve definitely taken a wrong turn at the search bar. This is my digital living room—shoes off, please.
+
+## **The Geekery**
+I’m an unapologetic tech tinkerer. I straddle the line between Apple fanboy and Linux power user, mostly because I enjoy things that work *and* things I can break. Being blind, I experience the web differently than most. I built this site to be strictly accessible (WCAG 2.2 AA) not just because it’s the right thing to do, but because I know exactly how frustrating it is when the internet decides to be an obstacle course.
+
+## **The Vibe**
+Culturally, I’m pretty much permanently parked in a timeline that stretches from the 1970s straight through the late 2000s. I do occasionally dip a toe into modern media if it’s genuinely good, but I’m mostly here for the golden era. My movie night is a chaotic mix of action, comedy, and sci-fi—think *Die Hard*, *Ghostbusters*, or *The Matrix* playing on repeat. If it has practical effects or a plot hole big enough to drive a DeLorean through, I’m watching it.
+
+My playlist is even less disciplined. It’s a constant battleground where Mötley Crüe and Def Leppard fight for dominance against Dr. Dre, Madonna, and Daft Punk. I also devour audiobooks and podcasts at a rate that probably concerns my service provider, mostly so I can pretend I’m multitasking while I mess with my latest project.
+
+{{< youtube "UFX3gQHIroU" "Janet Jackson - Escapade" >}}
+
+## **Fuel & Chill**
+While my soul belongs to the holy trinity of burgers, tacos, and pizza, my appetite wanders the globe. I’m just as happy diving into a spicy Indian curry, Mediterranean hummus, or a bowl of pho as I am wrecking a plate of nachos. That said, I will politely (or impolitely) decline blue cheese and Brussels sprouts. Life is too short for moldy cheese and tiny, bitter cabbages.
+
+To unwind, I enjoy good drinks, laughter with friends, and a little cannabis to keep those Pacific Northwest chill vibes authentic.
+
+## **Wander Around**
+Feel free to poke around. You can read my [Articles](/articles/) if you have some time to kill, check the [Status Updates](/status/) for my random brain noise, or sign the [Guestbook](/guestbook/) so I know I'm not just shouting into the void.
+EOF
+
+# File: content/pages/accessibility/index.md
+cat <<'EOF' > "content/pages/accessibility/index.md"
+---
+title: "Accessibility"
+date: 2025-11-26T03:30:00-08:00
+layout: "page"
+summary: "My commitment to an open, usable web."
+show_webmentions: false
+tags: ["A11Y", "Accessibility"]
+---
+
+## **The Philosophy**
+Let’s be real: I’m blind. I use a screen reader every single day. I know exactly how frustrating it is when a website is nothing but a soup of unlabelled buttons and low-contrast text.
+
+When I built **Greg's Place**, accessibility wasn't an afterthought or a compliance checklist—it was the foundation. My goal is simple: this site should work perfectly for everyone, regardless of how you browse the web. Whether you’re using NVDA, VoiceOver, a braille display, or just really cranked-up text magnification, you are welcome here.
+
+## **The Standards**
+I target **WCAG 2.2 Level AA** compliance. To achieve this, I’ve made some specific design choices:
+* **Semantic HTML:** Everything is built with proper heading structures (`h1`–`h6`) and landmarks so you can navigate by rotor or shortcut keys without getting a headache.
+* **High Contrast:** I use an "Outlined Card" design system that relies on distinct borders rather than subtle shadows.
+* **Privacy Facades:** Video embeds (like YouTube) are static images until you click them. This prevents keyboard traps and keeps third-party tracking scripts off your back.
+* **No "Mouse-Only" Nonsense:** If you can click it, you can tab to it.
+
+## **The Reality Check**
+This is a personal site, not a corporate enterprise. I am the design team, the dev team, and the QA department. While I test everything thoroughly with my own tools, bugs happen. Updates break things. Sometimes I just mess up.
+
+## **Feedback**
+If you hit a barrier, please tell me. I don’t want to just "log the ticket"—I want to fix it.
+* **Contact Me:** Drop me a line via the [Contact Page](/contact/).
+* **The Details:** If you can, tell me what browser or assistive tech you were using when things went sideways.
+
+Let’s keep the web open.
+EOF
+
+# File: content/pages/contact/index.md
+cat <<'EOF' > "content/pages/contact/index.md"
+---
+title: "Contact"
+layout: "contact"
+date: 2025-11-22T23:40:00-08:00
+summary: "A contact form where visitors can get in touch with the author"
+---
+EOF
+
+# File: content/pages/guestbook/index.md
+cat <<'EOF' > "content/pages/guestbook/index.md"
+---
+title: "Guestbook"
+layout: "guestbook"
+date: 2025-11-22T23:35:00-08:00
+summary: "A place to collect webmentions from around the IndieWeb that are  not tied to a particular post or page"
+syndication: []
+---
+EOF
+
+# File: content/pages/search/index.md
+cat <<'EOF' > "content/pages/search/index.md"
+---
+title: "Search"
+date: 2025-11-22T19:10:40-0800
+layout: "search"
+summary: "A page where visitors can search this website"
+---
+EOF
+
+# File: content/articles/_index.md
+cat <<'EOF' > "content/articles/_index.md"
+---
+title: "Articles"
+description: "Long-form thoughts and essays."
+sort_by: "date"
+sort_order: "desc"
+---
+
+Welcome to my long-form writing. Here you'll find essays, stories, and deep dives that need a bit more space than a quick note. Grab a cup of coffee and settle in.
+EOF
+
+# File: content/bookmarks/_index.md
+cat <<'EOF' > "content/bookmarks/_index.md"
+---
+title: "Bookmarks"
+description: "Links saved for later reference."
+sort_by: "date"
+sort_order: "desc"
+---
+
+My personal library of links. These are articles, tools, and sites I’ve saved for future reference. Feel free to browse through my reading list.
+EOF
+
+# File: content/likes/_index.md
+cat <<'EOF' > "content/likes/_index.md"
+---
+title: "Likes"
+description: "Content I appreciated."
+sort_by: "date"
+sort_order: "desc"
+---
+
+A digital nod of appreciation. This is a collection of content I’ve "liked" from around the web—think of it as a public log of things that made me smile or think.
+EOF
+
+# File: content/replies/_index.md
+cat <<'EOF' > "content/replies/_index.md"
+---
+title: "Replies"
+description: "Conversations and responses across the web."
+sort_by: "date"
+sort_order: "desc"
+---
+
+The web is all about conversation. This page collects my responses to posts from other people around the internet. It’s the other half of the dialogue.
+EOF
+
+# File: content/reposts/_index.md
+cat <<'EOF' > "content/reposts/_index.md"
+---
+title: "Reposts"
+description: "Things I found worth sharing."
+sort_by: "date"
+sort_order: "desc"
+---
+
+Sharing is caring. These are posts from other creators that I found valuable, funny, or important enough to boost on my own site.
+EOF
+
+# File: content/rsvps/_index.md
+cat <<'EOF' > "content/rsvps/_index.md"
+---
+title: "RSVPs"
+description: "Events I am attending or tracking."
+sort_by: "date"
+sort_order: "desc"
+---
+
+My social calendar. This tracks public events I’ve responded to, whether I'm attending in person, watching online, or just interested.
+EOF
+
+# File: content/status/_index.md
+cat <<'EOF' > "content/status/_index.md"
+---
+title: "Status Updates"
+description: "Quick notes and life updates."
+sort_by: "date"
+sort_order: "desc"
+---
+
+These are my "micro-posts"—similar to tweets. Expect quick life updates, random thoughts, and behind-the-scenes moments. Short, sweet, and to the point.
+EOF
 
 
-# 8. GITHUB WORKFLOWS
-cat <<EOT > ".github/workflows/hugo.yml"
-# [Source: 178] CI/CD Pipeline
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: '0.152.2'
-          extended: true
-
-      - name: Build with Hugo
-        run: hugo --minify --gc
-
-      - name: Build Search Index (Pagefind)
-        run: npx pagefind --site public
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
-
-  deploy:
-    environment:
-      name: github-pages
-      url: \${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-EOT
-
-# 8. HELPER SCRIPTS
-cat <<'GENERATOR' > generate_icons.sh
-#!/bin/bash
-ICON_DIR="themes/Accessible-MD/layouts/partials/icons"
-mkdir -p "$ICON_DIR"
-declare -A SYSTEM_ICONS=(
-    ["search"]="search" ["menu"]="menu" ["close"]="close" ["home"]="home"
-    ["articles"]="article" ["status"]="chat_bubble" ["replies"]="reply"
-    ["reposts"]="repeat" ["likes"]="favorite" ["bookmarks"]="bookmark"
-    ["rsvps"]="event" ["guestbook"]="import_contacts" ["contact"]="mail"
-    ["about"]="info" ["pages"]="description" ["categories"]="category" 
-    ["tags"]="label" ["content_copy"]="content_copy" ["check"]="check" ["share"]="share"
-)
-echo "--- Updating System Icons ---"
-for NAME in "${!SYSTEM_ICONS[@]}"; do
-    MATERIAL_NAME="${SYSTEM_ICONS[$NAME]}"
-    TARGET="$ICON_DIR/$NAME.svg"
-    if [ ! -f "$TARGET" ]; then
-        echo "Fetching System: $NAME..."
-        URL="https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/${MATERIAL_NAME}/materialsymbolsoutlined/${MATERIAL_NAME}_24px.svg"
-        curl -s -L -f "$URL" -o "$TARGET" || echo "  X Failed to fetch $NAME"
-    fi
-done
-declare -A SOCIAL_ICONS=(
-    ["bluesky"]="bluesky" ["facebook"]="facebook" ["github"]="github"
-    ["mastodon"]="mastodon" ["matrix"]="matrix" ["messenger"]="messenger"
-    ["reddit"]="reddit" ["signal"]="signal" ["simplex"]="simplex" ["youtube"]="youtube"
-)
-echo "--- Updating Social Icons ---"
-for NAME in "${!SOCIAL_ICONS[@]}"; do
-    SLUG="${SOCIAL_ICONS[$NAME]}"
-    TARGET="$ICON_DIR/$NAME.svg"
-    echo "Fetching Social: $NAME..."
-    URL="https://cdn.simpleicons.org/$SLUG"
-    if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
-done
-TARGET="$ICON_DIR/friendica.svg"
-echo "Fetching Special: friendica..."
-URL="https://raw.githubusercontent.com/friendica/friendica/develop/images/friendica.svg"
-if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ OK"; else echo "  X ERROR: Could not fetch Friendica icon."; echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"; fi
-echo "Icon generation complete."
-GENERATOR
-chmod +x generate_icons.sh
-
-cat <<'NEWPOST' > new_post.sh
-#!/bin/bash
-if [ -z "$1" ]; then echo "Error: Content Type is required."; echo "Usage: ./new_post.sh [type] \"[optional title]\""; exit 1; fi
-TYPE=$1; TITLE=$2; TYPE=${TYPE%/}
-if [[ "$TYPE" == "articles" || "$TYPE" == "bookmarks" ]]; then if [ -z "$TITLE" ]; then echo "Error: Title is REQUIRED for '$TYPE'."; exit 1; fi; fi
-DIR_NAME=""; if [ -n "$TITLE" ]; then SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed -e 's/[^a-z0-9]/-/g' -e 's/-\+/-/g' -e 's/^-\|-$//g'); DIR_NAME="$SLUG"; else TIMESTAMP=$(date +%Y-%m-%d-%H%M); DIR_NAME="$TIMESTAMP"; fi
-TARGET_PATH="$TYPE/$DIR_NAME/index.md"
-echo "Creating new $TYPE..."; echo "Path: content/$TARGET_PATH"
-hugo new content "$TARGET_PATH" --kind "$TYPE"
-echo "Done."
-NEWPOST
-chmod +x new_post.sh
-
-cat <<'DEBUGSERVER' > debug_server.sh
-#!/bin/bash
-LOG_FILE="errors.txt"
-pkill hugo > /dev/null 2>&1
-echo "--- New Session: $(date) ---" > "$LOG_FILE"
-echo "Starting Hugo Server..."
-hugo server --disableFastRender -D -E -F --gc --printI18nWarnings > "$LOG_FILE" 2>&1 &
-HUGO_PID=$!
-echo "✅ Hugo is running in the background (PID: $HUGO_PID)."
-echo "📄 Logs are being captured in '$LOG_FILE'."
-DEBUGSERVER
-chmod +x debug_server.sh
-
-echo "Master Setup Complete. 'Greg's Place' is ready for development."
+echo "Master Setup Complete. 'Greg's Place' is fully restored."

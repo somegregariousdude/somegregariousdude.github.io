@@ -102,3 +102,36 @@
   height: auto;
   border-radius: 50%;
 }
+
+/* [Patch] MD3 Search Bar (Pagefind Override) */
+:root {
+  --pagefind-ui-border-radius: 24px; /* Pill Shape */
+  --pagefind-ui-font: 'Noto Sans', sans-serif;
+  --pagefind-ui-primary: var(--md-sys-color-primary);
+  --pagefind-ui-text: var(--md-sys-color-on-surface);
+  --pagefind-ui-background: var(--md-sys-color-surface);
+  --pagefind-ui-border: var(--md-sys-color-outline);
+}
+
+.pagefind-ui__search-input {
+  border-radius: 28px !important; /* Force Pill Shape */
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+  background-color: var(--md-sys-color-surface) !important;
+  transition: border-color 0.2s var(--md-sys-motion-easing-standard);
+}
+
+.pagefind-ui__search-input:focus {
+  outline: 2px solid var(--md-sys-color-primary) !important;
+  outline-offset: 2px;
+  border-color: var(--md-sys-color-primary) !important;
+}
+
+.pagefind-ui__drawer {
+  /* Ensure dropdown results match our theme */
+  background-color: var(--md-sys-color-surface) !important;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  margin-top: 8px;
+}
