@@ -1190,6 +1190,119 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   /* Level 2: Floating menu */
   @include elevation(2);
 }
+
+/* [Patch] Pagefind Results Polish (MD3 List Item Style) */
+
+/* The Dropdown Container */
+.pagefind-ui__drawer {
+  background-color: var(--md-sys-color-surface) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important; /* We use our own Elevation mixin elsewhere */
+  padding: 8px !important;
+  margin-top: 8px !important;
+}
+
+/* Individual Result Item */
+.pagefind-ui__result {
+  border: none !important;
+  border-radius: 8px !important; /* Inner radius */
+  padding: 12px !important;
+  margin-bottom: 4px !important;
+  transition: background-color 0.2s var(--md-sys-motion-easing-standard);
+  
+  /* Use CSS nesting for interaction */
+  &:hover, &:focus-within {
+    background-color: rgba(var(--md-sys-color-primary), 0.08) !important; /* State Layer */
+  }
+}
+
+/* The Result Image (Thumbnail) */
+.pagefind-ui__result-thumb {
+  border-radius: 8px !important;
+  width: 64px !important;
+  height: 64px !important;
+  object-fit: cover;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+/* Typography Overrides */
+.pagefind-ui__result-title {
+  font-family: 'Noto Serif', serif !important;
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  color: var(--md-sys-color-primary) !important;
+}
+
+.pagefind-ui__result-excerpt {
+  font-family: 'Noto Sans', sans-serif !important;
+  font-size: 0.95rem !important;
+  color: var(--md-sys-color-on-surface) !important;
+  margin-top: 4px !important;
+}
+
+/* The "Mark" (Highlighting text matches) */
+/* We replace the default yellow with a Theme-appropriate highlight */
+.pagefind-ui__result-excerpt mark {
+  background-color: rgba(var(--md-sys-color-tertiary), 0.3) !important;
+  color: inherit !important;
+  border-radius: 2px;
+  padding: 0 2px;
+  font-weight: 700;
+}
+
+/* The "Clear" Button in the Search Input */
+.pagefind-ui__suppressed {
+  color: var(--md-sys-color-on-surface) !important;
+  opacity: 0.7;
+}
+.pagefind-ui__button {
+  background: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-primary) !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+  border-radius: 20px !important; /* Pill button */
+  margin-top: 12px;
+}
+
+/* [Patch] MD3 Snackbar (Toast) */
+.md-toast {
+  visibility: hidden; /* Hide from DOM when inactive */
+  min-width: 250px;
+  max-width: 90vw; /* Mobile safety */
+  background-color: var(--md-sys-color-on-surface); /* Inverse Background */
+  color: var(--md-sys-color-surface); /* Inverse Text */
+  text-align: center;
+  border-radius: 4px; /* MD3 Spec for single-line */
+  padding: 14px 16px;
+  position: fixed;
+  z-index: 2000; /* Above everything, including Drawer */
+  left: 50%;
+  bottom: 24px; /* Resting position */
+  transform: translateX(-50%) translateY(100%); /* Start slightly down */
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  
+  /* Motion */
+  transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
+              opacity 0.3s linear, 
+              visibility 0s linear 0.3s;
+  opacity: 0;
+  
+  /* Shadow for lift */
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 
+              0 6px 10px 0 rgba(0,0,0,0.14), 
+              0 1px 18px 0 rgba(0,0,0,0.12);
+}
+
+.md-toast.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0); /* Slide up to position */
+  transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
+              opacity 0.3s linear, 
+              visibility 0s linear 0s;
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_images.scss
@@ -2241,6 +2354,25 @@ EOF
 cat <<'EOF' > "themes/Accessible-MD/assets/js/copy-code.js"
 document.addEventListener('DOMContentLoaded', () => {
     const copyButtons = document.querySelectorAll('.copy-code-btn');
+    const toast = document.getElementById('global-toast');
+    let toastTimeout;
+
+    // Helper: Show Toast
+    function showToast(message) {
+        if (!toast) return;
+
+        // 1. Set Content (Triggers Screen Reader announcement via aria-live)
+        toast.textContent = message;
+
+        // 2. Show Visuals
+        toast.classList.add('show');
+
+        // 3. Reset Timer
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000); // 4 seconds read time
+    }
 
     copyButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -2249,20 +2381,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = code.innerText;
 
             navigator.clipboard.writeText(text).then(() => {
-                // Success Feedback
+                // Visual Feedback on Button (Checkmark)
                 const originalIcon = btn.innerHTML;
-                
-                // Temporary Checkmark (We assume check.svg exists or use emoji fallback if needed, 
-                // but we will fetch the SVG in step 5)
                 btn.innerHTML = '<span role="img" aria-label="Copied">✓</span>'; 
                 btn.setAttribute('aria-label', 'Copied!');
                 
+                // Trigger Toast
+                showToast("Copied to clipboard");
+                
+                // Revert Button after 2s
                 setTimeout(() => {
                     btn.innerHTML = originalIcon;
                     btn.setAttribute('aria-label', 'Copy code to clipboard');
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy:', err);
+                showToast("Failed to copy code");
             });
         });
     });
@@ -3120,11 +3254,14 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/footer.html"
   <div class="container">
     <p>&copy; {{ now.Year }} {{ .Site.Params.author.name }}</p>
     <p>
-  Content licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
-  <span aria-hidden="true" style="margin: 0 8px;">|</span>
-  <a href="/accessibility/">Accessibility</a>
-</p>
+      Content licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+      <span aria-hidden="true" style="margin: 0 8px;">|</span>
+      <a href="/accessibility/">Accessibility</a>
+    </p>
   </div>
+  
+  {{/* MD3 Snackbar Container (Live Region) */}}
+  <div id="global-toast" class="md-toast" role="status" aria-live="polite"></div>
 </footer>
 EOF
 

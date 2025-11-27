@@ -272,3 +272,43 @@
   border-radius: 20px !important; /* Pill button */
   margin-top: 12px;
 }
+
+/* [Patch] MD3 Snackbar (Toast) */
+.md-toast {
+  visibility: hidden; /* Hide from DOM when inactive */
+  min-width: 250px;
+  max-width: 90vw; /* Mobile safety */
+  background-color: var(--md-sys-color-on-surface); /* Inverse Background */
+  color: var(--md-sys-color-surface); /* Inverse Text */
+  text-align: center;
+  border-radius: 4px; /* MD3 Spec for single-line */
+  padding: 14px 16px;
+  position: fixed;
+  z-index: 2000; /* Above everything, including Drawer */
+  left: 50%;
+  bottom: 24px; /* Resting position */
+  transform: translateX(-50%) translateY(100%); /* Start slightly down */
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  
+  /* Motion */
+  transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
+              opacity 0.3s linear, 
+              visibility 0s linear 0.3s;
+  opacity: 0;
+  
+  /* Shadow for lift */
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 
+              0 6px 10px 0 rgba(0,0,0,0.14), 
+              0 1px 18px 0 rgba(0,0,0,0.12);
+}
+
+.md-toast.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0); /* Slide up to position */
+  transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
+              opacity 0.3s linear, 
+              visibility 0s linear 0s;
+}
