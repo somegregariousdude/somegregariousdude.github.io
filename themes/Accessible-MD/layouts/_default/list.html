@@ -5,7 +5,6 @@
      <h1 class="p-name">{{ .Title }}</h1>
   </div>
 
-  {{/* NEW: Section Intro (Blurb) */}}
   {{ with .Content }}
   <div class="section-intro p-summary">
     {{ . }}
@@ -15,10 +14,16 @@
   <div class="post-feed">
     {{ range .Paginator.Pages }}
       <article class="feed-item outlined-card h-entry {{ .Type }}">
-        {{/* Hidden Author for Feed Items */}}
         <div style="display: none;" class="p-author h-card">
            <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
         </div>
+
+        {{/* Context Mini-Header */}}
+        {{ if .Params.reply_to }}<div class="context-mini">{{ partial "icons/replies.svg" . }} <span>Replying to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to | truncate 30 }}</a></span></div>{{ end }}
+        {{ if .Params.like_of }}<div class="context-mini">{{ partial "icons/likes.svg" . }} <span>Liked <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of | truncate 30 }}</a></span></div>{{ end }}
+        {{ if .Params.repost_of }}<div class="context-mini">{{ partial "icons/reposts.svg" . }} <span>Reposted <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of | truncate 30 }}</a></span></div>{{ end }}
+        {{ if .Params.bookmark_of }}<div class="context-mini">{{ partial "icons/bookmarks.svg" . }} <span>Bookmarked <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of | truncate 30 }}</a></span></div>{{ end }}
+        {{ if .Params.rsvp }}<div class="context-mini">{{ partial "icons/rsvps.svg" . }} <span>RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span></span></div>{{ end }}
 
         <header class="feed-header">
           <div class="headline-row">
@@ -29,12 +34,6 @@
             {{ .Date.Format "Jan 02, 2006" }}
           </time>
         </header>
-
-        {{ if .Params.reply_to }}<div class="context-mini">↪ Replying to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.like_of }}<div class="context-mini">♥ Liked <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.repost_of }}<div class="context-mini">↻ Reposted <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.bookmark_of }}<div class="context-mini">🔖 Bookmarked <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.rsvp }}<div class="context-mini">📅 RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span></div>{{ end }}
 
         <div class="feed-content p-summary">
           {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | truncate 500 }}{{ end }}

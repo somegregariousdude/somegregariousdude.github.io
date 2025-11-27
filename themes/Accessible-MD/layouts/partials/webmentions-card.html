@@ -1,0 +1,29 @@
+{{/* Universal Webmentions Component 
+  Usage: partial "webmentions-card.html" (dict "context" . "target" .Permalink "title" "..." "description" "...")
+*/}}
+{{ $context := .context }}
+{{ $target := .target | default $context.Permalink }}
+{{ $title := .title | default "Webmentions" }}
+{{ $desc := .description | default "Have your say. Write a post on your own site and link to this URL to appear here!" }}
+{{ $extraClasses := .extraClasses | default "" }}
+{{ $headingID := "webmentions-heading" }}
+
+<section id="webmentions" class="webmentions-container outlined-card {{ $extraClasses }}" data-target="{{ $target }}" aria-labelledby="{{ $headingID }}">
+  <div class="webmention-header">
+    <h2 id="{{ $headingID }}">{{ $title }}</h2>
+    
+    {{/* Copy URL Pill */}}
+    <div class="webmention-copy-field">
+      <span class="url-text">{{ $target }}</span>
+      <button class="copy-btn icon-btn" data-clipboard-text="{{ $target }}" aria-label="Copy URL">
+        {{ partial "icons/content_copy.svg" $context }}
+      </button>
+    </div>
+  </div>
+  
+  <div class="webmention-explainer">
+    <p>{{ $desc | safeHTML }}</p>
+  </div>
+
+  <div id="webmentions-list"><p>Loading...</p></div>
+</section>

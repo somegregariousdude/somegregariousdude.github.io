@@ -8,4 +8,5 @@ summary = ""
 reply_to = "" 
 tags = []
 syndication = []
+show_webmentions = true
 +++

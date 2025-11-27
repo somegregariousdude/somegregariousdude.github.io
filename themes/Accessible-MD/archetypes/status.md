@@ -9,4 +9,5 @@ tags = []
 syndication = []
 +++
 
-Write your status update here.
+show_webmentions = true
++++
