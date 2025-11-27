@@ -7,4 +7,5 @@ draft = false
 like_of = ""
 tags = []
 syndication = []
+show_webmentions = true
 +++

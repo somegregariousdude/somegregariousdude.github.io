@@ -7,4 +7,5 @@ draft = false
 repost_of = ""
 tags = []
 syndication = []
+show_webmentions = true
 +++

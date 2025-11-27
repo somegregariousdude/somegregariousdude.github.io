@@ -10,4 +10,5 @@ reply_to = ""
 rsvp = "yes"
 tags = []
 syndication = []
+show_webmentions = true
 +++

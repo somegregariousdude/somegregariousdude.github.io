@@ -79,7 +79,7 @@ cat <<'EOF' > "config/_default/params.toml"
   show_webmentions = true
   # [Source: 29] Must match the specific account name used on webmention.io.
   username = "simplygregario.us"
-  guestbookIntro = ""
+  guestbookIntro = "Greetings... Think of this page as a virtual guestbook lying on a desk with a pen beside it, inviting visitors like you to sign it and leave a message."
 
 # [Source: 31] Contact Form Settings
 [contact]
@@ -1457,6 +1457,85 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   width: 16px;
   height: 16px;
   fill: currentColor;
+}
+
+/* [Patch] MD3 Context Blocks (IndieWeb) */
+
+.context-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.context-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px; /* MD3 Medium Shape */
+  
+  /* MD3 Tonal Surface: Tinted background, no outline */
+  background-color: rgba(var(--md-sys-color-primary), 0.08);
+  color: var(--md-sys-color-on-surface);
+  
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.95rem;
+}
+
+.context-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--md-sys-color-primary);
+  display: block;
+}
+
+.context-label {
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+  white-space: nowrap;
+}
+
+.context-link {
+  text-decoration: none;
+  color: var(--md-sys-color-on-surface);
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  /* Add State Layer for interaction */
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: auto; /* Push to right if we want, or keep inline */
+  @include state-layer(var(--md-sys-color-primary));
+}
+
+/* Specific Tints for different types (Optional: kept uniform for now to match MD3 system) */
+
+/* List View Mini-Context */
+.context-mini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.context-mini svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.context-mini a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted currentColor;
 }
 EOF
 
@@ -3056,7 +3135,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/list.html"
      <h1 class="p-name">{{ .Title }}</h1>
   </div>
 
-  {{/* NEW: Section Intro (Blurb) */}}
   {{ with .Content }}
   <div class="section-intro p-summary">
     {{ . }}
@@ -3066,10 +3144,16 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/list.html"
   <div class="post-feed">
     {{ range .Paginator.Pages }}
       <article class="feed-item outlined-card h-entry {{ .Type }}">
-        {{/* Hidden Author for Feed Items */}}
         <div style="display: none;" class="p-author h-card">
            <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
         </div>
+
+        {{/* Context Mini-Header */}}
+        {{ if .Params.reply_to }}<div class="context-mini">{{ partial "icons/replies.svg" . }} <span>Replying to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to | truncate 30 }}</a></span></div>{{ end }}
+        {{ if .Params.like_of }}<div class="context-mini">{{ partial "icons/likes.svg" . }} <span>Liked <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of | truncate 30 }}</a></span></div>{{ end }}
+        {{ if .Params.repost_of }}<div class="context-mini">{{ partial "icons/reposts.svg" . }} <span>Reposted <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of | truncate 30 }}</a></span></div>{{ end }}
+        {{ if .Params.bookmark_of }}<div class="context-mini">{{ partial "icons/bookmarks.svg" . }} <span>Bookmarked <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of | truncate 30 }}</a></span></div>{{ end }}
+        {{ if .Params.rsvp }}<div class="context-mini">{{ partial "icons/rsvps.svg" . }} <span>RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span></span></div>{{ end }}
 
         <header class="feed-header">
           <div class="headline-row">
@@ -3080,12 +3164,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/list.html"
             {{ .Date.Format "Jan 02, 2006" }}
           </time>
         </header>
-
-        {{ if .Params.reply_to }}<div class="context-mini">↪ Replying to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.like_of }}<div class="context-mini">♥ Liked <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.repost_of }}<div class="context-mini">↻ Reposted <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.bookmark_of }}<div class="context-mini">🔖 Bookmarked <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of | truncate 40 }}</a></div>{{ end }}
-        {{ if .Params.rsvp }}<div class="context-mini">📅 RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span></div>{{ end }}
 
         <div class="feed-content p-summary">
           {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Content | truncate 500 }}{{ end }}
@@ -3124,7 +3202,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 {{ define "main" }}
 <article class="single-post h-entry outlined-card">
   
-  {{/* MICROFORMATS: Hidden Author Block */}}
   <div style="display: none;" class="p-author h-card">
     <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
     <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
@@ -3136,7 +3213,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       <h1 class="p-name">{{ .Title }}</h1>
     </div>
     
-    {{/* ENHANCED METADATA ROW */}}
     <div class="post-meta">
       <div class="meta-item">
         <span class="meta-icon">{{ partial "icons/event.svg" . }}</span>
@@ -3159,12 +3235,48 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
     </div>
   </header>
 
-  {{/* CONTEXT BLOCKS (Reply, Like, etc.) */}}
-  {{ if .Params.reply_to }}<div class="context-block reply-context"><p>Replying to: <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
-  {{ if .Params.like_of }}<div class="context-block like-context"><p>Liked: <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of }}</a></p></div>{{ end }}
-  {{ if .Params.repost_of }}<div class="context-block repost-context"><p>Reposted: <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of }}</a></p></div>{{ end }}
-  {{ if .Params.bookmark_of }}<div class="context-block bookmark-context"><p>Bookmarked: <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of">{{ .Params.bookmark_of }}</a></p></div>{{ end }}
-  {{ if and .Params.rsvp .Params.reply_to }}<div class="context-block rsvp-context"><p>RSVP: <span class="p-rsvp">{{ .Params.rsvp | upper }}</span> to <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
+  {{/* NEW: MD3 Tonal Context Blocks */}}
+  <div class="context-container">
+    {{ if .Params.reply_to }}
+    <div class="context-block reply-context">
+      <span class="context-icon">{{ partial "icons/replies.svg" . }}</span>
+      <span class="context-label">Replying to</span>
+      <a href="{{ .Params.reply_to }}" class="u-in-reply-to context-link">{{ .Params.reply_to | truncate 50 }}</a>
+    </div>
+    {{ end }}
+
+    {{ if .Params.like_of }}
+    <div class="context-block like-context">
+      <span class="context-icon">{{ partial "icons/likes.svg" . }}</span>
+      <span class="context-label">Liked</span>
+      <a href="{{ .Params.like_of }}" class="u-like-of context-link">{{ .Params.like_of | truncate 50 }}</a>
+    </div>
+    {{ end }}
+
+    {{ if .Params.repost_of }}
+    <div class="context-block repost-context">
+      <span class="context-icon">{{ partial "icons/reposts.svg" . }}</span>
+      <span class="context-label">Reposted</span>
+      <a href="{{ .Params.repost_of }}" class="u-repost-of context-link">{{ .Params.repost_of | truncate 50 }}</a>
+    </div>
+    {{ end }}
+
+    {{ if .Params.bookmark_of }}
+    <div class="context-block bookmark-context">
+      <span class="context-icon">{{ partial "icons/bookmarks.svg" . }}</span>
+      <span class="context-label">Bookmarked</span>
+      <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of context-link">{{ .Params.bookmark_of | truncate 50 }}</a>
+    </div>
+    {{ end }}
+
+    {{ if and .Params.rsvp .Params.reply_to }}
+    <div class="context-block rsvp-context">
+      <span class="context-icon">{{ partial "icons/rsvps.svg" . }}</span>
+      <span class="context-label">RSVP: <strong class="p-rsvp">{{ .Params.rsvp | upper }}</strong> to</span>
+      <a href="{{ .Params.reply_to }}" class="u-in-reply-to context-link">{{ .Params.reply_to | truncate 40 }}</a>
+    </div>
+    {{ end }}
+  </div>
 
   <div class="e-content">{{ .Content }}</div>
 
@@ -3204,26 +3316,17 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 
 {{ partial "share-buttons.html" . }}
 
-{{ if .Params.show_webmentions }}
-<section id="webmentions" class="webmentions-container outlined-card" data-target="{{ .Permalink }}" aria-labelledby="mentions-heading">
-  <div class="webmention-header">
-    <h2 id="mentions-heading">Webmentions</h2>
-    
-    {{/* COPYABLE URL COMPONENT */}}
-    <div class="webmention-copy-field">
-      <span class="url-text">{{ .Permalink }}</span>
-      <button class="copy-btn icon-btn" data-clipboard-text="{{ .Permalink }}" aria-label="Copy Webmention URL">
-        {{ partial "icons/content_copy.svg" . }}
-      </button>
-    </div>
-  </div>
-  
-  <div class="webmention-explainer">
-    <p>Have your say. Write a post on your own site and link to this URL to appear here!</p>
-  </div>
+{{/* UNIVERSAL WEBMENTIONS LOGIC */}}
+{{ $show := .Params.show_webmentions }}
+{{ if eq $show nil }}
+  {{ $show = .Site.Params.webmentions.show_webmentions }}
+{{ end }}
 
-  <div id="webmentions-list"><p>Loading...</p></div>
-</section>
+{{ if $show }}
+  {{ partial "webmentions-card.html" (dict 
+      "context" .
+      "description" "Have your say. Write a post on your own site and link to this URL to appear here!"
+  ) }}
 {{ end }}
 {{ end }}
 EOF
@@ -3818,7 +3921,14 @@ EOF
 # File: themes/Accessible-MD/layouts/pages/guestbook.html
 cat <<'EOF' > "themes/Accessible-MD/layouts/pages/guestbook.html"
 {{ define "main" }}
-{{/* 1. INTRO CARD */}}
+
+<header class="page-header">
+  <div class="headline-row">
+    {{ partial "ui/chip.html" . }}
+    <h1 class="p-name">Guestbook</h1>
+  </div>
+</header>
+
 <section class="guestbook-intro outlined-card h-entry">
   <div style="display: none;">
      <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
@@ -3826,40 +3936,24 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/guestbook.html"
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
   </div>
 
-  <header class="page-header">
-    <div class="headline-row">
-      {{ partial "ui/chip.html" . }}
-      <h1 class="p-name">Welcome to the Guestbook!</h1>
-    </div>
-  </header>
-
   <div class="e-content">
+    <p class="lead">{{ .Site.Params.webmentions.guestbookIntro }}</p>
     {{ .Content }}
   </div>
 </section>
 
-{{/* 2. SHARE & ACTIONS */}}
 {{ partial "share-buttons.html" . }}
 
-{{/* 3. SIGNATURES CARD */}}
-<section id="webmentions" class="webmentions-container outlined-card h-feed" data-target="{{ .Site.BaseURL }}" aria-labelledby="guestbook-heading">
-  <div class="webmention-header">
-    <h2 id="guestbook-heading">Signatures</h2>
-    
-    <div class="webmention-copy-field">
-      <span class="url-text">{{ .Site.BaseURL }}</span>
-      <button class="copy-btn icon-btn" data-clipboard-text="{{ .Site.BaseURL }}" aria-label="Copy Guestbook URL">
-        {{ partial "icons/content_copy.svg" . }}
-      </button>
-    </div>
-  </div>
+{{/* UNIVERSAL WEBMENTIONS CALL (Guestbook Mode) */}}
+{{/* Updated Description: Removed the explicit URL code block. */}}
+{{ partial "webmentions-card.html" (dict 
+    "context" . 
+    "target" .Site.BaseURL 
+    "title" "Signatures" 
+    "description" "This guestbook is powered by Webmentions. Write a post on your own site and link to this page to appear here!"
+    "extraClasses" "h-feed"
+) }}
 
-  <div class="webmention-explainer">
-    <p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p>
-  </div>
-  
-  <div id="webmentions-list"><p>Loading recent signatures...</p></div>
-</section>
 {{ end }}
 EOF
 
@@ -3906,6 +4000,7 @@ summary = ""
 bookmark_of = ""
 tags = []
 syndication = []
+show_webmentions = true
 +++
 EOF
 
@@ -3920,6 +4015,7 @@ draft = false
 like_of = ""
 tags = []
 syndication = []
+show_webmentions = true
 +++
 EOF
 
@@ -3935,6 +4031,7 @@ summary = ""
 reply_to = "" 
 tags = []
 syndication = []
+show_webmentions = true
 +++
 EOF
 
@@ -3949,6 +4046,7 @@ draft = false
 repost_of = ""
 tags = []
 syndication = []
+show_webmentions = true
 +++
 EOF
 
@@ -3966,6 +4064,7 @@ reply_to = ""
 rsvp = "yes"
 tags = []
 syndication = []
+show_webmentions = true
 +++
 EOF
 
@@ -3982,7 +4081,8 @@ tags = []
 syndication = []
 +++
 
-Write your status update here.
+show_webmentions = true
++++
 EOF
 
 # File: content/pages/about/index.md

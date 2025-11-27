@@ -24,7 +24,7 @@
   show_webmentions = true
   # [Source: 29] Must match the specific account name used on webmention.io.
   username = "simplygregario.us"
-  guestbookIntro = ""
+  guestbookIntro = "Greetings... Think of this page as a virtual guestbook lying on a desk with a pen beside it, inviting visitors like you to sign it and leave a message."
 
 # [Source: 31] Contact Form Settings
 [contact]

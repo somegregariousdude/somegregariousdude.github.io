@@ -8,4 +8,5 @@ summary = ""
 bookmark_of = ""
 tags = []
 syndication = []
+show_webmentions = true
 +++
