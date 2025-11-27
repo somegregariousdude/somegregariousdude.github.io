@@ -1,74 +1,44 @@
 {{ define "main" }}
-<section class="guestbook-page outlined-card h-entry">
-  {{/* Hidden Metadata */}}
+{{/* 1. INTRO CARD */}}
+<section class="guestbook-intro outlined-card h-entry">
   <div style="display: none;">
-     <div class="p-author h-card">
-       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
-       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
-     </div>
+     <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
      <a href="{{ .Permalink }}" class="u-url"></a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
-     <span class="p-category">Guestbook</span>
   </div>
 
   <header class="page-header">
     <div class="headline-row">
       {{ partial "ui/chip.html" . }}
-      <h1 class="p-name">Guestbook</h1>
+      <h1 class="p-name">Welcome to the Guestbook!</h1>
     </div>
-    <p class="p-summary">{{ .Site.Params.webmentions.guestbookIntro }}</p>
   </header>
 
-  <div class="e-content">{{ .Content }}</div>
-
-  <footer class="post-footer">
-    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
-    {{ if .Params.syndication }}
-    <div class="syndication-container">
-      <span class="syndication-label">Also on:</span>
-      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-        {{ range .Params.syndication }}
-          {{ $synURL := . }}
-          {{ $match := false }}
-          {{ $data := dict }}
-          
-          {{/* LOOKUP */}}
-          {{ range $.Site.Params.social }}
-             {{ if in $synURL .url }}
-               {{ $match = true }}
-               {{ $data = . }}
-             {{ end }}
-          {{ end }}
-
-          <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
-            {{ if $match }}
-               {{/* Icon Block: Silent for screen readers */}}
-               {{ if $data.icon }}
-                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
-                   {{ partial (printf "icons/%s.svg" $data.icon) . }}
-                 </span>
-               {{ end }}
-               <span class="chip-label">{{ $data.name }}</span>
-            {{ else }}
-               {{/* Fallback for unknown sites */}}
-               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
-            {{ end }}
-          </a>
-        {{ end }}
-      </div>
-    </div>
-    {{ end }}
-
-    {{ if .Params.tags }}
-    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
-    {{ end }}
-  </footer>
+  <div class="e-content">
+    {{ .Content }}
+  </div>
 </section>
 
+{{/* 2. SHARE & ACTIONS */}}
 {{ partial "share-buttons.html" . }}
+
+{{/* 3. SIGNATURES CARD */}}
 <section id="webmentions" class="webmentions-container outlined-card h-feed" data-target="{{ .Site.BaseURL }}" aria-labelledby="guestbook-heading">
-  <h2 id="guestbook-heading">Signatures</h2>
-  <div class="webmention-explainer"><p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p></div>
+  <div class="webmention-header">
+    <h2 id="guestbook-heading">Signatures</h2>
+    
+    <div class="webmention-copy-field">
+      <span class="url-text">{{ .Site.BaseURL }}</span>
+      <button class="copy-btn icon-btn" data-clipboard-text="{{ .Site.BaseURL }}" aria-label="Copy Guestbook URL">
+        {{ partial "icons/content_copy.svg" . }}
+      </button>
+    </div>
+  </div>
+
+  <div class="webmention-explainer">
+    <p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p>
+  </div>
+  
   <div id="webmentions-list"><p>Loading recent signatures...</p></div>
 </section>
 {{ end }}

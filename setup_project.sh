@@ -1369,6 +1369,93 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   margin-top: 4px;
   display: block;
 }
+
+/* [Patch] Post Metadata Styles */
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-outline);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.dt-updated-label {
+  font-style: italic;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
+/* [Patch] Webmention Copy Field */
+.webmention-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  padding-bottom: 12px;
+}
+
+.webmention-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.webmention-copy-field {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--md-sys-color-surface); /* Contrast against card */
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 24px; /* Pill */
+  padding: 4px 4px 4px 16px;
+  max-width: 100%;
+}
+
+.url-text {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-on-surface);
+  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* Truncate long URLs on mobile */
+}
+
+.copy-btn {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  @include state-layer(currentColor);
+}
+
+.copy-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_images.scss
@@ -2441,50 +2528,56 @@ EOF
 # File: themes/Accessible-MD/assets/js/copy-code.js
 cat <<'EOF' > "themes/Accessible-MD/assets/js/copy-code.js"
 document.addEventListener('DOMContentLoaded', () => {
-    const copyButtons = document.querySelectorAll('.copy-code-btn');
+    // Select both code block buttons and generic copy buttons
+    const copyButtons = document.querySelectorAll('.copy-code-btn, .copy-btn');
     const toast = document.getElementById('global-toast');
     let toastTimeout;
 
-    // Helper: Show Toast
     function showToast(message) {
         if (!toast) return;
-
-        // 1. Set Content (Triggers Screen Reader announcement via aria-live)
         toast.textContent = message;
-
-        // 2. Show Visuals
         toast.classList.add('show');
-
-        // 3. Reset Timer
         clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => {
             toast.classList.remove('show');
-        }, 4000); // 4 seconds read time
+        }, 4000);
     }
 
     copyButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            const pre = btn.nextElementSibling;
-            const code = pre.querySelector('code');
-            const text = code.innerText;
+            let textToCopy = '';
 
-            navigator.clipboard.writeText(text).then(() => {
-                // Visual Feedback on Button (Checkmark)
+            // Strategy 1: Data Attribute (Direct Copy)
+            if (btn.hasAttribute('data-clipboard-text')) {
+                textToCopy = btn.getAttribute('data-clipboard-text');
+            } 
+            // Strategy 2: Sibling Code Block (Legacy Support)
+            else {
+                const pre = btn.nextElementSibling;
+                if (pre && pre.querySelector('code')) {
+                    textToCopy = pre.querySelector('code').innerText;
+                }
+            }
+
+            if (!textToCopy) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Visual Feedback
                 const originalIcon = btn.innerHTML;
                 btn.innerHTML = '<span role="img" aria-label="Copied">✓</span>'; 
                 btn.setAttribute('aria-label', 'Copied!');
                 
-                // Trigger Toast
                 showToast("Copied to clipboard");
                 
-                // Revert Button after 2s
                 setTimeout(() => {
                     btn.innerHTML = originalIcon;
-                    btn.setAttribute('aria-label', 'Copy code to clipboard');
+                    // Restore label based on type
+                    const label = btn.classList.contains('copy-code-btn') ? 'Copy code' : 'Copy link';
+                    btn.setAttribute('aria-label', label);
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy:', err);
-                showToast("Failed to copy code");
+                showToast("Failed to copy");
             });
         });
     });
@@ -3040,14 +3133,31 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       {{ partial "ui/chip.html" . }}
       <h1 class="p-name">{{ .Title }}</h1>
     </div>
-    <a href="{{ .Permalink }}" class="u-url" style="text-decoration: none; color: inherit;">
-      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-        {{ .Date.Format "January 2, 2006" }}
-      </time>
-    </a>
+    
+    {{/* ENHANCED METADATA ROW */}}
+    <div class="post-meta">
+      <div class="meta-item">
+        <span class="meta-icon">{{ partial "icons/event.svg" . }}</span>
+        <div class="meta-text">
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Monday, Jan 2, 2006 at 3:04 PM (MST)" }}
+          </time>
+          {{ if ne .Date .Lastmod }}
+          <span class="dt-updated-label">
+            (Updated: <time class="dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time>)
+          </span>
+          {{ end }}
+        </div>
+      </div>
+
+      <div class="meta-item">
+        <span class="meta-icon">{{ partial "icons/schedule.svg" . }}</span>
+        <span class="reading-time">{{ .ReadingTime }} min read</span>
+      </div>
+    </div>
   </header>
 
-  {{/* CONTEXT BLOCKS */}}
+  {{/* CONTEXT BLOCKS (Reply, Like, etc.) */}}
   {{ if .Params.reply_to }}<div class="context-block reply-context"><p>Replying to: <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
   {{ if .Params.like_of }}<div class="context-block like-context"><p>Liked: <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of }}</a></p></div>{{ end }}
   {{ if .Params.repost_of }}<div class="context-block repost-context"><p>Reposted: <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of }}</a></p></div>{{ end }}
@@ -3057,7 +3167,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
     {{ if .Params.syndication }}
     <div class="syndication-container">
       <span class="syndication-label">Also on:</span>
@@ -3066,26 +3175,17 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
           {{ $synURL := . }}
           {{ $match := false }}
           {{ $data := dict }}
-          
-          {{/* LOOKUP */}}
           {{ range $.Site.Params.social }}
              {{ if in $synURL .url }}
                {{ $match = true }}
                {{ $data = . }}
              {{ end }}
           {{ end }}
-
           <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
             {{ if $match }}
-               {{/* Icon Block: Silent for screen readers */}}
-               {{ if $data.icon }}
-                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
-                   {{ partial (printf "icons/%s.svg" $data.icon) . }}
-                 </span>
-               {{ end }}
+               {{ if $data.icon }}<span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">{{ partial (printf "icons/%s.svg" $data.icon) . }}</span>{{ end }}
                <span class="chip-label">{{ $data.name }}</span>
             {{ else }}
-               {{/* Fallback for unknown sites */}}
                <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
             {{ end }}
           </a>
@@ -3101,13 +3201,23 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 </article>
 
 {{ partial "share-buttons.html" . }}
+
 {{ if .Params.show_webmentions }}
 <section id="webmentions" class="webmentions-container outlined-card" data-target="{{ .Permalink }}" aria-labelledby="mentions-heading">
-  <h2 id="mentions-heading">Webmentions</h2>
+  <div class="webmention-header">
+    <h2 id="mentions-heading">Webmentions</h2>
+    
+    {{/* COPYABLE URL COMPONENT */}}
+    <div class="webmention-copy-field">
+      <span class="url-text">{{ .Permalink }}</span>
+      <button class="copy-btn icon-btn" data-clipboard-text="{{ .Permalink }}" aria-label="Copy Webmention URL">
+        {{ partial "icons/content_copy.svg" . }}
+      </button>
+    </div>
+  </div>
   
-  {{/* NEW: Webmention Explainer (Restored) */}}
   <div class="webmention-explainer">
-    <p>Have your say. Write a post on your own site and link to <code>{{ .Permalink }}</code> to appear here!</p>
+    <p>Have your say. Write a post on your own site and link to this URL to appear here!</p>
   </div>
 
   <div id="webmentions-list"><p>Loading...</p></div>
@@ -3706,76 +3816,46 @@ EOF
 # File: themes/Accessible-MD/layouts/pages/guestbook.html
 cat <<'EOF' > "themes/Accessible-MD/layouts/pages/guestbook.html"
 {{ define "main" }}
-<section class="guestbook-page outlined-card h-entry">
-  {{/* Hidden Metadata */}}
+{{/* 1. INTRO CARD */}}
+<section class="guestbook-intro outlined-card h-entry">
   <div style="display: none;">
-     <div class="p-author h-card">
-       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
-       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
-     </div>
+     <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
      <a href="{{ .Permalink }}" class="u-url"></a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
-     <span class="p-category">Guestbook</span>
   </div>
 
   <header class="page-header">
     <div class="headline-row">
       {{ partial "ui/chip.html" . }}
-      <h1 class="p-name">Guestbook</h1>
+      <h1 class="p-name">Welcome to the Guestbook!</h1>
     </div>
-    <p class="p-summary">{{ .Site.Params.webmentions.guestbookIntro }}</p>
   </header>
 
-  <div class="e-content">{{ .Content }}</div>
-
-  <footer class="post-footer">
-    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
-    {{ if .Params.syndication }}
-    <div class="syndication-container">
-      <span class="syndication-label">Also on:</span>
-      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-        {{ range .Params.syndication }}
-          {{ $synURL := . }}
-          {{ $match := false }}
-          {{ $data := dict }}
-          
-          {{/* LOOKUP */}}
-          {{ range $.Site.Params.social }}
-             {{ if in $synURL .url }}
-               {{ $match = true }}
-               {{ $data = . }}
-             {{ end }}
-          {{ end }}
-
-          <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
-            {{ if $match }}
-               {{/* Icon Block: Silent for screen readers */}}
-               {{ if $data.icon }}
-                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
-                   {{ partial (printf "icons/%s.svg" $data.icon) . }}
-                 </span>
-               {{ end }}
-               <span class="chip-label">{{ $data.name }}</span>
-            {{ else }}
-               {{/* Fallback for unknown sites */}}
-               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
-            {{ end }}
-          </a>
-        {{ end }}
-      </div>
-    </div>
-    {{ end }}
-
-    {{ if .Params.tags }}
-    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
-    {{ end }}
-  </footer>
+  <div class="e-content">
+    {{ .Content }}
+  </div>
 </section>
 
+{{/* 2. SHARE & ACTIONS */}}
 {{ partial "share-buttons.html" . }}
+
+{{/* 3. SIGNATURES CARD */}}
 <section id="webmentions" class="webmentions-container outlined-card h-feed" data-target="{{ .Site.BaseURL }}" aria-labelledby="guestbook-heading">
-  <h2 id="guestbook-heading">Signatures</h2>
-  <div class="webmention-explainer"><p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p></div>
+  <div class="webmention-header">
+    <h2 id="guestbook-heading">Signatures</h2>
+    
+    <div class="webmention-copy-field">
+      <span class="url-text">{{ .Site.BaseURL }}</span>
+      <button class="copy-btn icon-btn" data-clipboard-text="{{ .Site.BaseURL }}" aria-label="Copy Guestbook URL">
+        {{ partial "icons/content_copy.svg" . }}
+      </button>
+    </div>
+  </div>
+
+  <div class="webmention-explainer">
+    <p>This guestbook is powered by Webmentions. Write a post on your own site and link to <code>{{ .Site.BaseURL }}</code> to appear here!</p>
+  </div>
+  
   <div id="webmentions-list"><p>Loading recent signatures...</p></div>
 </section>
 {{ end }}

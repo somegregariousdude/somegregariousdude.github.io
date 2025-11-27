@@ -1,48 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const copyButtons = document.querySelectorAll('.copy-code-btn');
+    // Select both code block buttons and generic copy buttons
+    const copyButtons = document.querySelectorAll('.copy-code-btn, .copy-btn');
     const toast = document.getElementById('global-toast');
     let toastTimeout;
 
-    // Helper: Show Toast
     function showToast(message) {
         if (!toast) return;
-
-        // 1. Set Content (Triggers Screen Reader announcement via aria-live)
         toast.textContent = message;
-
-        // 2. Show Visuals
         toast.classList.add('show');
-
-        // 3. Reset Timer
         clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => {
             toast.classList.remove('show');
-        }, 4000); // 4 seconds read time
+        }, 4000);
     }
 
     copyButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            const pre = btn.nextElementSibling;
-            const code = pre.querySelector('code');
-            const text = code.innerText;
+            let textToCopy = '';
 
-            navigator.clipboard.writeText(text).then(() => {
-                // Visual Feedback on Button (Checkmark)
+            // Strategy 1: Data Attribute (Direct Copy)
+            if (btn.hasAttribute('data-clipboard-text')) {
+                textToCopy = btn.getAttribute('data-clipboard-text');
+            } 
+            // Strategy 2: Sibling Code Block (Legacy Support)
+            else {
+                const pre = btn.nextElementSibling;
+                if (pre && pre.querySelector('code')) {
+                    textToCopy = pre.querySelector('code').innerText;
+                }
+            }
+
+            if (!textToCopy) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Visual Feedback
                 const originalIcon = btn.innerHTML;
                 btn.innerHTML = '<span role="img" aria-label="Copied">✓</span>'; 
                 btn.setAttribute('aria-label', 'Copied!');
                 
-                // Trigger Toast
                 showToast("Copied to clipboard");
                 
-                // Revert Button after 2s
                 setTimeout(() => {
                     btn.innerHTML = originalIcon;
-                    btn.setAttribute('aria-label', 'Copy code to clipboard');
+                    // Restore label based on type
+                    const label = btn.classList.contains('copy-code-btn') ? 'Copy code' : 'Copy link';
+                    btn.setAttribute('aria-label', label);
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy:', err);
-                showToast("Failed to copy code");
+                showToast("Failed to copy");
             });
         });
     });

@@ -12,14 +12,31 @@
       {{ partial "ui/chip.html" . }}
       <h1 class="p-name">{{ .Title }}</h1>
     </div>
-    <a href="{{ .Permalink }}" class="u-url" style="text-decoration: none; color: inherit;">
-      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-        {{ .Date.Format "January 2, 2006" }}
-      </time>
-    </a>
+    
+    {{/* ENHANCED METADATA ROW */}}
+    <div class="post-meta">
+      <div class="meta-item">
+        <span class="meta-icon">{{ partial "icons/event.svg" . }}</span>
+        <div class="meta-text">
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Monday, Jan 2, 2006 at 3:04 PM (MST)" }}
+          </time>
+          {{ if ne .Date .Lastmod }}
+          <span class="dt-updated-label">
+            (Updated: <time class="dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time>)
+          </span>
+          {{ end }}
+        </div>
+      </div>
+
+      <div class="meta-item">
+        <span class="meta-icon">{{ partial "icons/schedule.svg" . }}</span>
+        <span class="reading-time">{{ .ReadingTime }} min read</span>
+      </div>
+    </div>
   </header>
 
-  {{/* CONTEXT BLOCKS */}}
+  {{/* CONTEXT BLOCKS (Reply, Like, etc.) */}}
   {{ if .Params.reply_to }}<div class="context-block reply-context"><p>Replying to: <a href="{{ .Params.reply_to }}" class="u-in-reply-to">{{ .Params.reply_to }}</a></p></div>{{ end }}
   {{ if .Params.like_of }}<div class="context-block like-context"><p>Liked: <a href="{{ .Params.like_of }}" class="u-like-of">{{ .Params.like_of }}</a></p></div>{{ end }}
   {{ if .Params.repost_of }}<div class="context-block repost-context"><p>Reposted: <a href="{{ .Params.repost_of }}" class="u-repost-of">{{ .Params.repost_of }}</a></p></div>{{ end }}
@@ -29,7 +46,6 @@
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{/* POSSE: Syndication Chips (Visual Upgrade) */}}
     {{ if .Params.syndication }}
     <div class="syndication-container">
       <span class="syndication-label">Also on:</span>
@@ -38,26 +54,17 @@
           {{ $synURL := . }}
           {{ $match := false }}
           {{ $data := dict }}
-          
-          {{/* LOOKUP */}}
           {{ range $.Site.Params.social }}
              {{ if in $synURL .url }}
                {{ $match = true }}
                {{ $data = . }}
              {{ end }}
           {{ end }}
-
           <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
             {{ if $match }}
-               {{/* Icon Block: Silent for screen readers */}}
-               {{ if $data.icon }}
-                 <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
-                   {{ partial (printf "icons/%s.svg" $data.icon) . }}
-                 </span>
-               {{ end }}
+               {{ if $data.icon }}<span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">{{ partial (printf "icons/%s.svg" $data.icon) . }}</span>{{ end }}
                <span class="chip-label">{{ $data.name }}</span>
             {{ else }}
-               {{/* Fallback for unknown sites */}}
                <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
             {{ end }}
           </a>
@@ -73,13 +80,23 @@
 </article>
 
 {{ partial "share-buttons.html" . }}
+
 {{ if .Params.show_webmentions }}
 <section id="webmentions" class="webmentions-container outlined-card" data-target="{{ .Permalink }}" aria-labelledby="mentions-heading">
-  <h2 id="mentions-heading">Webmentions</h2>
+  <div class="webmention-header">
+    <h2 id="mentions-heading">Webmentions</h2>
+    
+    {{/* COPYABLE URL COMPONENT */}}
+    <div class="webmention-copy-field">
+      <span class="url-text">{{ .Permalink }}</span>
+      <button class="copy-btn icon-btn" data-clipboard-text="{{ .Permalink }}" aria-label="Copy Webmention URL">
+        {{ partial "icons/content_copy.svg" . }}
+      </button>
+    </div>
+  </div>
   
-  {{/* NEW: Webmention Explainer (Restored) */}}
   <div class="webmention-explainer">
-    <p>Have your say. Write a post on your own site and link to <code>{{ .Permalink }}</code> to appear here!</p>
+    <p>Have your say. Write a post on your own site and link to this URL to appear here!</p>
   </div>
 
   <div id="webmentions-list"><p>Loading...</p></div>
