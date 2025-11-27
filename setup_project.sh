@@ -1165,6 +1165,31 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   /* Apply the MD3 interaction */
   @include state-layer(var(--md-sys-color-primary));
 }
+
+/* [Patch] Code Block Copy Button - MD3 Interaction */
+.copy-code-btn {
+  /* Ensure it has the Pill/Circle shape */
+  border-radius: 50%;
+  border: 1px solid var(--md-sys-color-outline);
+  
+  /* Apply the State Layer Mixin */
+  @include state-layer(var(--md-sys-color-primary));
+  
+  /* Clean up transition */
+  transition: opacity 0.2s var(--md-sys-motion-easing-standard), background-color 0.2s;
+}
+
+.copy-code-btn:hover {
+  /* Remove the old flat background, rely on State Layer tint */
+  background-color: transparent; 
+  border-color: var(--md-sys-color-primary);
+}
+
+/* [Patch] Search Results Elevation */
+.pagefind-ui__drawer {
+  /* Level 2: Floating menu */
+  @include elevation(2);
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_images.scss
@@ -1459,6 +1484,21 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_layout.scss"
   /* Remove old hover background */
   &:hover { background-color: transparent; }
 }
+
+/* [Patch] MD3 Elevation Application */
+.site-header {
+  /* Level 2: Standard for Top App Bars */
+  @include elevation(2);
+  /* Ensure border stays visible or remove it if elevation is enough separation */
+  border-bottom: 1px solid rgba(var(--md-sys-color-outline), 0.2); 
+}
+
+@media (max-width: 768px) {
+  .nav-list {
+    /* Level 3: Modal Navigation Drawer sits above the header */
+    @include elevation(3);
+  }
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_mastodon.scss
@@ -1714,6 +1754,13 @@ dialog#fedi-share-dialog {
   @include state-layer(var(--md-sys-color-primary));
   &:hover { background-color: transparent; transform: scale(1.05); }
 }
+
+/* [Patch] Dialog Elevation */
+dialog#fedi-share-dialog {
+  /* Level 3: Modal Dialog */
+  @include elevation(3);
+  border: none; /* Elevation defines the edge now */
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_typography.scss
@@ -1896,6 +1943,73 @@ th { background-color: rgba(var(--md-sys-color-primary), 0.05); font-weight: 700
 .md-table th { background-color: var(--md-sys-color-surface); font-weight: 600; color: var(--md-sys-color-on-surface); }
 .md-table tr:last-child td { border-bottom: none; }
 .md-table tbody tr:nth-child(even) { background-color: rgba(var(--md-sys-color-primary), 0.02); }
+
+/* [Patch] MD3 Body Element Polish */
+
+/* 1. Blockquotes: "Container" Style */
+blockquote {
+  margin: 2rem 0;
+  padding: 1.5rem 2rem;
+  /* Surface Variant background (tinted) */
+  background-color: rgba(var(--md-sys-color-primary), 0.08);
+  /* Thick accent on the left */
+  border-left: 4px solid var(--md-sys-color-primary);
+  /* Rounded corners (Top-Right, Bottom-Right) */
+  border-radius: 0 16px 16px 0;
+  position: relative;
+}
+
+/* Optional: Add a subtle Quote Icon watermark */
+blockquote::before {
+  content: "“";
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  font-family: serif;
+  font-size: 4rem;
+  color: var(--md-sys-color-primary);
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* 2. Horizontal Rules: "Divider" Token */
+hr {
+  border: 0;
+  height: 1px;
+  /* Use Outline Variant for subtle separation */
+  background-color: var(--md-sys-color-outline-variant);
+  margin: 3rem auto; /* More breathing room */
+  width: 100%;
+  max-width: 200px; /* Center it nicely */
+}
+
+/* 3. Tables: "Data Grid" Style */
+.table-wrapper {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 12px; /* Matches Card Radius */
+  overflow: hidden; /* Clips the inner table corners */
+  margin-bottom: 2rem;
+}
+
+.md-table th {
+  /* Header Row: Distinct Tint */
+  background-color: rgba(var(--md-sys-color-primary), 0.12);
+  color: var(--md-sys-color-on-surface);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.md-table td {
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* Zebra Striping */
+.md-table tbody tr:nth-child(even) {
+  background-color: rgba(var(--md-sys-color-on-surface), 0.03);
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_variables.scss
@@ -1905,125 +2019,138 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_variables.scss"
   --md-sys-shape-corner-medium: 12px;
   --md-sys-spacing-base: 8px;
   
-  /* MD3 Motion Easing */ 
-  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0); 
-  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0); 
-  --md-sys-motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0); 
-  --md-sys-motion-duration-short: 200ms; 
-  --md-sys-motion-duration-medium: 400ms;
+  /* MD3 Motion Easing */
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-sys-motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0);
   
-  /* Shared Text Colors (White looks good on all these dark backgrounds) */
+  /* Shared Text Colors */
   --md-sys-color-on-surface-dark: #E6E1E5;
   --md-sys-color-outline-dark: #938F99;
   --md-sys-color-outline-variant-dark: #49454F;
 }
 
 /* ==========================================================================
-   THEME 1: THE SOUND (Deep Midnight Blue)
+   THEME 1: THE SOUND (Default)
+   Light: Ice Blue | Dark: Midnight Blue
    ========================================================================== */
 :root {
-  /* Light Mode */
-  --md-sys-color-surface: #FFFFFF;
+  /* DISTINCT LIGHT BACKGROUND */
+  --md-sys-color-surface: #F4F6F8; /* Alice Blue tint */
   --md-sys-color-on-surface: #1C1B1F;
   --md-sys-color-outline: #79747E;
   --md-sys-color-outline-variant: #CAC4D0;
+  
   --md-sys-color-primary: #4A5D8A;
   --md-sys-color-on-primary: #FFFFFF;
   --md-sys-color-secondary: #4A7A7A;
   --md-sys-color-tertiary: #A64B3B;
+  
+  /* Light Mode Elevation Tint: Primary Color */
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* UNIQUE BACKGROUND: Deep Midnight Blue */
     --md-sys-color-surface: #0F111A;
-    
     --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
     --md-sys-color-outline: var(--md-sys-color-outline-dark);
     --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
+    
     --md-sys-color-primary: #B0C4DE;
     --md-sys-color-secondary: #A7C7C7;
     --md-sys-color-tertiary: #FFB4A2;
+    
+    /* Dark Mode Elevation Tint: White */
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 
 /* ==========================================================================
-   THEME 2: THE MARKET (Deep Espresso)
+   THEME 2: THE MARKET
+   Light: Warm Cream | Dark: Espresso
    ========================================================================== */
 [data-theme="market"] {
+  --md-sys-color-surface: #FFF8F4; /* Floral White */
   --md-sys-color-primary: #4E342E;
   --md-sys-color-secondary: #C62828;
   --md-sys-color-tertiary: #985E00;
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="market"] {
-    /* UNIQUE BACKGROUND: Deep Espresso */
     --md-sys-color-surface: #1A120F;
-    
     --md-sys-color-primary: #D7CCC8;
     --md-sys-color-secondary: #EF9A9A;
     --md-sys-color-tertiary: #FFE082;
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 
 /* ==========================================================================
-   THEME 3: THE MOUNTAIN (Dark Slate)
+   THEME 3: THE MOUNTAIN
+   Light: Ghost White | Dark: Slate
    ========================================================================== */
 [data-theme="mountain"] {
+  --md-sys-color-surface: #F5F7FA; /* Cool Grey-White */
   --md-sys-color-primary: #455A64;
   --md-sys-color-secondary: #00838F;
   --md-sys-color-tertiary: #5E35B1;
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="mountain"] {
-    /* UNIQUE BACKGROUND: Dark Slate */
     --md-sys-color-surface: #101416;
-    
     --md-sys-color-primary: #B0BEC5;
     --md-sys-color-secondary: #80DEEA;
     --md-sys-color-tertiary: #B39DDB;
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 
 /* ==========================================================================
-   THEME 4: THE FOREST (Deepest Evergreen)
+   THEME 4: THE FOREST
+   Light: Mint Cream | Dark: Deep Evergreen
    ========================================================================== */
 [data-theme="forest"] {
+  --md-sys-color-surface: #F4F7F4; /* Subtle Green Tint */
   --md-sys-color-primary: #1B5E20;
   --md-sys-color-secondary: #5D4037;
   --md-sys-color-tertiary: #33691E;
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="forest"] {
-    /* UNIQUE BACKGROUND: Deepest Evergreen */
     --md-sys-color-surface: #0E140E;
-    
     --md-sys-color-primary: #A5D6A7;
     --md-sys-color-secondary: #BCAAA4;
     --md-sys-color-tertiary: #C5E1A5;
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 
 /* ==========================================================================
-   THEME 5: THE SUNSET (Deep Plum)
+   THEME 5: THE SUNSET
+   Light: Lavender Blush | Dark: Plum
    ========================================================================== */
 [data-theme="sunset"] {
+  --md-sys-color-surface: #FFF5F7; /* Warm Pink Tint */
   --md-sys-color-primary: #311B92;
   --md-sys-color-secondary: #880E4F;
   --md-sys-color-tertiary: #BF360C;
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="sunset"] {
-    /* UNIQUE BACKGROUND: Deep Plum */
     --md-sys-color-surface: #1A0F14;
-    
     --md-sys-color-primary: #9FA8DA;
     --md-sys-color-secondary: #F48FB1;
     --md-sys-color-tertiary: #FFCC80;
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 EOF
@@ -2097,6 +2224,7 @@ EOF
 # File: themes/Accessible-MD/assets/scss/main.scss
 cat <<'EOF' > "themes/Accessible-MD/assets/scss/main.scss"
 @import "variables";
+@import "elevation";
 @import "state_layer";
 @import "base";
 @import "typography";
