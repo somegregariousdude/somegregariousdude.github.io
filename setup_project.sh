@@ -1940,6 +1940,28 @@ dialog#fedi-share-dialog {
   @include elevation(3);
   border: none; /* Elevation defines the edge now */
 }
+
+/* [Patch] Force Icon Visibility */
+.share-btn svg,
+.share-btn svg path {
+  /* Force the icon to use the button's text color (Primary) */
+  fill: currentColor !important;
+}
+
+/* Ensure the button itself has the correct text color */
+.share-btn {
+  color: var(--md-sys-color-primary) !important;
+}
+
+/* [Hotfix] Aggressive Visibility for Button Icons */
+.share-btn svg, 
+.share-btn svg * {
+  /* Force the fill to be the Primary Theme Color */
+  fill: var(--md-sys-color-primary) !important;
+  
+  /* Fallback for stroke-based icons */
+  color: var(--md-sys-color-primary) !important;
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_typography.scss

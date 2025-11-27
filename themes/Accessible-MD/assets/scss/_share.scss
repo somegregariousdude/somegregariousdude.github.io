@@ -130,3 +130,13 @@ dialog#fedi-share-dialog {
 .share-btn {
   color: var(--md-sys-color-primary) !important;
 }
+
+/* [Hotfix] Aggressive Visibility for Button Icons */
+.share-btn svg, 
+.share-btn svg * {
+  /* Force the fill to be the Primary Theme Color */
+  fill: var(--md-sys-color-primary) !important;
+  
+  /* Fallback for stroke-based icons */
+  color: var(--md-sys-color-primary) !important;
+}
