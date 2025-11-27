@@ -689,16 +689,22 @@ EOF
 cat <<'EOF' > "generate_icons.sh"
 #!/bin/bash
 # ==============================================================================
-# SCRIPT: generate_icons.sh (LOCAL ASSET BUILDER)
-# PURPOSE: Fetch SVGs at build time and save locally.
-#          - System Icons: Material Symbols
-#          - Social Icons: Simple Icons + Official Repos
+# SCRIPT: generate_icons.sh (LOCAL ASSET BUILDER - CLEAN MODE)
+# PURPOSE: Fetch SVGs at build time.
+# SAFETY: Wipes 'icons/' dir first to remove orphaned files.
 # ==============================================================================
 
 ICON_DIR="themes/Accessible-MD/layouts/partials/icons"
+
+# 1. CLEANUP (The new feature)
+echo "--- Cleaning Icon Directory ---"
+if [ -d "$ICON_DIR" ]; then
+    rm -f "$ICON_DIR"/*.svg
+    echo "✓ Removed old SVGs."
+fi
 mkdir -p "$ICON_DIR"
 
-# 1. System Icons (Material Symbols)
+# 2. SYSTEM ICONS (Material Symbols)
 declare -A SYSTEM_ICONS=(
     ["search"]="search"
     ["menu"]="menu"
@@ -724,22 +730,21 @@ declare -A SYSTEM_ICONS=(
     ["schedule"]="schedule"
 )
 
-echo "--- Updating System Icons ---"
+echo "--- Fetching System Icons ---"
 for NAME in "${!SYSTEM_ICONS[@]}"; do
     MATERIAL_NAME="${SYSTEM_ICONS[$NAME]}"
     TARGET="$ICON_DIR/$NAME.svg"
     
-    if [ ! -f "$TARGET" ]; then
-        echo "Fetching System: $NAME..."
-        URL="https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/${MATERIAL_NAME}/materialsymbolsoutlined/${MATERIAL_NAME}_24px.svg"
-        curl -s -L -f "$URL" -o "$TARGET" || echo "  X Failed to fetch $NAME"
+    # Simple Fetch
+    URL="https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/${MATERIAL_NAME}/materialsymbolsoutlined/${MATERIAL_NAME}_24px.svg"
+    if curl -s -L -f "$URL" -o "$TARGET"; then
+        echo "  ✓ $NAME"
+    else
+        echo "  X Failed to fetch $NAME"
     fi
 done
 
-# 2. Standard Social Icons (Simple Icons CDN)
-# Maps your params.toml 'icon' keys to Simple Icons slugs
-# NOTE: Slugs must be lowercase (e.g. 'reddit', 'youtube')
-# REMOVED: Friendica (Not reliable on Simple Icons yet)
+# 3. SOCIAL ICONS (Simple Icons)
 declare -A SOCIAL_ICONS=(
     ["bluesky"]="bluesky"
     ["facebook"]="facebook"
@@ -753,39 +758,23 @@ declare -A SOCIAL_ICONS=(
     ["youtube"]="youtube"
 )
 
-echo "--- Updating Social Icons ---"
+echo "--- Fetching Social Icons ---"
 for NAME in "${!SOCIAL_ICONS[@]}"; do
-    SLUG="${SOCIAL_ICONS[$NAME]}"
     TARGET="$ICON_DIR/$NAME.svg"
-    
-    # Force check: Try to fetch even if file exists, to ensure content is valid
-    echo "Fetching Social: $NAME..."
-    URL="https://cdn.simpleicons.org/$SLUG"
+    URL="https://cdn.simpleicons.org/$NAME" # Slug matches name
     
     if curl -s -L -f "$URL" -o "$TARGET"; then
-         echo "  ✓ OK"
+         echo "  ✓ $NAME"
     else
-         echo "  X ERROR: Could not fetch '$NAME'. Creating fallback."
-         # Fallback: Empty square
+         echo "  X Failed: $NAME (Creating fallback)"
          echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"
     fi
 done
 
-# 3. Special Case: Friendica (Official Repo - Develop Branch)
-# Simple Icons does not reliably host Friendica. We fetch from the official repo.
-NAME="friendica"
-TARGET="$ICON_DIR/$NAME.svg"
-
-echo "Fetching Special: $NAME..."
-# Using 'develop' branch which is the active default for assets
+# 4. FRIENDICA SPECIAL
+TARGET="$ICON_DIR/friendica.svg"
 URL="https://raw.githubusercontent.com/friendica/friendica/develop/images/friendica.svg"
-
-if curl -s -L -f "$URL" -o "$TARGET"; then
-     echo "  ✓ OK"
-else
-     echo "  X ERROR: Could not fetch Friendica icon. Creating fallback."
-     echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>' > "$TARGET"
-fi
+if curl -s -L -f "$URL" -o "$TARGET"; then echo "  ✓ friendica"; else echo "  X Failed friendica"; fi
 
 echo "Icon generation complete."
 EOF
