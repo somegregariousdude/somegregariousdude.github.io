@@ -455,73 +455,191 @@ cat <<'EOF' > "README.md"
 
 An IndieWeb-focused, accessible static site built with Hugo.
 
-## Key Features
+## 1. Key Features (v5 Upgrades)
 * **Accessibility First (WCAG 2.2 AA):**
-    * High Contrast "Outlined Card" design.
-    * **Navigation Drawer:** A fully accessible mobile menu that traps focus and respects screen readers.
-    * **Sticky Header:** Keeps navigation visible for low-vision users.
+    * **Navigation Drawer:** A fully accessible mobile menu that traps focus, respects screen readers (Inert), and supports the Escape key.
+    * **Sticky Header:** Keeps navigation visible for low-vision users (with anchor scroll protection).
+    * **High Contrast:** "Outlined Card" design system.
     * **Distinct Dark Modes:** 5 unique color themes that retain their identity in dark mode.
 * **Privacy:** Zero-tracking "Static Facades" for YouTube and social sharing.
 * **IndieWeb:** Native support for Webmentions, Microformats, and POSSE.
 
-## Usage
-* **New Content:** `./new_post.sh [type] "Title"`
-* **Local Dev:** `hugo server`
-* **Reproduction:** Run `./setup_project.sh` to rebuild this exact environment.
+## 2. Cheat Sheet (Script Usage)
 
-## License
-MIT License. Content CC BY-SA 4.0.
+### Content Creation
+Use the `new_post.sh` script to generate content.
+**Usage:** `./new_post.sh [type] "[optional title]"`
+
+| Type | Title | Folder Strategy | Notes |
+| :--- | :--- | :--- | :--- |
+| **articles** | **Required** | Slug (e.g., `/my-post/`) | Long-form essays. |
+| **bookmarks** | **Required** | Slug (e.g., `/cool-tool/`) | Saved links. Requires `bookmark_of`. |
+| **status** | Optional | Timestamp* | Quick notes. |
+| **replies** | Optional | Timestamp* | Responses. Requires `reply_to`. |
+| **reposts** | Optional | Timestamp* | Shares. Requires `repost_of`. |
+| **likes** | Optional | Timestamp* | Appreciations. Requires `like_of`. |
+| **rsvps** | Optional | Timestamp* | Events. Requires `rsvp` status. |
+
+***Quirk:** If you omit the title for optional types, the script automatically creates a timestamp-based directory.
+
+### Maintenance
+* **Rebuild Setup Script:** `./maintenance/update_setup.sh`
+    * Run this after modifying code to update the "Golden Master" `setup_project.sh`.
+* **Generate Icons:** `./generate_icons.sh`
+    * Fetches SVGs at build time (Privacy).
+
+## 3. Shortcode Reference
+
+### YouTube (Lite Facade)
+Embeds a static thumbnail. Only loads the player on click (Privacy).
+```go
+{{< youtube "VIDEO_ID" "Descriptive Title" >}}
+```
+
+### Mastodon (Static Facade)
+Fetches the post content at **build time** and renders it as static HTML.
+```go
+{{< mastodon host="mastodon.social" id="123456789" >}}
+```
+
+### Gallery
+Renders a responsive grid of images from the page bundle.
+```go
+{{< gallery match="images/*" >}}
+```
+
+## 4. Installation (Reproduction)
+To reproduce this environment on a fresh machine, run the `setup_project.sh` script.
+
+## 5. Deployment
+This site deploys via **GitHub Actions** to GitHub Pages.
+* **Trigger:** Push to `main`.
+* **Process:** Icon Generation -> Hugo Build (Minified) -> Pagefind Indexing -> Deploy.
+* **Domain:** `simplygregario.us` (CNAME is stored in `themes/Accessible-MD/static/`).
+
+## 6. License
+* **Codebase:** MIT License.
+* **Content:** [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](http://creativecommons.org/licenses/by-sa/4.0/).
 EOF
 
 # File: project_context.txt
 cat <<'EOF' > "project_context.txt"
-# Project Context: Greg's Place (Updated)
+# Project Context: Greg's Place (Master Spec v5.1)
 
 ## CONFIGURATION SPECIFICATION & GLOBAL PARAMETERS
-* Base URL: `https://simplygregario.us`
-* Theme: "Accessible-MD"
-* Language: "en-us"
+This section defines the required structure for the `config/_default/` files.
+All settings must include comments explaining their function and default values.
+
+### 1. Main Configuration (hugo.toml)
+* **Base URL:** `https://simplygregario.us`
+* **Title:** "Greg's Place"
+* **Theme:** "Accessible-MD"
+* **Language Code:** "en-us"
 * **Permalinks:**
-    * `pages = "/:slug/"` (Root level)
-    * `articles`, `bookmarks` -> Slug-based.
-    * `status`, `replies`, etc. -> Timestamp-based.
+    * `pages = "/:slug/"` (Critical: Ensures /about/ works at root).
+    * `articles = "/articles/:year-:month-:day/:slug/"`
+    * `bookmarks = "/bookmarks/:year-:month-:day/:slug/"`
+    * `status`, `replies`, `reposts`, `likes`, `rsvps` -> `/:year-:month-:day/:contentbasename/` (Timestamp-based).
+* **Pagination:** `pagerSize = 10`
+* **Outputs:** Home and Section must output `["HTML", "RSS", "JSON"]` for feed syndication.
+
+### 2. Parameters (params.toml)
+* **[author]**: Name, Bio (H-Card), Photo (path to assets), Location.
+* **[webmentions]**: `username` (simplygregario.us), `show_webmentions` (true).
+* **[contact]**: `formAction` (Formspree URL).
+* **[theme]**: Options: "sound", "market", "mountain", "forest", "sunset".
+* **Social & IM:** Display Strategy: Text-Only Links ("Name: @Handle") for maximum accessibility.
+
+### 3. Menus (menus.toml)
+* Structure: `[[main]]` array with 100-level weight spacing.
+* Order: Home (100) ... Search (1100).
+
+### 4. Markup (markup.toml)
+* **Security:** `unsafe = false` (Strict Security Policy).
+* **Parser:** `attribute = { block = true, title = true }` (Required for Accessible Table captions).
+* **Highlighting:** Monokai style, no line numbers.
+
+---
 
 ## CORE ARCHITECTURE & PHILOSOPHY
-* **Priority:** W3C Standards, WCAG 2.2 AA, IndieWeb.
-* **Privacy:** Strict "Static Facade" policy (No tracking iframes).
-* **Regression Policy:**
-    * **Visuals:** "Outlined Card" metaphor (High Contrast Borders).
-    * **Accessibility:** Focus states must always be visible.
-    * **Scripts:** `setup_project.sh` must always reflect the current production state.
 
-## STYLING & UX (UPDATED)
+* **Priority:** Strict adherence to W3C Standards, WCAG 2.2 AA Accessibility, and IndieWeb principles.
+* **Privacy Strategy:** "Static Facades" for all embeds (YouTube, Mastodon). No tracking pixels on load.
+* **Asset Strategy:**
+    * **Icons:** Fetched at *build time* via `generate_icons.sh`. No runtime CDN calls.
+    * **CSS:** Processed via Hugo Pipes (LibSass).
+* **License Strategy:** Code = MIT. Content = CC BY-SA 4.0.
+
+---
+
+## STYLING & UX (MATERIAL DESIGN 3)
+
 ### 1. Visual System
-* **Themes:** 5 Distinct Palettes (Sound, Market, Mountain, Forest, Sunset).
-    * **Light Mode:** Dark Colors on Light Background (>4.5:1).
-    * **Dark Mode:** Pastel Colors on **Tinted Dark Backgrounds** (Unique to each theme).
-    * **Contrast:** Code blocks and UI elements must maintain contrast in all modes.
+* **Metaphor:** "Outlined Cards" (High contrast borders, no subtle shadows).
+* **Themes:** 5 Distinct Palettes defined in `_variables.scss`.
+    * **Light Mode:** High contrast (Dark on Light).
+    * **Dark Mode Strategy:** **Distinct Tinted Backgrounds**.
+        * Instead of a global charcoal, each theme uses a unique, deep surface color (e.g., Forest uses `#0E140E`).
+        * Text remains white `#E6E1E5` for > 15:1 contrast.
 
-### 2. Navigation & Layout
-* **Desktop:** Top App Bar (Row of Links).
-* **Mobile:** **Navigation Drawer** (Modal Side-Sheet).
-    * Must use `inert` to trap focus.
-    * Must use a Scrim (Backdrop) to close.
-    * Must support `Escape` key.
-* **Header Behavior:** **Sticky** (Always visible).
-    * Requires `scroll-padding-top` to prevent anchor overlap.
+### 2. Typography & Layout
+* **Sticky Header:** The header must use `position: sticky`.
+    * **Constraint:** Must use `scroll-padding-top` in `html` to prevent anchor links from being hidden behind the header.
+* **Mobile Navigation:** **Navigation Drawer** (Modal Side-Sheet).
+    * **Animation:** Slides in from Right.
+    * **Scrim:** Darkens background content.
+    * **Accessibility:** Must trap focus and support `Escape` key to close.
+    * **Safari Fix:** Must toggle `visibility: hidden` to prevent "ghost clicks" when closed.
 
-## JAVASCRIPT POLICY
-* **Principle:** Minimal, purposeful JS.
-* **Approved:**
-    * **Menu:** Focus trapping, state toggling, inert management.
-    * **Webmentions:** Fetch and sanitize.
-    * **Sharing:** Native Intent URLs and Fediverse Modals.
-    * **Search:** Pagefind (Client-side).
+### 3. Images & Tables
+* **Image Engine:** Render Hook auto-generates WebP srcsets and wraps in `<figure>`.
+* **Profile Photo:** Must be constrained (`max-width: 100%`) to prevent mobile overflow.
+* **Tables:** Render Hook wraps tables in a scroll container for mobile safety.
 
-## AUTOMATION
-* `setup_project.sh`: The Source of Truth. Rebuilds the site from scratch.
-* `new_post.sh`: Handles content generation.
-* `generate_icons.sh`: Fetches assets at build time (Privacy).
+---
+
+## JAVASCRIPT POLICY & SECURITY
+
+* **Principle:** Minimal, purposeful JS. No frameworks.
+* **Approved Modules:**
+    1.  **Menu:** Handles state toggling, Scrim clicks, and **Inert Attribute** management (preventing VoiceOver scroll leaks).
+    2.  **Webmentions:** Client-side fetch and HTML sanitization (strip scripts/styles).
+    3.  **Share Modal:** Native `<dialog>` element for Federated sharing (Mastodon/Friendica).
+    4.  **YouTube Facade:** Click-to-load iframe injection.
+    5.  **Copy Code:** Clipboard API integration.
+
+---
+
+## CONTENT ARCHETYPES & FRONTMATTER
+
+* **Articles/Bookmarks:** Title Required. Folder = Slug.
+* **Microblog (Status, Replies):** Title Optional. Folder = Timestamp.
+* **IndieWeb Params:**
+    * `reply_to`, `like_of`, `repost_of`, `bookmark_of`, `rsvp`.
+* **Syndication:** `syndication = []` (List of URLs where the post was POSSE'd).
+
+---
+
+## DEVELOPMENT & AUTOMATION STANDARDS
+
+* **Source of Truth:** `setup_project.sh`
+    * This script must be **generated** from the live codebase using `maintenance/update_setup.sh`.
+    * Never edit `setup_project.sh` manually.
+* **Content Creation:** `./new_post.sh [type] "Title"`
+    * Automatically handles directory structure logic.
+* **Icons:** `./generate_icons.sh`
+    * Fetches Material Symbols and Simple Icons to `assets/icons/`.
+* **Deployment:** GitHub Actions (Push to Main).
+    * Builds Hugo -> Indexes with Pagefind -> Deploys to Pages.
+
+---
+
+## REGRESSION POLICY (STRICT)
+
+1.  **Accessibility:** Every interactive element must have a visible focus state (System ring or CSS border).
+2.  **Contrast:** No text may fall below 4.5:1 contrast in any theme or mode.
+3.  **Privacy:** No commit may introduce a third-party script tag or iframe that loads automatically.
+4.  **Integrity:** The `setup_project.sh` script must always be able to reproduce the site exactly as it exists in Production.
 EOF
 
 # File: new_post.sh
@@ -975,6 +1093,78 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   height: auto;
   border-radius: 50%;
 }
+
+/* [Patch] MD3 Search Bar (Pagefind Override) */
+:root {
+  --pagefind-ui-border-radius: 24px; /* Pill Shape */
+  --pagefind-ui-font: 'Noto Sans', sans-serif;
+  --pagefind-ui-primary: var(--md-sys-color-primary);
+  --pagefind-ui-text: var(--md-sys-color-on-surface);
+  --pagefind-ui-background: var(--md-sys-color-surface);
+  --pagefind-ui-border: var(--md-sys-color-outline);
+}
+
+.pagefind-ui__search-input {
+  border-radius: 28px !important; /* Force Pill Shape */
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+  background-color: var(--md-sys-color-surface) !important;
+  transition: border-color 0.2s var(--md-sys-motion-easing-standard);
+}
+
+.pagefind-ui__search-input:focus {
+  outline: 2px solid var(--md-sys-color-primary) !important;
+  outline-offset: 2px;
+  border-color: var(--md-sys-color-primary) !important;
+}
+
+.pagefind-ui__drawer {
+  /* Ensure dropdown results match our theme */
+  background-color: var(--md-sys-color-surface) !important;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  margin-top: 8px;
+}
+
+/* [Patch] MD3 State Layers */
+.feed-item {
+  @include state-layer;
+}
+
+.chip {
+  @include state-layer(var(--md-sys-color-primary));
+}
+
+/* Ensure the chip icon stays colored correctly under the layer */
+.chip:hover {
+  background-color: transparent; /* Remove old hover */
+}
+
+/* [Patch] MD3 State Layers */
+.feed-item {
+  @include state-layer;
+}
+
+.chip {
+  @include state-layer(var(--md-sys-color-primary));
+}
+
+/* Ensure the chip icon stays colored correctly under the layer */
+.chip:hover {
+  background-color: transparent; /* Remove old hover */
+}
+
+/* [Patch] Social Link State Layers */
+.social-link {
+  /* Add breathing room for the hover effect */
+  padding: 8px 12px; 
+  border-radius: 8px;
+  margin: -8px -12px; /* Negative margin prevents layout shift */
+  
+  /* Apply the MD3 interaction */
+  @include state-layer(var(--md-sys-color-primary));
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_images.scss
@@ -1196,7 +1386,7 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_layout.scss"
     
     /* Animation State: Closed */
     transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0); /* MD3 Standard Easing */
+    transition: transform 0.3s var(--md-sys-motion-easing-standard); /* MD3 Standard Easing */
     overflow-y: auto;
   }
 
@@ -1237,7 +1427,7 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_layout.scss"
     
     /* Transition: Transform (slide) + Visibility (delayed hide) */
     /* We delay hiding visibility (0.3s) so the slide animation finishes first */
-    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0), visibility 0s linear 0.3s;
+    transition: transform 0.3s var(--md-sys-motion-easing-standard), visibility 0s linear 0.3s;
     
     /* Safety: Ensure Safari treats this as a fixed layer */
     -webkit-transform: translateX(100%);
@@ -1249,11 +1439,25 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_layout.scss"
     visibility: visible;
     
     /* Remove delay so it appears instantly as it slides in */
-    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0), visibility 0s linear 0s;
+    transition: transform 0.3s var(--md-sys-motion-easing-standard), visibility 0s linear 0s;
     
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
+}
+
+/* [Patch] MD3 State Layers */
+.nav-list a {
+  @include state-layer(var(--md-sys-color-primary));
+  /* Remove old hover background */
+  &:hover { background-color: transparent; }
+}
+
+/* [Patch] MD3 State Layers */
+.nav-list a {
+  @include state-layer(var(--md-sys-color-primary));
+  /* Remove old hover background */
+  &:hover { background-color: transparent; }
 }
 EOF
 
@@ -1377,6 +1581,22 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_mastodon.scss"
   margin: -4px -8px;
   border-radius: 4px;
 }
+
+/* [Patch] Modernize Mastodon Button */
+.mastodon-footer .button-small {
+  padding: 6px 12px;
+  border-radius: 16px;
+  background-color: transparent;
+  /* Use mixin for interaction */
+  @include state-layer(var(--md-sys-color-primary));
+  
+  /* Override old hover */
+  &:hover {
+    background-color: transparent; 
+    padding: 6px 12px;
+    margin: 0;
+  }
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_share.scss
@@ -1481,6 +1701,18 @@ dialog#fedi-share-dialog {
       background: rgba(var(--md-sys-color-primary), 0.1);
     }
   }
+}
+
+/* [Patch] MD3 State Layers */
+.share-btn {
+  @include state-layer(var(--md-sys-color-primary));
+  &:hover { background-color: transparent; transform: scale(1.05); }
+}
+
+/* [Patch] MD3 State Layers */
+.share-btn {
+  @include state-layer(var(--md-sys-color-primary));
+  &:hover { background-color: transparent; transform: scale(1.05); }
 }
 EOF
 
@@ -1700,6 +1932,13 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_variables.scss"
   --md-sys-shape-corner-medium: 12px;
   --md-sys-spacing-base: 8px;
   
+  /* MD3 Motion Easing */ 
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0); 
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0); 
+  --md-sys-motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0); 
+  --md-sys-motion-duration-short: 200ms; 
+  --md-sys-motion-duration-medium: 400ms;
+  
   /* Shared Text Colors (White looks good on all these dark backgrounds) */
   --md-sys-color-on-surface-dark: #E6E1E5;
   --md-sys-color-outline-dark: #938F99;
@@ -1828,7 +2067,11 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_youtube.scss"
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0; /* Override generic card padding */
+  padding: 0;
+  border-radius: var(--md-sys-shape-corner-medium);
+  
+  /* Add State Layer to the whole container */
+  @include state-layer(white);
 }
 
 .youtube-lite img {
@@ -1836,12 +2079,12 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_youtube.scss"
   height: 100%;
   object-fit: cover;
   opacity: 0.8;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s var(--md-sys-motion-easing-standard);
 }
 
 .youtube-lite:hover img,
 .youtube-lite:focus-visible img {
-  opacity: 1;
+  opacity: 0.6; /* Dim image slightly to make play button pop */
 }
 
 /* Play Button */
@@ -1851,16 +2094,17 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_youtube.scss"
   height: 48px;
   background-color: rgba(33, 33, 33, 0.8);
   border-radius: 12px;
-  z-index: 1;
-  transition: background-color 0.2s ease;
+  z-index: 2;
+  transition: transform 0.2s var(--md-sys-motion-easing-standard), background-color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.youtube-lite:hover .play-button,
-.youtube-lite:focus-visible .play-button {
-  background-color: #f00; /* YouTube Red */
+/* MD3: Scale up on hover instead of just changing color */
+.youtube-lite:hover .play-button {
+  background-color: #f00;
+  transform: scale(1.1);
 }
 
 .youtube-lite .play-button::before {
@@ -1870,7 +2114,6 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_youtube.scss"
   border-color: transparent transparent transparent #fff;
 }
 
-/* Iframe (Loaded State) */
 .youtube-lite iframe {
   width: 100%;
   height: 100%;
@@ -1881,8 +2124,10 @@ EOF
 # File: themes/Accessible-MD/assets/scss/main.scss
 cat <<'EOF' > "themes/Accessible-MD/assets/scss/main.scss"
 @import "variables";
+@import "state_layer";
 @import "base";
 @import "typography";
+@import "forms";
 @import "layout";
 @import "components";
 @import "youtube";

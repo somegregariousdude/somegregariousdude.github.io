@@ -135,3 +135,42 @@
   border-radius: var(--md-sys-shape-corner-medium);
   margin-top: 8px;
 }
+
+/* [Patch] MD3 State Layers */
+.feed-item {
+  @include state-layer;
+}
+
+.chip {
+  @include state-layer(var(--md-sys-color-primary));
+}
+
+/* Ensure the chip icon stays colored correctly under the layer */
+.chip:hover {
+  background-color: transparent; /* Remove old hover */
+}
+
+/* [Patch] MD3 State Layers */
+.feed-item {
+  @include state-layer;
+}
+
+.chip {
+  @include state-layer(var(--md-sys-color-primary));
+}
+
+/* Ensure the chip icon stays colored correctly under the layer */
+.chip:hover {
+  background-color: transparent; /* Remove old hover */
+}
+
+/* [Patch] Social Link State Layers */
+.social-link {
+  /* Add breathing room for the hover effect */
+  padding: 8px 12px; 
+  border-radius: 8px;
+  margin: -8px -12px; /* Negative margin prevents layout shift */
+  
+  /* Apply the MD3 interaction */
+  @include state-layer(var(--md-sys-color-primary));
+}

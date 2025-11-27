@@ -213,3 +213,17 @@
     transform: translateX(0);
   }
 }
+
+/* [Patch] MD3 State Layers */
+.nav-list a {
+  @include state-layer(var(--md-sys-color-primary));
+  /* Remove old hover background */
+  &:hover { background-color: transparent; }
+}
+
+/* [Patch] MD3 State Layers */
+.nav-list a {
+  @include state-layer(var(--md-sys-color-primary));
+  /* Remove old hover background */
+  &:hover { background-color: transparent; }
+}
