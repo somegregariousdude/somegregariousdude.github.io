@@ -3,124 +3,137 @@
   --md-sys-shape-corner-medium: 12px;
   --md-sys-spacing-base: 8px;
   
-  /* MD3 Motion Easing */ 
-  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0); 
-  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0); 
-  --md-sys-motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0); 
-  --md-sys-motion-duration-short: 200ms; 
-  --md-sys-motion-duration-medium: 400ms;
+  /* MD3 Motion Easing */
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-sys-motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0);
   
-  /* Shared Text Colors (White looks good on all these dark backgrounds) */
+  /* Shared Text Colors */
   --md-sys-color-on-surface-dark: #E6E1E5;
   --md-sys-color-outline-dark: #938F99;
   --md-sys-color-outline-variant-dark: #49454F;
 }
 
 /* ==========================================================================
-   THEME 1: THE SOUND (Deep Midnight Blue)
+   THEME 1: THE SOUND (Default)
+   Light: Ice Blue | Dark: Midnight Blue
    ========================================================================== */
 :root {
-  /* Light Mode */
-  --md-sys-color-surface: #FFFFFF;
+  /* DISTINCT LIGHT BACKGROUND */
+  --md-sys-color-surface: #F4F6F8; /* Alice Blue tint */
   --md-sys-color-on-surface: #1C1B1F;
   --md-sys-color-outline: #79747E;
   --md-sys-color-outline-variant: #CAC4D0;
+  
   --md-sys-color-primary: #4A5D8A;
   --md-sys-color-on-primary: #FFFFFF;
   --md-sys-color-secondary: #4A7A7A;
   --md-sys-color-tertiary: #A64B3B;
+  
+  /* Light Mode Elevation Tint: Primary Color */
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* UNIQUE BACKGROUND: Deep Midnight Blue */
     --md-sys-color-surface: #0F111A;
-    
     --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
     --md-sys-color-outline: var(--md-sys-color-outline-dark);
     --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
+    
     --md-sys-color-primary: #B0C4DE;
     --md-sys-color-secondary: #A7C7C7;
     --md-sys-color-tertiary: #FFB4A2;
+    
+    /* Dark Mode Elevation Tint: White */
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 
 /* ==========================================================================
-   THEME 2: THE MARKET (Deep Espresso)
+   THEME 2: THE MARKET
+   Light: Warm Cream | Dark: Espresso
    ========================================================================== */
 [data-theme="market"] {
+  --md-sys-color-surface: #FFF8F4; /* Floral White */
   --md-sys-color-primary: #4E342E;
   --md-sys-color-secondary: #C62828;
   --md-sys-color-tertiary: #985E00;
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="market"] {
-    /* UNIQUE BACKGROUND: Deep Espresso */
     --md-sys-color-surface: #1A120F;
-    
     --md-sys-color-primary: #D7CCC8;
     --md-sys-color-secondary: #EF9A9A;
     --md-sys-color-tertiary: #FFE082;
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 
 /* ==========================================================================
-   THEME 3: THE MOUNTAIN (Dark Slate)
+   THEME 3: THE MOUNTAIN
+   Light: Ghost White | Dark: Slate
    ========================================================================== */
 [data-theme="mountain"] {
+  --md-sys-color-surface: #F5F7FA; /* Cool Grey-White */
   --md-sys-color-primary: #455A64;
   --md-sys-color-secondary: #00838F;
   --md-sys-color-tertiary: #5E35B1;
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="mountain"] {
-    /* UNIQUE BACKGROUND: Dark Slate */
     --md-sys-color-surface: #101416;
-    
     --md-sys-color-primary: #B0BEC5;
     --md-sys-color-secondary: #80DEEA;
     --md-sys-color-tertiary: #B39DDB;
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 
 /* ==========================================================================
-   THEME 4: THE FOREST (Deepest Evergreen)
+   THEME 4: THE FOREST
+   Light: Mint Cream | Dark: Deep Evergreen
    ========================================================================== */
 [data-theme="forest"] {
+  --md-sys-color-surface: #F4F7F4; /* Subtle Green Tint */
   --md-sys-color-primary: #1B5E20;
   --md-sys-color-secondary: #5D4037;
   --md-sys-color-tertiary: #33691E;
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="forest"] {
-    /* UNIQUE BACKGROUND: Deepest Evergreen */
     --md-sys-color-surface: #0E140E;
-    
     --md-sys-color-primary: #A5D6A7;
     --md-sys-color-secondary: #BCAAA4;
     --md-sys-color-tertiary: #C5E1A5;
+    --md-elevation-overlay: #FFFFFF;
   }
 }
 
 /* ==========================================================================
-   THEME 5: THE SUNSET (Deep Plum)
+   THEME 5: THE SUNSET
+   Light: Lavender Blush | Dark: Plum
    ========================================================================== */
 [data-theme="sunset"] {
+  --md-sys-color-surface: #FFF5F7; /* Warm Pink Tint */
   --md-sys-color-primary: #311B92;
   --md-sys-color-secondary: #880E4F;
   --md-sys-color-tertiary: #BF360C;
+  --md-elevation-overlay: var(--md-sys-color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="sunset"] {
-    /* UNIQUE BACKGROUND: Deep Plum */
     --md-sys-color-surface: #1A0F14;
-    
     --md-sys-color-primary: #9FA8DA;
     --md-sys-color-secondary: #F48FB1;
     --md-sys-color-tertiary: #FFCC80;
+    --md-elevation-overlay: #FFFFFF;
   }
 }

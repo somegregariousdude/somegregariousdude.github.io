@@ -227,3 +227,18 @@
   /* Remove old hover background */
   &:hover { background-color: transparent; }
 }
+
+/* [Patch] MD3 Elevation Application */
+.site-header {
+  /* Level 2: Standard for Top App Bars */
+  @include elevation(2);
+  /* Ensure border stays visible or remove it if elevation is enough separation */
+  border-bottom: 1px solid rgba(var(--md-sys-color-outline), 0.2); 
+}
+
+@media (max-width: 768px) {
+  .nav-list {
+    /* Level 3: Modal Navigation Drawer sits above the header */
+    @include elevation(3);
+  }
+}

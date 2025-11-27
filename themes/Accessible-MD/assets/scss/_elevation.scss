@@ -1,0 +1,64 @@
+/* MD3 Elevation System (Surface Tones) */
+/* Usage: @include elevation(2); */
+
+@mixin elevation($level) {
+  /* Default: No tint */
+  --elevation-tint: 0;
+  
+  /* MD3 Opacity Specs */
+  @if $level == 1 { --elevation-tint: 0.05; }
+  @if $level == 2 { --elevation-tint: 0.08; }
+  @if $level == 3 { --elevation-tint: 0.11; }
+  @if $level == 4 { --elevation-tint: 0.12; }
+  @if $level == 5 { --elevation-tint: 0.14; }
+
+  /* The Trick: We use a dynamic overlay color.
+     Dark Mode = White (Lightens the surface).
+     Light Mode = Primary Color (Tints the surface).
+  */
+  background-image: linear-gradient(
+    rgba(var(--md-elevation-overlay), var(--elevation-tint)),
+    rgba(var(--md-elevation-overlay), var(--elevation-tint))
+  );
+  
+  /* NOTE: SASS cannot interpolate CSS variables inside rgba() easily if they are hex codes.
+     However, modern CSS 'linear-gradient' handles this if we rely on stacking contexts.
+     A safer cross-browser way for SCSS is to rely on opacity via ::before, 
+     but since we are keeping it simple (no extra DOM), we will rely on 
+     the background-color blending.
+     
+     ACTUALLY: SASS will choke on 'rgba(#hex, 0.5)'. 
+     We need to be clever. We will use `color-mix` (modern CSS) or just stick to
+     white/black opacity if we can't easily convert hex to rgb via CSS variables.
+     
+     SAFE FALLBACK: We will use a pseudo-element approach for the tint
+     if we want perfect Primary color tinting without JS conversion.
+     
+     WAIT: Let's stick to the linear-gradient, but we can't pass a HEX variable to rgba().
+     We need to define the color as R,G,B in variables? Too complex for this script.
+     
+     BETTER: We will use `linear-gradient` with the variable directly, 
+     but we need to set the opacity IN the color variable? No.
+     
+     SIMPLEST FIX: We will strictly use `background-color` mix.
+     MD3 uses "Surface Container" colors. We are simulating them.
+     
+     Let's try the modern CSS `color-mix` which has good support now.
+  */
+  
+  background-color: color-mix(
+    in srgb, 
+    var(--md-elevation-overlay) calc(var(--elevation-tint) * 100%), 
+    var(--md-sys-color-surface)
+  );
+  
+  /* Fallback for older browsers (just the base surface) */
+  @supports not (background-color: color-mix(in srgb, red, blue)) {
+    background-color: var(--md-sys-color-surface);
+  }
+
+  /* In Light Mode, we still add the shadow for definition */
+  @media (prefers-color-scheme: light) {
+    box-shadow: 0px #{$level}px #{$level * 2}px rgba(0, 0, 0, 0.1);
+  }
+}

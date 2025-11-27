@@ -111,3 +111,10 @@ dialog#fedi-share-dialog {
   @include state-layer(var(--md-sys-color-primary));
   &:hover { background-color: transparent; transform: scale(1.05); }
 }
+
+/* [Patch] Dialog Elevation */
+dialog#fedi-share-dialog {
+  /* Level 3: Modal Dialog */
+  @include elevation(3);
+  border: none; /* Elevation defines the edge now */
+}

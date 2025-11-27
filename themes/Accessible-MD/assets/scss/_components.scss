@@ -174,3 +174,28 @@
   /* Apply the MD3 interaction */
   @include state-layer(var(--md-sys-color-primary));
 }
+
+/* [Patch] Code Block Copy Button - MD3 Interaction */
+.copy-code-btn {
+  /* Ensure it has the Pill/Circle shape */
+  border-radius: 50%;
+  border: 1px solid var(--md-sys-color-outline);
+  
+  /* Apply the State Layer Mixin */
+  @include state-layer(var(--md-sys-color-primary));
+  
+  /* Clean up transition */
+  transition: opacity 0.2s var(--md-sys-motion-easing-standard), background-color 0.2s;
+}
+
+.copy-code-btn:hover {
+  /* Remove the old flat background, rely on State Layer tint */
+  background-color: transparent; 
+  border-color: var(--md-sys-color-primary);
+}
+
+/* [Patch] Search Results Elevation */
+.pagefind-ui__drawer {
+  /* Level 2: Floating menu */
+  @include elevation(2);
+}
