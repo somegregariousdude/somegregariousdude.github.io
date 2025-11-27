@@ -720,6 +720,8 @@ declare -A SYSTEM_ICONS=(
     ["content_copy"]="content_copy"
     ["check"]="check"
     ["share"]="share"
+    ["event"]="event"
+    ["schedule"]="schedule"
 )
 
 echo "--- Updating System Icons ---"
