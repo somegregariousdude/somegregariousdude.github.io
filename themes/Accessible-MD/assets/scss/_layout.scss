@@ -134,3 +134,55 @@
   color: var(--md-sys-color-on-surface);
   max-width: 65ch; /* Optimal reading width for introductory text */
 }
+
+/* [Patch] MD3 Navigation Drawer Upgrade */
+@media (max-width: 768px) {
+  /* The Drawer Itself */
+  .nav-list {
+    display: block; /* Always exist in DOM for transitions */
+    position: fixed;
+    top: 0;
+    right: 0; /* Slide in from Right */
+    width: 300px; /* Standard MD3 width */
+    max-width: 80%;
+    height: 100vh;
+    background-color: var(--md-sys-color-surface);
+    border-left: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: -4px 0 12px rgba(0,0,0,0.2); /* Scrim shadow */
+    padding: 72px 16px 24px 16px; /* Top padding to clear close button space */
+    z-index: 1000;
+    
+    /* Animation State: Closed */
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.0, 0, 1.0); /* MD3 Standard Easing */
+    overflow-y: auto;
+  }
+
+  /* Animation State: Open */
+  .nav-list.is-open {
+    display: block;
+    transform: translateX(0);
+  }
+
+  /* The Backdrop (Scrim) */
+  /* We use the ::before pseudo-element on the nav container when open */
+  #main-nav.has-scrim::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s;
+  }
+
+  /* Close Button visibility */
+  .menu-toggle {
+    position: relative;
+    z-index: 1001; /* Above the drawer so it can toggle back */
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
