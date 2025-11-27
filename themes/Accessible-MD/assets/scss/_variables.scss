@@ -3,6 +3,13 @@
   --md-sys-shape-corner-medium: 12px;
   --md-sys-spacing-base: 8px;
   
+  /* MD3 Motion Easing */ 
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0); 
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0); 
+  --md-sys-motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0); 
+  --md-sys-motion-duration-short: 200ms; 
+  --md-sys-motion-duration-medium: 400ms;
+  
   /* Shared Text Colors (White looks good on all these dark backgrounds) */
   --md-sys-color-on-surface-dark: #E6E1E5;
   --md-sys-color-outline-dark: #938F99;
