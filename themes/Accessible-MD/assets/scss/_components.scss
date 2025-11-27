@@ -199,3 +199,76 @@
   /* Level 2: Floating menu */
   @include elevation(2);
 }
+
+/* [Patch] Pagefind Results Polish (MD3 List Item Style) */
+
+/* The Dropdown Container */
+.pagefind-ui__drawer {
+  background-color: var(--md-sys-color-surface) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important; /* We use our own Elevation mixin elsewhere */
+  padding: 8px !important;
+  margin-top: 8px !important;
+}
+
+/* Individual Result Item */
+.pagefind-ui__result {
+  border: none !important;
+  border-radius: 8px !important; /* Inner radius */
+  padding: 12px !important;
+  margin-bottom: 4px !important;
+  transition: background-color 0.2s var(--md-sys-motion-easing-standard);
+  
+  /* Use CSS nesting for interaction */
+  &:hover, &:focus-within {
+    background-color: rgba(var(--md-sys-color-primary), 0.08) !important; /* State Layer */
+  }
+}
+
+/* The Result Image (Thumbnail) */
+.pagefind-ui__result-thumb {
+  border-radius: 8px !important;
+  width: 64px !important;
+  height: 64px !important;
+  object-fit: cover;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+/* Typography Overrides */
+.pagefind-ui__result-title {
+  font-family: 'Noto Serif', serif !important;
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  color: var(--md-sys-color-primary) !important;
+}
+
+.pagefind-ui__result-excerpt {
+  font-family: 'Noto Sans', sans-serif !important;
+  font-size: 0.95rem !important;
+  color: var(--md-sys-color-on-surface) !important;
+  margin-top: 4px !important;
+}
+
+/* The "Mark" (Highlighting text matches) */
+/* We replace the default yellow with a Theme-appropriate highlight */
+.pagefind-ui__result-excerpt mark {
+  background-color: rgba(var(--md-sys-color-tertiary), 0.3) !important;
+  color: inherit !important;
+  border-radius: 2px;
+  padding: 0 2px;
+  font-weight: 700;
+}
+
+/* The "Clear" Button in the Search Input */
+.pagefind-ui__suppressed {
+  color: var(--md-sys-color-on-surface) !important;
+  opacity: 0.7;
+}
+.pagefind-ui__button {
+  background: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-primary) !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+  border-radius: 20px !important; /* Pill button */
+  margin-top: 12px;
+}
