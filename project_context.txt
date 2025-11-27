@@ -1,4 +1,4 @@
-# Project Context: Greg's Place (Master Spec v5.1)
+# Project Context: Greg's Place (Master Spec v5.2)
 
 ## CONFIGURATION SPECIFICATION & GLOBAL PARAMETERS
 This section defines the required structure for the `config/_default/` files.
@@ -8,67 +8,56 @@ All settings must include comments explaining their function and default values.
 * **Base URL:** `https://simplygregario.us`
 * **Title:** "Greg's Place"
 * **Theme:** "Accessible-MD"
-* **Language Code:** "en-us"
 * **Permalinks:**
     * `pages = "/:slug/"` (Critical: Ensures /about/ works at root).
-    * `articles = "/articles/:year-:month-:day/:slug/"`
-    * `bookmarks = "/bookmarks/:year-:month-:day/:slug/"`
-    * `status`, `replies`, `reposts`, `likes`, `rsvps` -> `/:year-:month-:day/:contentbasename/` (Timestamp-based).
-* **Pagination:** `pagerSize = 10`
-* **Outputs:** Home and Section must output `["HTML", "RSS", "JSON"]` for feed syndication.
+    * `articles`, `bookmarks` -> Slug-based.
+    * `status`, `replies`, etc. -> Timestamp-based.
+* **Outputs:** Home/Section must output `["HTML", "RSS", "JSON"]`.
 
 ### 2. Parameters (params.toml)
-* **[author]**: Name, Bio (H-Card), Photo (path to assets), Location.
-* **[webmentions]**: `username` (simplygregario.us), `show_webmentions` (true).
-* **[contact]**: `formAction` (Formspree URL).
+* **[author]**: Name, Bio (H-Card), Photo, Location.
+* **[webmentions]**: `username`, `show_webmentions`.
 * **[theme]**: Options: "sound", "market", "mountain", "forest", "sunset".
-* **Social & IM:** Display Strategy: Text-Only Links ("Name: @Handle") for maximum accessibility.
-
-### 3. Menus (menus.toml)
-* Structure: `[[main]]` array with 100-level weight spacing.
-* Order: Home (100) ... Search (1100).
-
-### 4. Markup (markup.toml)
-* **Security:** `unsafe = false` (Strict Security Policy).
-* **Parser:** `attribute = { block = true, title = true }` (Required for Accessible Table captions).
-* **Highlighting:** Monokai style, no line numbers.
+* **Social:** Display Strategy: Text-Only Links ("Name: @Handle") for accessibility.
 
 ---
 
 ## CORE ARCHITECTURE & PHILOSOPHY
 
-* **Priority:** Strict adherence to W3C Standards, WCAG 2.2 AA Accessibility, and IndieWeb principles.
-* **Privacy Strategy:** "Static Facades" for all embeds (YouTube, Mastodon). No tracking pixels on load.
-* **Asset Strategy:**
-    * **Icons:** Fetched at *build time* via `generate_icons.sh`. No runtime CDN calls.
-    * **CSS:** Processed via Hugo Pipes (LibSass).
-* **License Strategy:** Code = MIT. Content = CC BY-SA 4.0.
+* **Priority:** W3C Standards, WCAG 2.2 AA Accessibility, IndieWeb.
+* **Privacy:** "Static Facades" for all embeds. No tracking pixels on load.
+* **Regression Policy:**
+    * **Visuals:** "Outlined Card" metaphor (High Contrast Borders).
+    * **Accessibility:** Focus states must always be visible.
+    * **Integrity:** `setup_project.sh` must always reflect the current production state.
 
 ---
 
-## STYLING & UX (MATERIAL DESIGN 3)
+## STYLING & UX (MATERIAL DESIGN 3 - FULL IMPLEMENTATION)
 
 ### 1. Visual System
-* **Metaphor:** "Outlined Cards" (High contrast borders, no subtle shadows).
 * **Themes:** 5 Distinct Palettes defined in `_variables.scss`.
-    * **Light Mode:** High contrast (Dark on Light).
-    * **Dark Mode Strategy:** **Distinct Tinted Backgrounds**.
-        * Instead of a global charcoal, each theme uses a unique, deep surface color (e.g., Forest uses `#0E140E`).
-        * Text remains white `#E6E1E5` for > 15:1 contrast.
+    * **Light Mode:** High contrast. Backgrounds are **Tinted Off-Whites** (e.g., Mint Cream).
+    * **Dark Mode:** Backgrounds are **Deeply Tinted Surfaces** (e.g., Deep Evergreen). No generic charcoal.
+* **Elevation (Surface Tones):**
+    * **Dark Mode:** Uses Semi-transparent White Overlays.
+    * **Light Mode:** Uses **Primary Color Tints** + Soft Shadows.
+* **Shape:**
+    * **Inputs/Search:** Full "Pill" shape (28px radius).
+    * **Cards/Dialogs:** Medium rounded corners (12px - 16px).
 
 ### 2. Typography & Layout
-* **Sticky Header:** The header must use `position: sticky`.
-    * **Constraint:** Must use `scroll-padding-top` in `html` to prevent anchor links from being hidden behind the header.
-* **Mobile Navigation:** **Navigation Drawer** (Modal Side-Sheet).
-    * **Animation:** Slides in from Right.
-    * **Scrim:** Darkens background content.
-    * **Accessibility:** Must trap focus and support `Escape` key to close.
-    * **Safari Fix:** Must toggle `visibility: hidden` to prevent "ghost clicks" when closed.
+* **Typescale:**
+    * **Headlines:** Negative tracking (`-0.02em`) and tight leading (`1.12`).
+    * **Body:** Positive tracking (`0.01em`) and relaxed leading (`1.6`).
+* **Navigation:**
+    * **Desktop:** Sticky Top App Bar (requires `scroll-padding-top`).
+    * **Mobile:** **Navigation Drawer** (Modal Side-Sheet) with focus trapping (Inert).
 
-### 3. Images & Tables
-* **Image Engine:** Render Hook auto-generates WebP srcsets and wraps in `<figure>`.
-* **Profile Photo:** Must be constrained (`max-width: 100%`) to prevent mobile overflow.
-* **Tables:** Render Hook wraps tables in a scroll container for mobile safety.
+### 3. Interaction & Motion
+* **State Layers:** Interactive elements (Cards, Buttons, Links) use an overlay tint (8-12% opacity) on hover/focus instead of changing colors.
+* **Motion:** All animations use MD3 Standard Easing (`cubic-bezier(0.2, 0.0, 0, 1.0)`).
+* **Feedback:** "Copy Code" triggers an accessible **Toast Notification** (Live Region).
 
 ---
 
@@ -76,41 +65,26 @@ All settings must include comments explaining their function and default values.
 
 * **Principle:** Minimal, purposeful JS. No frameworks.
 * **Approved Modules:**
-    1.  **Menu:** Handles state toggling, Scrim clicks, and **Inert Attribute** management (preventing VoiceOver scroll leaks).
-    2.  **Webmentions:** Client-side fetch and HTML sanitization (strip scripts/styles).
-    3.  **Share Modal:** Native `<dialog>` element for Federated sharing (Mastodon/Friendica).
-    4.  **YouTube Facade:** Click-to-load iframe injection.
-    5.  **Copy Code:** Clipboard API integration.
-
----
-
-## CONTENT ARCHETYPES & FRONTMATTER
-
-* **Articles/Bookmarks:** Title Required. Folder = Slug.
-* **Microblog (Status, Replies):** Title Optional. Folder = Timestamp.
-* **IndieWeb Params:**
-    * `reply_to`, `like_of`, `repost_of`, `bookmark_of`, `rsvp`.
-* **Syndication:** `syndication = []` (List of URLs where the post was POSSE'd).
+    1.  **Menu:** Handles state toggling, Scrim clicks, and **Inert Attribute** management.
+    2.  **Webmentions:** Client-side fetch and HTML sanitization.
+    3.  **Share Modal:** Native `<dialog>` element.
+    4.  **Toast:** Live region management for status updates.
+    5.  **Search:** Pagefind (Client-side) with customized MD3 styling.
 
 ---
 
 ## DEVELOPMENT & AUTOMATION STANDARDS
 
 * **Source of Truth:** `setup_project.sh`
-    * This script must be **generated** from the live codebase using `maintenance/update_setup.sh`.
-    * Never edit `setup_project.sh` manually.
+    * Must be generated via `maintenance/update_setup.sh`.
 * **Content Creation:** `./new_post.sh [type] "Title"`
-    * Automatically handles directory structure logic.
-* **Icons:** `./generate_icons.sh`
-    * Fetches Material Symbols and Simple Icons to `assets/icons/`.
-* **Deployment:** GitHub Actions (Push to Main).
-    * Builds Hugo -> Indexes with Pagefind -> Deploys to Pages.
+* **Icons:** `./generate_icons.sh` (Build-time fetch).
+* **Deployment:** GitHub Actions -> Pagefind Indexing -> Pages.
 
 ---
 
 ## REGRESSION POLICY (STRICT)
 
-1.  **Accessibility:** Every interactive element must have a visible focus state (System ring or CSS border).
+1.  **Accessibility:** Every interactive element must have a visible focus state.
 2.  **Contrast:** No text may fall below 4.5:1 contrast in any theme or mode.
 3.  **Privacy:** No commit may introduce a third-party script tag or iframe that loads automatically.
-4.  **Integrity:** The `setup_project.sh` script must always be able to reproduce the site exactly as it exists in Production.
