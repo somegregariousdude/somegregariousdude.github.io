@@ -455,16 +455,18 @@ cat <<'EOF' > "README.md"
 
 An IndieWeb-focused, accessible static site built with Hugo.
 
-## 1. Key Features (v5.2)
+## 1. Key Features (v5.4)
 * **Accessibility First (WCAG 2.2 AA):**
-    * **Navigation Drawer:** Mobile menu traps focus, respects screen readers (Inert), and supports Escape key.
+    * **Navigation Drawer:** Traps focus (Inert), supports Escape key.
     * **Sticky Header:** Keeps navigation visible for low-vision users.
     * **Toast Notifications:** Accessible status updates (Live Regions).
+* **Quality of Life (QoL):**
+    * **Rich Metadata:** Full Date/Time, Timezone, and Reading Time on all posts.
+    * **Easy Copying:** "Pill" buttons to copy Webmention URLs instantly.
+    * **Guestbook:** Dedicated Intro card + Site-wide Signature aggregation.
 * **Material Design 3 (Complete):**
-    * **Distinct Themes:** 5 unique color palettes for both Light (Tinted) and Dark (Deep) modes.
-    * **Elevation:** Sophisticated Surface Tones and Overlay system.
-    * **Shape & Motion:** Pill-shaped inputs, weighted easing curves, and tactile State Layers.
-* **Privacy:** Zero-tracking "Static Facades" for YouTube and social sharing.
+    * **Distinct Themes:** 5 unique color palettes for Light and Dark modes.
+    * **Elevation & Shape:** Surface Tones, Pill shapes, and State Layers.
 * **IndieWeb:** Native support for Webmentions, Microformats, and POSSE.
 
 ## 2. Cheat Sheet (Script Usage)
@@ -522,7 +524,7 @@ EOF
 
 # File: project_context.txt
 cat <<'EOF' > "project_context.txt"
-# Project Context: Greg's Place (Master Spec v5.2)
+# Project Context: Greg's Place (Master Spec v5.4)
 
 ## CONFIGURATION SPECIFICATION & GLOBAL PARAMETERS
 This section defines the required structure for the `config/_default/` files.
@@ -541,6 +543,7 @@ All settings must include comments explaining their function and default values.
 ### 2. Parameters (params.toml)
 * **[author]**: Name, Bio (H-Card), Photo, Location.
 * **[webmentions]**: `username`, `show_webmentions`.
+    * `guestbookIntro`: Text for the Guestbook Welcome Card.
 * **[theme]**: Options: "sound", "market", "mountain", "forest", "sunset".
 * **Social:** Display Strategy: Text-Only Links ("Name: @Handle") for accessibility.
 
@@ -557,31 +560,30 @@ All settings must include comments explaining their function and default values.
 
 ---
 
-## STYLING & UX (MATERIAL DESIGN 3 - FULL IMPLEMENTATION)
+## STYLING & UX (MATERIAL DESIGN 3 - COMPLETE)
 
 ### 1. Visual System
 * **Themes:** 5 Distinct Palettes defined in `_variables.scss`.
-    * **Light Mode:** High contrast. Backgrounds are **Tinted Off-Whites** (e.g., Mint Cream).
-    * **Dark Mode:** Backgrounds are **Deeply Tinted Surfaces** (e.g., Deep Evergreen). No generic charcoal.
+    * **Light Mode:** High contrast. Backgrounds are **Tinted Off-Whites**.
+    * **Dark Mode:** Backgrounds are **Deeply Tinted Surfaces** (e.g., Deep Evergreen).
 * **Elevation (Surface Tones):**
     * **Dark Mode:** Uses Semi-transparent White Overlays.
     * **Light Mode:** Uses **Primary Color Tints** + Soft Shadows.
-* **Shape:**
-    * **Inputs/Search:** Full "Pill" shape (28px radius).
-    * **Cards/Dialogs:** Medium rounded corners (12px - 16px).
+* **Shape:** "Pill" inputs (28px) and Medium Cards (12px).
 
 ### 2. Typography & Layout
-* **Typescale:**
-    * **Headlines:** Negative tracking (`-0.02em`) and tight leading (`1.12`).
-    * **Body:** Positive tracking (`0.01em`) and relaxed leading (`1.6`).
+* **Typescale:** Tight Headlines (`1.12` leading), Loose Body (`1.6` leading).
 * **Navigation:**
     * **Desktop:** Sticky Top App Bar (requires `scroll-padding-top`).
     * **Mobile:** **Navigation Drawer** (Modal Side-Sheet) with focus trapping (Inert).
+* **Metadata (QoL):**
+    * Posts display **Full Date/Time** (with Timezone) and **Reading Time** (Clock Icon).
+    * "Last Updated" date appears if different from publish date.
 
 ### 3. Interaction & Motion
-* **State Layers:** Interactive elements (Cards, Buttons, Links) use an overlay tint (8-12% opacity) on hover/focus instead of changing colors.
-* **Motion:** All animations use MD3 Standard Easing (`cubic-bezier(0.2, 0.0, 0, 1.0)`).
-* **Feedback:** "Copy Code" triggers an accessible **Toast Notification** (Live Region).
+* **State Layers:** Interactive elements use overlay tints instead of color swaps.
+* **Motion:** All animations use MD3 Standard Easing.
+* **Feedback:** "Copy Code" and "Copy URL" triggers an accessible **Toast Notification**.
 
 ---
 
@@ -593,25 +595,30 @@ All settings must include comments explaining their function and default values.
     2.  **Webmentions:** Client-side fetch and HTML sanitization.
     3.  **Share Modal:** Native `<dialog>` element.
     4.  **Toast:** Live region management for status updates.
-    5.  **Search:** Pagefind (Client-side) with customized MD3 styling.
+    5.  **Copy Logic:** Handles `data-clipboard-text` for generic copy buttons (URL pills).
+    6.  **Search:** Pagefind (Client-side) with customized MD3 styling.
+
+---
+
+## CONTENT ARCHETYPES & TEMPLATES
+
+* **Architecture:**
+    * **Universal Layout:** `single.html` handles all content types (Articles, Status, Replies) via conditional logic.
+    * **Universal Webmentions:** `partials/webmentions-card.html` handles the UI.
+        * **Articles:** Target = `.Permalink`
+        * **Guestbook:** Target = `.Site.BaseURL`
+* **Frontmatter:**
+    * `show_webmentions`: Boolean toggle (Defaults to true via smart fallback).
+    * IndieWeb Params: `reply_to`, `like_of`, `repost_of`, `bookmark_of`, `rsvp`.
 
 ---
 
 ## DEVELOPMENT & AUTOMATION STANDARDS
 
-* **Source of Truth:** `setup_project.sh`
-    * Must be generated via `maintenance/update_setup.sh`.
+* **Source of Truth:** `setup_project.sh` (Generated via `update_setup.sh`).
 * **Content Creation:** `./new_post.sh [type] "Title"`
 * **Icons:** `./generate_icons.sh` (Build-time fetch).
 * **Deployment:** GitHub Actions -> Pagefind Indexing -> Pages.
-
----
-
-## REGRESSION POLICY (STRICT)
-
-1.  **Accessibility:** Every interactive element must have a visible focus state.
-2.  **Contrast:** No text may fall below 4.5:1 contrast in any theme or mode.
-3.  **Privacy:** No commit may introduce a third-party script tag or iframe that loads automatically.
 EOF
 
 # File: new_post.sh
@@ -3668,12 +3675,12 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/ui/chip.html"
 {{ end }}
 
 {{/* 2. Map Icons to Vibe Descriptors */}}
-{{ if eq $iconName "status" }}{{ $vibe = "Bubble" }}{{ end }}
+{{ if eq $iconName "status" }}{{ $vibe = "Status" }}{{ end }}
 {{ if eq $iconName "replies" }}{{ $vibe = "Reply" }}{{ end }}
-{{ if eq $iconName "reposts" }}{{ $vibe = "Repeat" }}{{ end }}
-{{ if eq $iconName "likes" }}{{ $vibe = "Heart" }}{{ end }}
+{{ if eq $iconName "reposts" }}{{ $vibe = "Repost" }}{{ end }}
+{{ if eq $iconName "likes" }}{{ $vibe = "Like" }}{{ end }}
 {{ if eq $iconName "bookmarks" }}{{ $vibe = "Bookmark" }}{{ end }}
-{{ if eq $iconName "rsvps" }}{{ $vibe = "Event" }}{{ end }}
+{{ if eq $iconName "rsvps" }}{{ $vibe = "RSVP" }}{{ end }}
 {{ if eq $iconName "articles" }}{{ $vibe = "Article" }}{{ end }}
 {{ if eq $iconName "pages" }}{{ $vibe = "Page" }}{{ end }}
 {{ if eq $iconName "categories" }}{{ $vibe = "Category" }}{{ end }}

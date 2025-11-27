@@ -2,16 +2,18 @@
 
 An IndieWeb-focused, accessible static site built with Hugo.
 
-## 1. Key Features (v5.2)
+## 1. Key Features (v5.4)
 * **Accessibility First (WCAG 2.2 AA):**
-    * **Navigation Drawer:** Mobile menu traps focus, respects screen readers (Inert), and supports Escape key.
+    * **Navigation Drawer:** Traps focus (Inert), supports Escape key.
     * **Sticky Header:** Keeps navigation visible for low-vision users.
     * **Toast Notifications:** Accessible status updates (Live Regions).
+* **Quality of Life (QoL):**
+    * **Rich Metadata:** Full Date/Time, Timezone, and Reading Time on all posts.
+    * **Easy Copying:** "Pill" buttons to copy Webmention URLs instantly.
+    * **Guestbook:** Dedicated Intro card + Site-wide Signature aggregation.
 * **Material Design 3 (Complete):**
-    * **Distinct Themes:** 5 unique color palettes for both Light (Tinted) and Dark (Deep) modes.
-    * **Elevation:** Sophisticated Surface Tones and Overlay system.
-    * **Shape & Motion:** Pill-shaped inputs, weighted easing curves, and tactile State Layers.
-* **Privacy:** Zero-tracking "Static Facades" for YouTube and social sharing.
+    * **Distinct Themes:** 5 unique color palettes for Light and Dark modes.
+    * **Elevation & Shape:** Surface Tones, Pill shapes, and State Layers.
 * **IndieWeb:** Native support for Webmentions, Microformats, and POSSE.
 
 ## 2. Cheat Sheet (Script Usage)
