@@ -99,3 +99,15 @@ dialog#fedi-share-dialog {
     }
   }
 }
+
+/* [Patch] MD3 State Layers */
+.share-btn {
+  @include state-layer(var(--md-sys-color-primary));
+  &:hover { background-color: transparent; transform: scale(1.05); }
+}
+
+/* [Patch] MD3 State Layers */
+.share-btn {
+  @include state-layer(var(--md-sys-color-primary));
+  &:hover { background-color: transparent; transform: scale(1.05); }
+}

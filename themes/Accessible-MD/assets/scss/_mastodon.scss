@@ -116,3 +116,19 @@
   margin: -4px -8px;
   border-radius: 4px;
 }
+
+/* [Patch] Modernize Mastodon Button */
+.mastodon-footer .button-small {
+  padding: 6px 12px;
+  border-radius: 16px;
+  background-color: transparent;
+  /* Use mixin for interaction */
+  @include state-layer(var(--md-sys-color-primary));
+  
+  /* Override old hover */
+  &:hover {
+    background-color: transparent; 
+    padding: 6px 12px;
+    margin: 0;
+  }
+}
