@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.getElementById('menu-toggle');
     const menu = document.getElementById('main-menu');
     const navContainer = document.getElementById('main-nav');
+    
+    // Targets to hide from VoiceOver when menu is open
+    const mainContent = document.getElementById('main-content');
+    const footer = document.querySelector('.site-footer');
 
     if (!toggle || !menu) return;
 
@@ -11,7 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.setAttribute('aria-label', 'Open Menu');
         menu.classList.remove('is-open');
         navContainer.classList.remove('has-scrim');
-        document.body.style.overflow = ''; // Restore scrolling
+        
+        // Restore scrolling and accessibility
+        document.body.style.overflow = ''; 
+        if (mainContent) mainContent.removeAttribute('inert');
+        if (footer) footer.removeAttribute('inert');
     }
 
     // Helper: Open Menu
@@ -20,12 +28,16 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.setAttribute('aria-label', 'Close Menu');
         menu.classList.add('is-open');
         navContainer.classList.add('has-scrim');
-        document.body.style.overflow = 'hidden'; // Lock scrolling
+        
+        // Lock scrolling and hide background content from VoiceOver
+        document.body.style.overflow = 'hidden';
+        if (mainContent) mainContent.setAttribute('inert', '');
+        if (footer) footer.setAttribute('inert', '');
     }
 
     // 1. Toggle Click
     toggle.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent immediate bubbling
+        e.stopPropagation();
         const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
         if (isExpanded) {
             closeMenu();
@@ -42,11 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 3. Escape Key to Close (Accessibility)
+    // 3. Escape Key to Close
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
             closeMenu();
-            toggle.focus(); // Return focus to button
+            toggle.focus();
         }
     });
 });
