@@ -12,18 +12,20 @@
      <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
      <a href="{{ .Permalink }}" class="u-url"></a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
   </div>
 
   <div class="e-content">
     <p class="lead">{{ .Site.Params.webmentions.guestbookIntro }}</p>
     {{ .Content }}
   </div>
+
+  {{/* UNIVERSAL SYNDICATION PARTIAL */}}
+  {{ partial "syndication.html" . }}
 </section>
 
 {{ partial "share-buttons.html" . }}
 
-{{/* UNIVERSAL WEBMENTIONS CALL (Guestbook Mode) */}}
-{{/* Updated Description: Removed the explicit URL code block. */}}
 {{ partial "webmentions-card.html" (dict 
     "context" . 
     "target" .Site.BaseURL 

@@ -242,3 +242,19 @@
     @include elevation(3);
   }
 }
+
+/* [Patch] MD3 Navigation Active Pill */
+.nav-list a {
+  /* Reset the padding added by state layers for uniformity */
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.nav-list a[aria-current="page"] {
+  /* Remove old underline */
+  border-bottom: none;
+  /* Add MD3 Pill look: Tinted background */
+  background-color: rgba(var(--md-sys-color-primary), 0.12); 
+  color: var(--md-sys-color-primary); /* Primary text on Tinted Primary background */
+  font-weight: 700;
+}

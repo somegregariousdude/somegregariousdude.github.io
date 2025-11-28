@@ -9,6 +9,6 @@ node_modules/
 
 # Hugo Cache
 .hugo_build.lock
-package-lock.json
 # Build error log
 errors.txt
+content/styleguide/

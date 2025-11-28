@@ -1,33 +1,12 @@
 /* MD3 State Layer Mixin */
-/* Usage: @include state-layer; */
-
 @mixin state-layer($color: currentColor) {
-  position: relative;
-  overflow: hidden; /* Clips the layer to the element's border-radius */
-  
+  position: relative; overflow: hidden;
   &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: $color;
-    opacity: 0; /* Invisible by default */
-    z-index: 1; /* Sits on top of content */
-    pointer-events: none; /* CRITICAL: Let clicks pass through to the link/button */
-    
-    /* MD3 Motion for the fade effect */
+    content: ""; position: absolute; inset: 0; background-color: $color;
+    opacity: 0; z-index: 1; pointer-events: none;
     transition: opacity 0.2s var(--md-sys-motion-easing-standard, ease);
   }
-
-  /* MD3 Interaction Specs */
-  &:hover::before {
-    opacity: 0.08; /* Hover State */
-  }
-
-  &:focus-visible::before {
-    opacity: 0.12; /* Focus State */
-  }
-
-  &:active::before {
-    opacity: 0.12; /* Press State */
-  }
+  &:hover::before { opacity: 0.08; }
+  &:focus-visible::before { opacity: 0.12; }
+  &:active::before { opacity: 0.12; }
 }

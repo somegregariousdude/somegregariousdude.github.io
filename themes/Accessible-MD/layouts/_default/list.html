@@ -13,6 +13,7 @@
   
   <div class="post-feed">
     {{ range .Paginator.Pages }}
+      {{/* Add .Type class for CSS targeting */}}
       <article class="feed-item outlined-card h-entry {{ .Type }}">
         <div style="display: none;" class="p-author h-card">
            <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>

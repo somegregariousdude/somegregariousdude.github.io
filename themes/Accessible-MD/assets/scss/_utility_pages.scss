@@ -1,0 +1,35 @@
+/* MD3 Utility Page Styles */
+.guestbook-intro {
+  border-left: 8px solid var(--md-sys-color-secondary) !important;
+  background-color: var(--md-sys-color-surface-variant) !important;
+  color: var(--md-sys-color-on-surface-variant) !important;
+  border-radius: 4px 12px 12px 4px !important;
+}
+.guestbook-intro .lead { font-size: 1.2rem; font-weight: 500; margin-bottom: 1rem; }
+.contact-page {
+  border-top: 4px solid var(--md-sys-color-primary) !important;
+  border-radius: 4px 4px 12px 12px !important;
+  @include elevation(2);
+}
+.search-page {
+  border: 2px solid var(--md-sys-color-tertiary) !important;
+  box-shadow: 0 0 0 1px var(--md-sys-color-surface) inset !important;
+  background-image: radial-gradient(var(--md-sys-color-outline-variant) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-color: var(--md-sys-color-surface);
+}
+.search-tips {
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 16px; border-radius: 12px; margin-bottom: 24px; font-size: 0.95rem;
+  border-left: 4px solid var(--md-sys-color-tertiary);
+}
+.search-tips h2 { margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+article.manifesto {
+  padding: 32px !important;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: inset 0 0 0 4px var(--md-sys-color-surface), inset 0 0 0 5px var(--md-sys-color-outline-variant);
+}
+article.manifesto .post-header { text-align: center; margin-bottom: 3rem; border-bottom: 1px solid var(--md-sys-color-outline-variant); padding-bottom: 2rem; }
+article.manifesto .p-name { font-size: 3rem; margin-bottom: 0.5rem; }
+article.manifesto .headline-row { justify-content: center; }

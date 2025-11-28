@@ -7,7 +7,5 @@ draft = false
 summary = ""
 tags = []
 syndication = []
-+++
-
 show_webmentions = true
 +++

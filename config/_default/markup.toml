@@ -1,7 +1,7 @@
 # [Source: 64] Strict Security Policy
 [goldmark]
   [goldmark.renderer]
-    unsafe = false 
+    unsafe = true 
   [goldmark.parser]
     attribute = { block = true, title = true }
 

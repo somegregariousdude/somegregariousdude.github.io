@@ -1,54 +1,75 @@
 {{ define "main" }}
 <section class="feed-stream">
 
-  {{/* 1. AUTHOR PROFILE CARD (Top of Page) */}}
-  <article class="h-card profile-card outlined-card" style="margin-bottom: 2rem;">
-    <h1 class="p-name">{{ .Site.Params.author.name }}</h1>
+  {{/* 1. AUTHOR PROFILE CARD (The MD3 Hero - h-card is preserved) */}}
+  <article class="h-card profile-card outlined-card md-hero-card" style="margin-bottom: 2rem;">
     
-    {{/* Profile Photo */}}
-    {{ $avatar := resources.Get .Site.Params.author.photo }}
-    {{ if $avatar }}
-      {{ $avatar := $avatar.Fill "500x500 Center webp" }}
-      <img class="u-photo" src="{{ $avatar.RelPermalink }}" alt="Profile Photo" width="{{ $avatar.Width }}" height="{{ $avatar.Height }}">
-    {{ else }}
-      <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
-    {{ end }}
+    {{/* Hero Layout Container */}}
+    <div class="hero-content-wrapper">
+      
+      {{/* Image Side */}}
+      <div class="hero-avatar-area">
+        {{/* p-name is preserved here for h-card compliance */}}
+        <h1 class="p-name">{{ .Site.Params.author.name }}</h1>
+        {{ $avatar := resources.Get .Site.Params.author.photo }}
+        {{ if $avatar }}
+          {{ $avatar := $avatar.Fill "500x500 Center webp" }}
+          {{/* u-photo is preserved here */}}
+          <img class="u-photo" src="{{ $avatar.RelPermalink }}" alt="Profile Photo" width="{{ $avatar.Width }}" height="{{ $avatar.Height }}">
+        {{ else }}
+          <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
+        {{ end }}
+        
+        {{/* Location is visible near photo on mobile view */}}
+        <div class="profile-meta is-desktop-hidden">
+          <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
+          <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+        </div>
+      </div>
 
-    <p class="p-note">{{ .Site.Params.author.bio }}</p>
+      {{/* Text & Links Side */}}
+      <div class="hero-details-area">
+        {{/* p-note (bio) is preserved */}}
+        <p class="p-note">{{ .Site.Params.author.bio }}</p>
 
-    <div class="profile-meta">
-      <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
-      <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+        <div class="profile-meta is-mobile-hidden">
+          <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
+          <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+        </div>
+        
+        <h2>Social Media</h2>
+        {{/* Social Links rendered as MD3 Assist Chips */}}
+        <div class="social-chips-row">
+          {{ range .Site.Params.social }}
+            {{ partial "ui/social-chip.html" . }}
+          {{ end }}
+        </div>
+
+        {{ if .Site.Params.im }}
+        <h2>Messaging Services</h2>
+        <div class="social-chips-row">
+          {{ range .Site.Params.im }}
+            {{ partial "ui/social-chip.html" . }}
+          {{ end }}
+        </div>
+        {{ end }}
+      </div>
+      
     </div>
-    
-    <h2>Social Media</h2>
-    <ul class="social-links">
-      {{ range .Site.Params.social }}
-        {{ partial "ui/social-link.html" . }}
-      {{ end }}
-    </ul>
-
-    {{ if .Site.Params.im }}
-    <h2>Messaging Services</h2>
-    <ul class="im-links">
-      {{ range .Site.Params.im }}
-        {{ partial "ui/social-link.html" . }}
-      {{ end }}
-    </ul>
-    {{ end }}
   </article>
 
   {{/* 2. FEED SECTION TITLE */}}
   <h1>Latest Updates</h1>
 
-  {{/* 3. FEED LOGIC */}}
+  {{/* 3. FEED LOGIC (h-entry is preserved on <article> below) */}}
   {{ $allowed_sections := slice "articles" "status" "replies" "reposts" "likes" "bookmarks" "rsvps" }}
   {{ $feed := where .Site.RegularPages "Section" "in" $allowed_sections }}
   {{ $paginator := .Paginate $feed }}
 
   <div class="post-feed">
     {{ range $paginator.Pages }}
-      <article class="feed-item outlined-card h-entry">
+      {{/* MICROFORMAT CHECK: h-entry is preserved here */}}
+      <article class="feed-item outlined-card h-entry {{ .Type }}">
         <header class="feed-header">
           <div class="headline-row">
             {{ partial "ui/chip.html" . }}

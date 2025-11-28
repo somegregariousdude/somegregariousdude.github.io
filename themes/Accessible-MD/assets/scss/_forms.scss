@@ -1,62 +1,16 @@
 /* MD3 Forms & Buttons */
-
-/* Text Inputs & Textareas */
-input[type="text"],
-input[type="email"],
-textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--md-sys-color-outline);
-  border-radius: 8px; /* Small rounded corners for text areas */
-  background-color: var(--md-sys-color-surface);
-  color: var(--md-sys-color-on-surface);
-  font-family: 'Noto Sans', sans-serif;
-  font-size: 1rem;
-  transition: border-color 0.2s var(--md-sys-motion-easing-standard);
-  margin-bottom: 1rem;
+input[type="text"], input[type="email"], textarea {
+  width: 100%; padding: 12px 16px; border: 1px solid var(--md-sys-color-outline);
+  border-radius: 8px; background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface); font-family: 'Noto Sans', sans-serif;
+  font-size: 1rem; transition: border-color 0.2s var(--md-sys-motion-easing-standard); margin-bottom: 1rem;
 }
-
-/* "Pill" Shape for single-line inputs (matches Search) */
-input[type="text"],
-input[type="email"] {
-  border-radius: 28px;
-  padding-left: 24px;
-  padding-right: 24px;
+input[type="text"], input[type="email"] { border-radius: 28px; padding-left: 24px; padding-right: 24px; }
+input:focus, textarea:focus { outline: 2px solid var(--md-sys-color-primary); outline-offset: 2px; border-color: var(--md-sys-color-primary); }
+button, .button-primary, .button-secondary {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 24px; border-radius: 20px; font-weight: 600; font-family: 'Noto Sans', sans-serif;
+  cursor: pointer; text-decoration: none; border: none; @include state-layer(currentColor);
 }
-
-input:focus,
-textarea:focus {
-  outline: 2px solid var(--md-sys-color-primary);
-  outline-offset: 2px;
-  border-color: var(--md-sys-color-primary);
-}
-
-/* Standard Buttons */
-button,
-.button-primary,
-.button-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 24px;
-  border-radius: 20px; /* Full Pill */
-  font-weight: 600;
-  font-family: 'Noto Sans', sans-serif;
-  cursor: pointer;
-  text-decoration: none;
-  border: none;
-  
-  /* Hook into State Layer Mixin */
-  @include state-layer(currentColor);
-}
-
-.button-primary {
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-}
-
-.button-secondary {
-  background-color: transparent;
-  color: var(--md-sys-color-primary);
-  border: 1px solid var(--md-sys-color-outline);
-}
+.button-primary { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.button-secondary { background-color: transparent; color: var(--md-sys-color-primary); border: 1px solid var(--md-sys-color-outline); }

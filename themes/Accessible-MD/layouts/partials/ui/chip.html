@@ -33,6 +33,7 @@
 {{ if eq $iconName "search" }}{{ $vibe = "Magnifier" }}{{ end }}
 {{ if eq $iconName "about" }}{{ $vibe = "Info" }}{{ end }}
 
+{{ if eq $iconName "styleguide" }}{{ $vibe = "Design" }}{{ end }}
 <div class="chip chip-icon-only">
   <span class="chip-icon" role="img" aria-label="{{ $vibe }}">
     {{ partial (printf "icons/%s.svg" $iconName) . }}
