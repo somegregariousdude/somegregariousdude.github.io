@@ -73,6 +73,10 @@ cat <<'EOF' > "config/_default/params.toml"
     state = "Washington"
     country = "USA"
 
+# [NEW] IndieAuth Endpoints
+authorization_endpoint = "https://indieauth.com/auth"
+token_endpoint = "https://tokens.indieauth.com/token"
+
 # [Source: 26] Webmention.io Integration
 [webmentions]
   enable = true
@@ -100,7 +104,7 @@ cat <<'EOF' > "config/_default/params.toml"
   name = "BlueSky"
   handle = "@somegregariousdude.bsky.social"
   url = "https://bsky.app/profile/somegregariousdude.bsky.social"
-  rel = "nofollow"
+  rel = "me"
   icon = "bluesky"
 
 [[social]]
