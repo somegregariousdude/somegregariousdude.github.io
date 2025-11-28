@@ -3577,14 +3577,13 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 {{/* The {{ .Type }} class allows CSS to target specific content types */}}
 <article class="single-post h-entry outlined-card {{ .Type }}">
   
-  {{/* METADATA BLOCK: Hidden from view, visible to parsers */}}
+  {{/* METADATA BLOCK: Hidden */}}
   <div style="display: none;">
-    {{/* Author Info */}}
     <div class="p-author h-card">
       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
     </div>
-    {{/* Entry Canonical URL (Must be outside p-author) */}}
+    {{/* FIX: Strict u-url */}}
     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
@@ -3617,7 +3616,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
     </div>
   </header>
 
-  {{/* Context Blocks (MD3 Tonal) */}}
+  {{/* Context Blocks */}}
   <div class="context-container">
     {{ if .Params.reply_to }}
     <div class="context-block reply-context">
@@ -3659,18 +3658,25 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{/* Universal Syndication */}}
     {{ partial "syndication.html" . }}
 
     {{ if .Params.tags }}
-    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{/* FIX: Clean p-category (no visual #) */}}
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
+          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
     {{ end }}
   </footer>
 </article>
 
 {{ partial "share-buttons.html" . }}
 
-{{/* Universal Webmentions (Smart Fallback) */}}
 {{ $show := .Params.show_webmentions }}
 {{ if eq $show nil }}
   {{ $show = .Site.Params.webmentions.show_webmentions }}
@@ -3690,13 +3696,11 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/photos/single.html"
 {{ define "main" }}
 <article class="single-post h-entry outlined-card photos">
   
-  {{/* METADATA BLOCK: Hidden from view */}}
   <div style="display: none;">
     <div class="p-author h-card">
       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
     </div>
-    {{/* Entry Canonical URL */}}
     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
@@ -3716,7 +3720,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/photos/single.html"
     </div>
   </header>
 
-  {{/* The Content (containing the image) */}}
   <div class="e-content">
     {{ .Content }}
   </div>
@@ -3724,7 +3727,15 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/photos/single.html"
   <footer class="post-footer">
     {{ partial "syndication.html" . }}
     {{ if .Params.tags }}
-    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
+          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
     {{ end }}
   </footer>
 </article>
@@ -3790,13 +3801,11 @@ EOF
 cat <<'EOF' > "themes/Accessible-MD/layouts/_default/search.html"
 {{ define "main" }}
 <section class="search-page outlined-card h-entry">
-  {{/* Hidden Metadata for Parsers */}}
   <div style="display: none;">
      <div class="p-author h-card">
        <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
        <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
      </div>
-     {{/* FIX: Add text content to the anchor */}}
      <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
@@ -3805,7 +3814,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/search.html"
   <header class="page-header">
     <div class="headline-row">
       {{ partial "ui/chip.html" . }}
-      {{/* Hardcoded P-Name */}}
       <h1 class="p-name">Search</h1>
     </div>
   </header>
@@ -3847,7 +3855,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-image.html"
     {{- $small := $img.Resize "800x webp" -}}
     {{- $medium := $img.Resize "1200x webp" -}}
     
-    {{/* MICROFORMAT FIX: Added u-photo class */}}
+    {{/* MICROFORMAT: u-photo applied */}}
     <img 
       class="md-image u-photo" 
       src="{{ $small.RelPermalink }}" 
@@ -3863,7 +3871,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-image.html"
     >
   {{- else -}}
     {{/* REMOTE IMAGE FALLBACK */}}
-    {{/* MICROFORMAT FIX: Added u-photo class */}}
+    {{/* MICROFORMAT: u-photo applied */}}
     <img 
       class="md-image u-photo" 
       src="{{ .Destination | safeURL }}" 
@@ -4257,7 +4265,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/mastodon.html"
 {{ if and $host $id }}
   {{ $apiURL := printf "https://%s/api/v1/statuses/%s" $host $id }}
   
-  {{/* Fetch Data with Error Handling */}}
+  {{/* Fetch Data */}}
   {{ $data := dict }}
   {{ $response := resources.GetRemote $apiURL }}
   
@@ -4276,17 +4284,14 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/mastodon.html"
     </div>
   {{ end }}
 
-  {{/* Render Card if Data Exists */}}
   {{ if $data }}
     <article class="mastodon-card outlined-card" lang="{{ $data.language | default "en" }}">
       
-      {{/* HEADER: Author Info */}}
+      {{/* HEADER */}}
       <header class="mastodon-header">
         <div class="mastodon-author">
-          {{/* PROXY AVATAR: Download image to serve locally for privacy */}}
           {{ $avatar := resources.GetRemote $data.account.avatar }}
           {{ if $avatar }}
-             {{/* Check for valid image resource before processing */}}
              {{ if $avatar.Err }}
                <div class="u-photo-placeholder">?</div>
              {{ else }}
@@ -4309,21 +4314,43 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/mastodon.html"
         </div>
       </header>
 
-      {{/* BODY: Content */}}
+      {{/* BODY */}}
       <div class="e-content">
         {{ $data.content | safeHTML }}
       </div>
 
-      {{/* MEDIA: Image Grid */}}
+      {{/* MEDIA: Handles Images AND Videos now */}}
       {{ if $data.media_attachments }}
       <div class="mastodon-media">
         {{ range $data.media_attachments }}
+          {{/* LOGIC: Determine Source & Type */}}
+          {{ $src := "" }}
+          {{ $isVideo := false }}
+          
           {{ if eq .type "image" }}
-            {{/* PROXY MEDIA: Download content images */}}
-            {{ $img := resources.GetRemote .url }}
-            {{ if $img }}
-              {{ if not $img.Err }}
-                <img src="{{ $img.RelPermalink }}" alt="{{ .description | default "Attached image" }}" loading="lazy">
+             {{ $src = .url }}
+          {{ else if or (eq .type "video") (eq .type "gifv") }}
+             {{ $src = .preview_url }} {{/* Use thumbnail for static site */}}
+             {{ $isVideo = true }}
+          {{ end }}
+
+          {{ if $src }}
+            {{ $imgRes := resources.GetRemote $src }}
+            {{ if $imgRes }}
+              {{ if not $imgRes.Err }}
+                <div class="media-item">
+                  {{/* VISUAL: u-photo (Preview) */}}
+                  <img src="{{ $imgRes.RelPermalink }}" class="u-photo" alt="{{ .description | default "Media attachment" }}" loading="lazy">
+                  
+                  {{/* DATA: u-video (Hidden Link to original file) */}}
+                  {{ if $isVideo }}
+                    <a href="{{ .url }}" class="u-video" style="display:none;" aria-hidden="true">Watch Video</a>
+                    {{/* Optional: Overlay icon to indicate video */}}
+                    <div class="play-overlay" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+                       <span style="background:rgba(0,0,0,0.5); color:white; padding:8px; border-radius:50%;">▶</span>
+                    </div>
+                  {{ end }}
+                </div>
               {{ end }}
             {{ end }}
           {{ end }}
@@ -4331,7 +4358,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/mastodon.html"
       </div>
       {{ end }}
 
-      {{/* FOOTER: Meta & Stats */}}
+      {{/* FOOTER */}}
       <footer class="mastodon-footer">
         <time class="dt-published" datetime="{{ $data.created_at }}">
           {{ dateFormat "Jan 02, 2006" $data.created_at }}
@@ -4363,9 +4390,14 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/youtube.html"
      aria-label="{{ $title }}"
      title="{{ $title }}">
   
+  {{/* VISUAL: u-photo */}}
   <img src="https://img.youtube.com/vi/{{ $id }}/maxresdefault.jpg" 
+       class="u-photo"
        alt="Video Thumbnail" 
        loading="lazy">
+  
+  {{/* DATA: u-video (Hidden) */}}
+  <a href="https://www.youtube.com/watch?v={{ $id }}" class="u-video" style="display:none;" aria-hidden="true">Watch on YouTube</a>
   
   <div class="play-button" aria-hidden="true"></div>
 </div>
@@ -4375,13 +4407,11 @@ EOF
 cat <<'EOF' > "themes/Accessible-MD/layouts/pages/contact.html"
 {{ define "main" }}
 <section class="contact-page outlined-card h-entry">
-  {{/* Hidden Metadata for Parsers */}}
   <div style="display: none;">
      <div class="p-author h-card">
        <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
        <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
      </div>
-     {{/* FIX: Add text content to the anchor */}}
      <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
@@ -4390,7 +4420,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/contact.html"
   <header class="page-header">
     <div class="headline-row">
       {{ partial "ui/chip.html" . }}
-      {{/* Hardcoded P-Name */}}
       <h1 class="p-name">Contact Me</h1>
     </div>
     <p class="p-summary">{{ .Site.Params.contact.intro }}</p>
@@ -4402,7 +4431,11 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/contact.html"
   <footer class="post-footer">
     <ul class="tags">
       {{ range .Params.tags }}
-      <li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
+          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+        </a>
+      </li>
       {{ end }}
     </ul>
   </footer>
@@ -4433,7 +4466,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/guestbook.html"
 <section class="guestbook-intro outlined-card h-entry">
   <div style="display: none;">
      <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
-     {{/* FIX: Add text content to the anchor */}}
      <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
@@ -4444,7 +4476,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/guestbook.html"
     {{ .Content }}
   </div>
 
-  {{/* UNIVERSAL SYNDICATION PARTIAL */}}
   {{ partial "syndication.html" . }}
 </section>
 

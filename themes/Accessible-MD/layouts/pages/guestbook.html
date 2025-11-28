@@ -10,7 +10,6 @@
 <section class="guestbook-intro outlined-card h-entry">
   <div style="display: none;">
      <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
-     {{/* FIX: Add text content to the anchor */}}
      <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
@@ -21,7 +20,6 @@
     {{ .Content }}
   </div>
 
-  {{/* UNIVERSAL SYNDICATION PARTIAL */}}
   {{ partial "syndication.html" . }}
 </section>
 

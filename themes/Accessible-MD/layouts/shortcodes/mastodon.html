@@ -4,7 +4,7 @@
 {{ if and $host $id }}
   {{ $apiURL := printf "https://%s/api/v1/statuses/%s" $host $id }}
   
-  {{/* Fetch Data with Error Handling */}}
+  {{/* Fetch Data */}}
   {{ $data := dict }}
   {{ $response := resources.GetRemote $apiURL }}
   
@@ -23,17 +23,14 @@
     </div>
   {{ end }}
 
-  {{/* Render Card if Data Exists */}}
   {{ if $data }}
     <article class="mastodon-card outlined-card" lang="{{ $data.language | default "en" }}">
       
-      {{/* HEADER: Author Info */}}
+      {{/* HEADER */}}
       <header class="mastodon-header">
         <div class="mastodon-author">
-          {{/* PROXY AVATAR: Download image to serve locally for privacy */}}
           {{ $avatar := resources.GetRemote $data.account.avatar }}
           {{ if $avatar }}
-             {{/* Check for valid image resource before processing */}}
              {{ if $avatar.Err }}
                <div class="u-photo-placeholder">?</div>
              {{ else }}
@@ -56,21 +53,43 @@
         </div>
       </header>
 
-      {{/* BODY: Content */}}
+      {{/* BODY */}}
       <div class="e-content">
         {{ $data.content | safeHTML }}
       </div>
 
-      {{/* MEDIA: Image Grid */}}
+      {{/* MEDIA: Handles Images AND Videos now */}}
       {{ if $data.media_attachments }}
       <div class="mastodon-media">
         {{ range $data.media_attachments }}
+          {{/* LOGIC: Determine Source & Type */}}
+          {{ $src := "" }}
+          {{ $isVideo := false }}
+          
           {{ if eq .type "image" }}
-            {{/* PROXY MEDIA: Download content images */}}
-            {{ $img := resources.GetRemote .url }}
-            {{ if $img }}
-              {{ if not $img.Err }}
-                <img src="{{ $img.RelPermalink }}" alt="{{ .description | default "Attached image" }}" loading="lazy">
+             {{ $src = .url }}
+          {{ else if or (eq .type "video") (eq .type "gifv") }}
+             {{ $src = .preview_url }} {{/* Use thumbnail for static site */}}
+             {{ $isVideo = true }}
+          {{ end }}
+
+          {{ if $src }}
+            {{ $imgRes := resources.GetRemote $src }}
+            {{ if $imgRes }}
+              {{ if not $imgRes.Err }}
+                <div class="media-item">
+                  {{/* VISUAL: u-photo (Preview) */}}
+                  <img src="{{ $imgRes.RelPermalink }}" class="u-photo" alt="{{ .description | default "Media attachment" }}" loading="lazy">
+                  
+                  {{/* DATA: u-video (Hidden Link to original file) */}}
+                  {{ if $isVideo }}
+                    <a href="{{ .url }}" class="u-video" style="display:none;" aria-hidden="true">Watch Video</a>
+                    {{/* Optional: Overlay icon to indicate video */}}
+                    <div class="play-overlay" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+                       <span style="background:rgba(0,0,0,0.5); color:white; padding:8px; border-radius:50%;">▶</span>
+                    </div>
+                  {{ end }}
+                </div>
               {{ end }}
             {{ end }}
           {{ end }}
@@ -78,7 +97,7 @@
       </div>
       {{ end }}
 
-      {{/* FOOTER: Meta & Stats */}}
+      {{/* FOOTER */}}
       <footer class="mastodon-footer">
         <time class="dt-published" datetime="{{ $data.created_at }}">
           {{ dateFormat "Jan 02, 2006" $data.created_at }}

@@ -22,11 +22,18 @@
   </div>
 
   <footer class="post-footer">
-    {{/* UNIVERSAL SYNDICATION PARTIAL */}}
     {{ partial "syndication.html" . }}
 
     {{ if .Params.tags }}
-    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
+          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
     {{ end }}
   </footer>
 </article>

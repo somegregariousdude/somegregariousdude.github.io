@@ -2,14 +2,13 @@
 {{/* The {{ .Type }} class allows CSS to target specific content types */}}
 <article class="single-post h-entry outlined-card {{ .Type }}">
   
-  {{/* METADATA BLOCK: Hidden from view, visible to parsers */}}
+  {{/* METADATA BLOCK: Hidden */}}
   <div style="display: none;">
-    {{/* Author Info */}}
     <div class="p-author h-card">
       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
     </div>
-    {{/* Entry Canonical URL (Must be outside p-author) */}}
+    {{/* FIX: Strict u-url */}}
     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
@@ -42,7 +41,7 @@
     </div>
   </header>
 
-  {{/* Context Blocks (MD3 Tonal) */}}
+  {{/* Context Blocks */}}
   <div class="context-container">
     {{ if .Params.reply_to }}
     <div class="context-block reply-context">
@@ -84,18 +83,25 @@
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{/* Universal Syndication */}}
     {{ partial "syndication.html" . }}
 
     {{ if .Params.tags }}
-    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{/* FIX: Clean p-category (no visual #) */}}
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
+          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
     {{ end }}
   </footer>
 </article>
 
 {{ partial "share-buttons.html" . }}
 
-{{/* Universal Webmentions (Smart Fallback) */}}
 {{ $show := .Params.show_webmentions }}
 {{ if eq $show nil }}
   {{ $show = .Site.Params.webmentions.show_webmentions }}
