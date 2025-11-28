@@ -35,7 +35,7 @@
 # [Source: 34] Visual Theming
 [theme]
   # Options: "sound", "market", "mountain", "forest", "sunset"
-  colorScheme = "forest"
+  colorScheme = "sunset"
 
 # [Source: 36] Social Media - Dynamic Block
 # Used by generate_icons.sh to fetch SVGs from Simple Icons.
