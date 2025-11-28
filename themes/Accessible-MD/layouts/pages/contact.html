@@ -6,7 +6,8 @@
        <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
        <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
      </div>
-     <a href="{{ .Permalink }}" class="u-url"></a>
+     {{/* FIX: Add text content to the anchor */}}
+     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
   </div>
