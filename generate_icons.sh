@@ -39,6 +39,7 @@ declare -A SYSTEM_ICONS=(
     ["share"]="share"
     ["event"]="event"
     ["schedule"]="schedule"
+    ["styleguide"]="palette"
 )
 
 echo "--- Fetching System Icons ---"

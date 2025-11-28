@@ -248,7 +248,7 @@ cat <<'EOF' > "config/_default/markup.toml"
 # [Source: 64] Strict Security Policy
 [goldmark]
   [goldmark.renderer]
-    unsafe = false 
+    unsafe = true 
   [goldmark.parser]
     attribute = { block = true, title = true }
 
@@ -417,6 +417,7 @@ node_modules/
 package-lock.json
 # Build error log
 errors.txt
+content/styleguide/
 EOF
 
 # File: CNAME
@@ -735,6 +736,7 @@ declare -A SYSTEM_ICONS=(
     ["share"]="share"
     ["event"]="event"
     ["schedule"]="schedule"
+    ["styleguide"]="palette"
 )
 
 echo "--- Fetching System Icons ---"
@@ -1533,6 +1535,128 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   text-decoration: none;
   border-bottom: 1px dotted currentColor;
 }
+
+/* [Patch] Syndication (POSSE) Styles */
+.syndication-container {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.syndication-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--md-sys-color-outline);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.syndication-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Ensure syndication chips look like standard chips but maybe smaller/distinct */
+.chip.u-syndication {
+  @include state-layer(var(--md-sys-color-secondary));
+  border-color: var(--md-sys-color-outline-variant);
+}
+
+/* [Patch] MD3 Hero Card & Chip Styles */
+
+/* 1. Profile Hero Card (md-hero-card) */
+.md-hero-card {
+  /* Elevation: Lift it slightly */
+  @include elevation(1);
+  /* Use Surface Container High for a distinct background tint */
+  background-color: var(--md-sys-color-surface-container-high) !important;
+  border-radius: 20px; /* Softer, friendlier corners */
+}
+
+.hero-content-wrapper {
+  display: grid;
+  grid-template-columns: 200px 1fr; /* Image width | Content width */
+  gap: 32px;
+  align-items: start;
+}
+
+.hero-avatar-area {
+  grid-column: 1;
+  text-align: center;
+}
+
+.hero-avatar-area h1 {
+  /* H1 is visible here but text-only on mobile */
+  font-size: 2rem; /* Display Small size */
+  margin-bottom: 12px;
+}
+
+.hero-details-area {
+  grid-column: 2;
+  padding-top: 12px;
+}
+
+/* 2. MD3 Assist Chips for Social Links (Replaces List) */
+.social-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  list-style: none; /* Remove list item dots */
+}
+
+.social-chip {
+  /* MD3 Assist Chip Styling */
+  display: inline-flex;
+  align-items: center;
+  border-radius: 20px; /* Pill Shape */
+  padding: 6px 12px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface); /* Inner Surface */
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-on-surface);
+  
+  /* Apply state layer for interaction */
+  @include state-layer(var(--md-sys-color-primary));
+}
+
+.social-chip .brand-icon {
+  margin-right: 6px;
+  color: var(--md-sys-color-primary);
+}
+
+.social-chip:hover {
+  background-color: var(--md-sys-color-surface) !important; /* Reset component hover */
+  border-color: var(--md-sys-color-outline);
+}
+
+
+/* 3. Tablet/Mobile Adjustments */
+@media (max-width: 768px) {
+  .hero-content-wrapper {
+    grid-template-columns: 1fr; /* Stacked */
+    gap: 16px;
+  }
+  .hero-avatar-area {
+    grid-column: 1;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hero-avatar-area h1 {
+    display: none; /* Hide H1 visually, keep in DOM for microformats */
+  }
+  .u-photo {
+    width: 100px;
+    height: 100px;
+  }
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_images.scss
@@ -1841,6 +1965,22 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_layout.scss"
     /* Level 3: Modal Navigation Drawer sits above the header */
     @include elevation(3);
   }
+}
+
+/* [Patch] MD3 Navigation Active Pill */
+.nav-list a {
+  /* Reset the padding added by state layers for uniformity */
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.nav-list a[aria-current="page"] {
+  /* Remove old underline */
+  border-bottom: none;
+  /* Add MD3 Pill look: Tinted background */
+  background-color: rgba(var(--md-sys-color-primary), 0.12); 
+  color: var(--md-sys-color-primary); /* Primary text on Tinted Primary background */
+  font-weight: 700;
 }
 EOF
 
@@ -2600,6 +2740,185 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/main.scss"
 @import "mastodon";
 @import "images";
 @import "share";
+@import "utility_pages";
+@import "content_types";
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_elevation.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_elevation.scss"
+/* MD3 Elevation System (Surface Tones) */
+@mixin elevation($level) {
+  --elevation-tint: 0;
+  @if $level == 1 { --elevation-tint: 0.05; }
+  @if $level == 2 { --elevation-tint: 0.08; }
+  @if $level == 3 { --elevation-tint: 0.11; }
+  @if $level == 4 { --elevation-tint: 0.12; }
+  @if $level == 5 { --elevation-tint: 0.14; }
+  background-image: linear-gradient(
+    rgba(var(--md-elevation-overlay), var(--elevation-tint)),
+    rgba(var(--md-elevation-overlay), var(--elevation-tint))
+  );
+  background-color: color-mix(in srgb, var(--md-elevation-overlay) calc(var(--elevation-tint) * 100%), var(--md-sys-color-surface));
+  @supports not (background-color: color-mix(in srgb, red, blue)) { background-color: var(--md-sys-color-surface); }
+  @media (prefers-color-scheme: light) { box-shadow: 0px #{$level}px #{$level * 2}px rgba(0, 0, 0, 0.1); }
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_state_layer.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_state_layer.scss"
+/* MD3 State Layer Mixin */
+@mixin state-layer($color: currentColor) {
+  position: relative; overflow: hidden;
+  &::before {
+    content: ""; position: absolute; inset: 0; background-color: $color;
+    opacity: 0; z-index: 1; pointer-events: none;
+    transition: opacity 0.2s var(--md-sys-motion-easing-standard, ease);
+  }
+  &:hover::before { opacity: 0.08; }
+  &:focus-visible::before { opacity: 0.12; }
+  &:active::before { opacity: 0.12; }
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_forms.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_forms.scss"
+/* MD3 Forms & Buttons */
+input[type="text"], input[type="email"], textarea {
+  width: 100%; padding: 12px 16px; border: 1px solid var(--md-sys-color-outline);
+  border-radius: 8px; background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface); font-family: 'Noto Sans', sans-serif;
+  font-size: 1rem; transition: border-color 0.2s var(--md-sys-motion-easing-standard); margin-bottom: 1rem;
+}
+input[type="text"], input[type="email"] { border-radius: 28px; padding-left: 24px; padding-right: 24px; }
+input:focus, textarea:focus { outline: 2px solid var(--md-sys-color-primary); outline-offset: 2px; border-color: var(--md-sys-color-primary); }
+button, .button-primary, .button-secondary {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 24px; border-radius: 20px; font-weight: 600; font-family: 'Noto Sans', sans-serif;
+  cursor: pointer; text-decoration: none; border: none; @include state-layer(currentColor);
+}
+.button-primary { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.button-secondary { background-color: transparent; color: var(--md-sys-color-primary); border: 1px solid var(--md-sys-color-outline); }
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_content_types.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_content_types.scss"
+/* MD3 Content Type Variations */
+
+/* 1. STATUS UPDATES ("The Note Card") */
+article.status {
+  background-color: var(--md-sys-color-surface-variant); /* Tinted Background */
+  border: none;
+  border-radius: 16px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+article.status .outlined-card:hover {
+  background-color: var(--md-sys-color-surface-variant); 
+}
+
+/* 2. BOOKMARKS ("The Reference") */
+article.bookmarks {
+  border: 2px dashed var(--md-sys-color-outline);
+  background-color: transparent;
+}
+article.bookmarks .post-header h1 {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--md-sys-color-tertiary);
+}
+
+/* 3. REPLIES ("The Thread") */
+article.replies {
+  border-left: 4px solid var(--md-sys-color-tertiary);
+  border-radius: 4px 12px 12px 4px;
+  padding-left: 24px;
+}
+article.replies .context-block {
+  background-color: rgba(var(--md-sys-color-tertiary), 0.1);
+  border: 1px solid rgba(var(--md-sys-color-tertiary), 0.2);
+}
+
+/* 4. LIKES ("The Signal") */
+article.likes {
+  border-radius: 100px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.feed-item.likes .e-content, 
+.feed-item.likes footer {
+  display: none; /* Hide body content in feed */
+}
+article.likes .context-block {
+  margin: 0; padding: 0; background: none; border: none; flex-grow: 1;
+}
+
+/* 5. REPOSTS ("The Frame") */
+article.reposts {
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  position: relative;
+  overflow: hidden;
+}
+article.reposts::before {
+  content: "⟳";
+  position: absolute;
+  top: -20px; right: 10px; font-size: 100px;
+  color: var(--md-sys-color-secondary);
+  opacity: 0.05; pointer-events: none; line-height: 1;
+}
+
+/* 6. RSVPs ("The Ticket") */
+article.rsvps {
+  border-left: 12px solid var(--md-sys-color-primary);
+  border-radius: 4px 12px 12px 4px;
+}
+article.rsvps .context-label strong {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+EOF
+
+# File: themes/Accessible-MD/assets/scss/_utility_pages.scss
+cat <<'EOF' > "themes/Accessible-MD/assets/scss/_utility_pages.scss"
+/* MD3 Utility Page Styles */
+.guestbook-intro {
+  border-left: 8px solid var(--md-sys-color-secondary) !important;
+  background-color: var(--md-sys-color-surface-variant) !important;
+  color: var(--md-sys-color-on-surface-variant) !important;
+  border-radius: 4px 12px 12px 4px !important;
+}
+.guestbook-intro .lead { font-size: 1.2rem; font-weight: 500; margin-bottom: 1rem; }
+.contact-page {
+  border-top: 4px solid var(--md-sys-color-primary) !important;
+  border-radius: 4px 4px 12px 12px !important;
+  @include elevation(2);
+}
+.search-page {
+  border: 2px solid var(--md-sys-color-tertiary) !important;
+  box-shadow: 0 0 0 1px var(--md-sys-color-surface) inset !important;
+  background-image: radial-gradient(var(--md-sys-color-outline-variant) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-color: var(--md-sys-color-surface);
+}
+.search-tips {
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 16px; border-radius: 12px; margin-bottom: 24px; font-size: 0.95rem;
+  border-left: 4px solid var(--md-sys-color-tertiary);
+}
+.search-tips h2 { margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+article.manifesto {
+  padding: 32px !important;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: inset 0 0 0 4px var(--md-sys-color-surface), inset 0 0 0 5px var(--md-sys-color-outline-variant);
+}
+article.manifesto .post-header { text-align: center; margin-bottom: 3rem; border-bottom: 1px solid var(--md-sys-color-outline-variant); padding-bottom: 2rem; }
+article.manifesto .p-name { font-size: 3rem; margin-bottom: 0.5rem; }
+article.manifesto .headline-row { justify-content: center; }
 EOF
 
 # File: themes/Accessible-MD/assets/js/copy-code.js
@@ -2973,54 +3292,69 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/index.html"
 {{ define "main" }}
 <section class="feed-stream">
 
-  {{/* 1. AUTHOR PROFILE CARD (Top of Page) */}}
-  <article class="h-card profile-card outlined-card" style="margin-bottom: 2rem;">
-    <h1 class="p-name">{{ .Site.Params.author.name }}</h1>
+  {{/* 1. AUTHOR PROFILE CARD (The MD3 Hero - h-card is preserved) */}}
+  <article class="h-card profile-card outlined-card md-hero-card" style="margin-bottom: 2rem;">
     
-    {{/* Profile Photo */}}
-    {{ $avatar := resources.Get .Site.Params.author.photo }}
-    {{ if $avatar }}
-      {{ $avatar := $avatar.Fill "500x500 Center webp" }}
-      <img class="u-photo" src="{{ $avatar.RelPermalink }}" alt="Profile Photo" width="{{ $avatar.Width }}" height="{{ $avatar.Height }}">
-    {{ else }}
-      <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
-    {{ end }}
+    {{/* Hero Layout Container */}}
+    <div class="hero-content-wrapper">
+      
+      {{/* Image Side */}}
+      <div class="hero-avatar-area">
+        {{/* p-name is preserved here for h-card compliance */}}
+        <h1 class="p-name">{{ .Site.Params.author.name }}</h1>
+        {{ $avatar := resources.Get .Site.Params.author.photo }}
+        {{ if $avatar }}
+          {{ $avatar := $avatar.Fill "500x500 Center webp" }}
+          {{/* u-photo is preserved here */}}
+          <img class="u-photo" src="{{ $avatar.RelPermalink }}" alt="Profile Photo" width="{{ $avatar.Width }}" height="{{ $avatar.Height }}">
+        {{ else }}
+          <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
+        {{ end }}
+      </div>
 
-    <p class="p-note">{{ .Site.Params.author.bio }}</p>
+      {{/* Text & Links Side */}}
+      <div class="hero-details-area">
+        {{/* p-note (bio) is preserved */}}
+        <p class="p-note">{{ .Site.Params.author.bio }}</p>
 
-    <div class="profile-meta">
-      <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
-      <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+        <div class="profile-meta">
+          <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
+          <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+        </div>
+        
+        <h2>Social Media</h2>
+        {{/* Social Links rendered as MD3 Assist Chips */}}
+        <div class="social-chips-row">
+          {{ range .Site.Params.social }}
+            {{ partial "ui/social-chip.html" . }}
+          {{ end }}
+        </div>
+
+        {{ if .Site.Params.im }}
+        <h2>Messaging Services</h2>
+        <div class="social-chips-row">
+          {{ range .Site.Params.im }}
+            {{ partial "ui/social-chip.html" . }}
+          {{ end }}
+        </div>
+        {{ end }}
+      </div>
+      
     </div>
-    
-    <h2>Social Media</h2>
-    <ul class="social-links">
-      {{ range .Site.Params.social }}
-        {{ partial "ui/social-link.html" . }}
-      {{ end }}
-    </ul>
-
-    {{ if .Site.Params.im }}
-    <h2>Messaging Services</h2>
-    <ul class="im-links">
-      {{ range .Site.Params.im }}
-        {{ partial "ui/social-link.html" . }}
-      {{ end }}
-    </ul>
-    {{ end }}
   </article>
 
   {{/* 2. FEED SECTION TITLE */}}
   <h1>Latest Updates</h1>
 
-  {{/* 3. FEED LOGIC */}}
+  {{/* 3. FEED LOGIC (h-entry is preserved on <article> below) */}}
   {{ $allowed_sections := slice "articles" "status" "replies" "reposts" "likes" "bookmarks" "rsvps" }}
   {{ $feed := where .Site.RegularPages "Section" "in" $allowed_sections }}
   {{ $paginator := .Paginate $feed }}
 
   <div class="post-feed">
     {{ range $paginator.Pages }}
-      <article class="feed-item outlined-card h-entry">
+      {{/* MICROFORMAT CHECK: h-entry is preserved here */}}
+      <article class="feed-item outlined-card h-entry {{ .Type }}">
         <header class="feed-header">
           <div class="headline-row">
             {{ partial "ui/chip.html" . }}
@@ -3139,6 +3473,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/list.html"
   
   <div class="post-feed">
     {{ range .Paginator.Pages }}
+      {{/* Add .Type class for CSS targeting */}}
       <article class="feed-item outlined-card h-entry {{ .Type }}">
         <div style="display: none;" class="p-author h-card">
            <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
@@ -3196,7 +3531,8 @@ EOF
 # File: themes/Accessible-MD/layouts/_default/single.html
 cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 {{ define "main" }}
-<article class="single-post h-entry outlined-card">
+{{/* The {{ .Type }} class allows CSS to target specific content types */}}
+<article class="single-post h-entry outlined-card {{ .Type }}">
   
   <div style="display: none;" class="p-author h-card">
     <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
@@ -3209,6 +3545,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       <h1 class="p-name">{{ .Title }}</h1>
     </div>
     
+    {{/* QoL Metadata */}}
     <div class="post-meta">
       <div class="meta-item">
         <span class="meta-icon">{{ partial "icons/event.svg" . }}</span>
@@ -3231,7 +3568,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
     </div>
   </header>
 
-  {{/* NEW: MD3 Tonal Context Blocks */}}
+  {{/* Context Blocks (MD3 Tonal) */}}
   <div class="context-container">
     {{ if .Params.reply_to }}
     <div class="context-block reply-context">
@@ -3240,7 +3577,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       <a href="{{ .Params.reply_to }}" class="u-in-reply-to context-link">{{ .Params.reply_to | truncate 50 }}</a>
     </div>
     {{ end }}
-
     {{ if .Params.like_of }}
     <div class="context-block like-context">
       <span class="context-icon">{{ partial "icons/likes.svg" . }}</span>
@@ -3248,7 +3584,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       <a href="{{ .Params.like_of }}" class="u-like-of context-link">{{ .Params.like_of | truncate 50 }}</a>
     </div>
     {{ end }}
-
     {{ if .Params.repost_of }}
     <div class="context-block repost-context">
       <span class="context-icon">{{ partial "icons/reposts.svg" . }}</span>
@@ -3256,7 +3591,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       <a href="{{ .Params.repost_of }}" class="u-repost-of context-link">{{ .Params.repost_of | truncate 50 }}</a>
     </div>
     {{ end }}
-
     {{ if .Params.bookmark_of }}
     <div class="context-block bookmark-context">
       <span class="context-icon">{{ partial "icons/bookmarks.svg" . }}</span>
@@ -3264,7 +3598,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of context-link">{{ .Params.bookmark_of | truncate 50 }}</a>
     </div>
     {{ end }}
-
     {{ if and .Params.rsvp .Params.reply_to }}
     <div class="context-block rsvp-context">
       <span class="context-icon">{{ partial "icons/rsvps.svg" . }}</span>
@@ -3277,32 +3610,8 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{ if .Params.syndication }}
-    <div class="syndication-container">
-      <span class="syndication-label">Also on:</span>
-      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-        {{ range .Params.syndication }}
-          {{ $synURL := . }}
-          {{ $match := false }}
-          {{ $data := dict }}
-          {{ range $.Site.Params.social }}
-             {{ if in $synURL .url }}
-               {{ $match = true }}
-               {{ $data = . }}
-             {{ end }}
-          {{ end }}
-          <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
-            {{ if $match }}
-               {{ if $data.icon }}<span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">{{ partial (printf "icons/%s.svg" $data.icon) . }}</span>{{ end }}
-               <span class="chip-label">{{ $data.name }}</span>
-            {{ else }}
-               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
-            {{ end }}
-          </a>
-        {{ end }}
-      </div>
-    </div>
-    {{ end }}
+    {{/* Universal Syndication */}}
+    {{ partial "syndication.html" . }}
 
     {{ if .Params.tags }}
     <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
@@ -3312,7 +3621,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 
 {{ partial "share-buttons.html" . }}
 
-{{/* UNIVERSAL WEBMENTIONS LOGIC */}}
+{{/* Universal Webmentions (Smart Fallback) */}}
 {{ $show := .Params.show_webmentions }}
 {{ if eq $show nil }}
   {{ $show = .Site.Params.webmentions.show_webmentions }}
@@ -3388,7 +3697,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/search.html"
      </div>
      <a href="{{ .Permalink }}" class="u-url"></a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
-     <span class="p-category">Search</span>
+     {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
   </div>
 
   <header class="page-header">
@@ -3400,6 +3709,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/search.html"
   </header>
   
   <div id="search" role="search"></div>
+{{ partial "syndication.html" . }}
 </section>
 
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
@@ -3556,6 +3866,12 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/footer.html"
       Content licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
       <span aria-hidden="true" style="margin: 0 8px;">|</span>
       <a href="/accessibility/">Accessibility</a>
+      
+      {{/* DEV ONLY LINK */}}
+      {{ if hugo.IsServer }}
+      <span aria-hidden="true" style="margin: 0 8px;">|</span>
+      <a href="/styleguide/" style="color: var(--md-sys-color-tertiary);">⚠️ Style Guide</a>
+      {{ end }}
     </p>
   </div>
   
@@ -3690,6 +4006,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/ui/chip.html"
 {{ if eq $iconName "search" }}{{ $vibe = "Magnifier" }}{{ end }}
 {{ if eq $iconName "about" }}{{ $vibe = "Info" }}{{ end }}
 
+{{ if eq $iconName "styleguide" }}{{ $vibe = "Design" }}{{ end }}
 <div class="chip chip-icon-only">
   <span class="chip-icon" role="img" aria-label="{{ $vibe }}">
     {{ partial (printf "icons/%s.svg" $iconName) . }}
@@ -3714,6 +4031,81 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/ui/social-link.html"
     <span class="brand-handle" style="color: var(--md-sys-color-on-surface); opacity: 0.8; margin-left: 4px;">{{ .handle }}</span>
   </a>
 </li>
+EOF
+
+# File: themes/Accessible-MD/layouts/partials/webmentions-card.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/webmentions-card.html"
+{{/* Universal Webmentions Component 
+  Usage: partial "webmentions-card.html" (dict "context" . "target" .Permalink "title" "..." "description" "...")
+*/}}
+{{ $context := .context }}
+{{ $target := .target | default $context.Permalink }}
+{{ $title := .title | default "Webmentions" }}
+{{ $desc := .description | default "Have your say. Write a post on your own site and link to this URL to appear here!" }}
+{{ $extraClasses := .extraClasses | default "" }}
+{{ $headingID := "webmentions-heading" }}
+
+<section id="webmentions" class="webmentions-container outlined-card {{ $extraClasses }}" data-target="{{ $target }}" aria-labelledby="{{ $headingID }}">
+  <div class="webmention-header">
+    <h2 id="{{ $headingID }}">{{ $title }}</h2>
+    
+    {{/* Copy URL Pill */}}
+    <div class="webmention-copy-field">
+      <span class="url-text">{{ $target }}</span>
+      <button class="copy-btn icon-btn" data-clipboard-text="{{ $target }}" aria-label="Copy URL">
+        {{ partial "icons/content_copy.svg" $context }}
+      </button>
+    </div>
+  </div>
+  
+  <div class="webmention-explainer">
+    <p>{{ $desc | safeHTML }}</p>
+  </div>
+
+  <div id="webmentions-list"><p>Loading...</p></div>
+</section>
+EOF
+
+# File: themes/Accessible-MD/layouts/partials/syndication.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/syndication.html"
+{{/* Universal Syndication Component */}}
+{{/* Usage: partial "syndication.html" . */}}
+
+{{ if .Params.syndication }}
+<div class="syndication-container">
+  <span class="syndication-label">Also on:</span>
+  <div class="syndication-chips">
+    {{ range .Params.syndication }}
+      {{ $synURL := . }}
+      {{ $match := false }}
+      {{ $data := dict }}
+      
+      {{/* LOOKUP: Match URL to Social Config for Icons */}}
+      {{ range $.Site.Params.social }}
+         {{ if in $synURL .url }}
+           {{ $match = true }}
+           {{ $data = . }}
+         {{ end }}
+      {{ end }}
+
+      <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication">
+        {{ if $match }}
+           {{/* Icon Block: Silent for screen readers */}}
+           {{ if $data.icon }}
+             <span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">
+               {{ partial (printf "icons/%s.svg" $data.icon) . }}
+             </span>
+           {{ end }}
+           <span class="chip-label">{{ $data.name }}</span>
+        {{ else }}
+           {{/* Fallback for unknown sites: Extract Domain */}}
+           <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
+        {{ end }}
+      </a>
+    {{ end }}
+  </div>
+</div>
+{{ end }}
 EOF
 
 # File: themes/Accessible-MD/layouts/shortcodes/gallery.html
@@ -3880,7 +4272,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/contact.html"
      </div>
      <a href="{{ .Permalink }}" class="u-url"></a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
-     <span class="p-category">Contact Form</span>
+     {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
   </div>
 
   <header class="page-header">
@@ -3910,6 +4302,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/contact.html"
     <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" rows="5" required></textarea></div>
     <button type="submit" class="button-primary">Send Message</button>
   </form>
+{{ partial "syndication.html" . }}
 </section>
 {{ end }}
 EOF
@@ -3930,18 +4323,20 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/guestbook.html"
      <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
      <a href="{{ .Permalink }}" class="u-url"></a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+     {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
   </div>
 
   <div class="e-content">
     <p class="lead">{{ .Site.Params.webmentions.guestbookIntro }}</p>
     {{ .Content }}
   </div>
+
+  {{/* UNIVERSAL SYNDICATION PARTIAL */}}
+  {{ partial "syndication.html" . }}
 </section>
 
 {{ partial "share-buttons.html" . }}
 
-{{/* UNIVERSAL WEBMENTIONS CALL (Guestbook Mode) */}}
-{{/* Updated Description: Removed the explicit URL code block. */}}
 {{ partial "webmentions-card.html" (dict 
     "context" . 
     "target" .Site.BaseURL 
@@ -4075,8 +4470,6 @@ draft = false
 summary = ""
 tags = []
 syndication = []
-+++
-
 show_webmentions = true
 +++
 EOF

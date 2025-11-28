@@ -1,0 +1,78 @@
+/* MD3 Content Type Variations */
+
+/* 1. STATUS UPDATES ("The Note Card") */
+article.status {
+  background-color: var(--md-sys-color-surface-variant); /* Tinted Background */
+  border: none;
+  border-radius: 16px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+article.status .outlined-card:hover {
+  background-color: var(--md-sys-color-surface-variant); 
+}
+
+/* 2. BOOKMARKS ("The Reference") */
+article.bookmarks {
+  border: 2px dashed var(--md-sys-color-outline);
+  background-color: transparent;
+}
+article.bookmarks .post-header h1 {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--md-sys-color-tertiary);
+}
+
+/* 3. REPLIES ("The Thread") */
+article.replies {
+  border-left: 4px solid var(--md-sys-color-tertiary);
+  border-radius: 4px 12px 12px 4px;
+  padding-left: 24px;
+}
+article.replies .context-block {
+  background-color: rgba(var(--md-sys-color-tertiary), 0.1);
+  border: 1px solid rgba(var(--md-sys-color-tertiary), 0.2);
+}
+
+/* 4. LIKES ("The Signal") */
+article.likes {
+  border-radius: 100px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.feed-item.likes .e-content, 
+.feed-item.likes footer {
+  display: none; /* Hide body content in feed */
+}
+article.likes .context-block {
+  margin: 0; padding: 0; background: none; border: none; flex-grow: 1;
+}
+
+/* 5. REPOSTS ("The Frame") */
+article.reposts {
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  position: relative;
+  overflow: hidden;
+}
+article.reposts::before {
+  content: "⟳";
+  position: absolute;
+  top: -20px; right: 10px; font-size: 100px;
+  color: var(--md-sys-color-secondary);
+  opacity: 0.05; pointer-events: none; line-height: 1;
+}
+
+/* 6. RSVPs ("The Ticket") */
+article.rsvps {
+  border-left: 12px solid var(--md-sys-color-primary);
+  border-radius: 4px 12px 12px 4px;
+}
+article.rsvps .context-label strong {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+}

@@ -1,5 +1,6 @@
 {{ define "main" }}
-<article class="single-post h-entry outlined-card">
+{{/* The {{ .Type }} class allows CSS to target specific content types */}}
+<article class="single-post h-entry outlined-card {{ .Type }}">
   
   <div style="display: none;" class="p-author h-card">
     <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
@@ -12,6 +13,7 @@
       <h1 class="p-name">{{ .Title }}</h1>
     </div>
     
+    {{/* QoL Metadata */}}
     <div class="post-meta">
       <div class="meta-item">
         <span class="meta-icon">{{ partial "icons/event.svg" . }}</span>
@@ -34,7 +36,7 @@
     </div>
   </header>
 
-  {{/* NEW: MD3 Tonal Context Blocks */}}
+  {{/* Context Blocks (MD3 Tonal) */}}
   <div class="context-container">
     {{ if .Params.reply_to }}
     <div class="context-block reply-context">
@@ -43,7 +45,6 @@
       <a href="{{ .Params.reply_to }}" class="u-in-reply-to context-link">{{ .Params.reply_to | truncate 50 }}</a>
     </div>
     {{ end }}
-
     {{ if .Params.like_of }}
     <div class="context-block like-context">
       <span class="context-icon">{{ partial "icons/likes.svg" . }}</span>
@@ -51,7 +52,6 @@
       <a href="{{ .Params.like_of }}" class="u-like-of context-link">{{ .Params.like_of | truncate 50 }}</a>
     </div>
     {{ end }}
-
     {{ if .Params.repost_of }}
     <div class="context-block repost-context">
       <span class="context-icon">{{ partial "icons/reposts.svg" . }}</span>
@@ -59,7 +59,6 @@
       <a href="{{ .Params.repost_of }}" class="u-repost-of context-link">{{ .Params.repost_of | truncate 50 }}</a>
     </div>
     {{ end }}
-
     {{ if .Params.bookmark_of }}
     <div class="context-block bookmark-context">
       <span class="context-icon">{{ partial "icons/bookmarks.svg" . }}</span>
@@ -67,7 +66,6 @@
       <a href="{{ .Params.bookmark_of }}" class="u-bookmark-of context-link">{{ .Params.bookmark_of | truncate 50 }}</a>
     </div>
     {{ end }}
-
     {{ if and .Params.rsvp .Params.reply_to }}
     <div class="context-block rsvp-context">
       <span class="context-icon">{{ partial "icons/rsvps.svg" . }}</span>
@@ -80,32 +78,8 @@
   <div class="e-content">{{ .Content }}</div>
 
   <footer class="post-footer">
-    {{ if .Params.syndication }}
-    <div class="syndication-container">
-      <span class="syndication-label">Also on:</span>
-      <div class="syndication-chips" style="display: inline-flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-        {{ range .Params.syndication }}
-          {{ $synURL := . }}
-          {{ $match := false }}
-          {{ $data := dict }}
-          {{ range $.Site.Params.social }}
-             {{ if in $synURL .url }}
-               {{ $match = true }}
-               {{ $data = . }}
-             {{ end }}
-          {{ end }}
-          <a href="{{ $synURL }}" class="chip u-syndication" rel="syndication" style="text-decoration: none;">
-            {{ if $match }}
-               {{ if $data.icon }}<span class="chip-icon" aria-hidden="true" style="color: var(--md-sys-color-primary);">{{ partial (printf "icons/%s.svg" $data.icon) . }}</span>{{ end }}
-               <span class="chip-label">{{ $data.name }}</span>
-            {{ else }}
-               <span class="chip-label">{{ replaceRE "^https?://([^/]+).*" "$1" $synURL }}</span>
-            {{ end }}
-          </a>
-        {{ end }}
-      </div>
-    </div>
-    {{ end }}
+    {{/* Universal Syndication */}}
+    {{ partial "syndication.html" . }}
 
     {{ if .Params.tags }}
     <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
@@ -115,7 +89,7 @@
 
 {{ partial "share-buttons.html" . }}
 
-{{/* UNIVERSAL WEBMENTIONS LOGIC */}}
+{{/* Universal Webmentions (Smart Fallback) */}}
 {{ $show := .Params.show_webmentions }}
 {{ if eq $show nil }}
   {{ $show = .Site.Params.webmentions.show_webmentions }}

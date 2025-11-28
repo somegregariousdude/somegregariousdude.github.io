@@ -1,0 +1,11 @@
+{{/* Renders a Social Link as an MD3 Assist Chip */}}
+{{/* u-url and rel attributes are preserved for IndieWeb compliance */}}
+<a href="{{ .url }}" rel="{{ .rel }}" class="u-url social-chip outlined-card" style="text-decoration: none;">
+  {{ if .icon }}
+    <span class="brand-icon" aria-hidden="true">
+      {{ partial (printf "icons/%s.svg" .icon) . }}
+    </span>
+  {{ end }}
+  
+  <span class="chip-label">{{ .name }}</span>
+</a>

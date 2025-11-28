@@ -1,0 +1,45 @@
+{{ define "main" }}
+<article class="single-post h-entry outlined-card manifesto">
+  
+  <div style="display: none;" class="metadata-machine-only">
+    <div class="p-author h-card">
+      <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+      <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+    </div>
+    <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
+    <a href="{{ .Permalink }}" class="u-url">Permalink</a>
+  </div>
+
+  <header class="post-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">{{ .Title }}</h1>
+    </div>
+  </header>
+
+  <div class="e-content">
+    {{ .Content }}
+  </div>
+
+  <footer class="post-footer">
+    {{/* UNIVERSAL SYNDICATION PARTIAL */}}
+    {{ partial "syndication.html" . }}
+
+    {{ if .Params.tags }}
+    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{ end }}
+  </footer>
+</article>
+
+{{ partial "share-buttons.html" . }}
+
+{{ $show := .Params.show_webmentions }}
+{{ if eq $show nil }}
+  {{ $show = .Site.Params.webmentions.show_webmentions }}
+{{ end }}
+
+{{ if $show }}
+  {{ partial "webmentions-card.html" (dict "context" . "description" "Feedback on this page? Mention it on your site!") }}
+{{ end }}
+
+{{ end }}

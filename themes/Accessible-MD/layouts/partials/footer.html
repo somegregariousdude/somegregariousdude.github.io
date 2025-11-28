@@ -5,6 +5,12 @@
       Content licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
       <span aria-hidden="true" style="margin: 0 8px;">|</span>
       <a href="/accessibility/">Accessibility</a>
+      
+      {{/* DEV ONLY LINK */}}
+      {{ if hugo.IsServer }}
+      <span aria-hidden="true" style="margin: 0 8px;">|</span>
+      <a href="/styleguide/" style="color: var(--md-sys-color-tertiary);">⚠️ Style Guide</a>
+      {{ end }}
     </p>
   </div>
   
