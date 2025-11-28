@@ -3847,7 +3847,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-image.html"
     {{- $small := $img.Resize "800x webp" -}}
     {{- $medium := $img.Resize "1200x webp" -}}
     
-    {{/* MICROFORMAT: u-photo class added */}}
+    {{/* MICROFORMAT FIX: Added u-photo class */}}
     <img 
       class="md-image u-photo" 
       src="{{ $small.RelPermalink }}" 
@@ -3863,6 +3863,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-image.html"
     >
   {{- else -}}
     {{/* REMOTE IMAGE FALLBACK */}}
+    {{/* MICROFORMAT FIX: Added u-photo class */}}
     <img 
       class="md-image u-photo" 
       src="{{ .Destination | safeURL }}" 
