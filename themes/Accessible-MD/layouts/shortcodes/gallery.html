@@ -11,7 +11,9 @@
     {{ $altText := .Params.alt | default .Title | default .Name }}
     
     <a href="{{ .RelPermalink }}" class="gallery-item" target="_blank" aria-label="View full size: {{ $altText }}">
+      {{/* MICROFORMAT: u-photo class added */}}
       <img 
+        class="u-photo"
         src="{{ $thumb.RelPermalink }}" 
         alt="{{ $altText }}" 
         width="{{ $thumb.Width }}" 

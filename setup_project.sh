@@ -12,8 +12,8 @@ mkdir -p config/_default
 THEME_ROOT="themes/Accessible-MD"
 mkdir -p "$THEME_ROOT/archetypes" "$THEME_ROOT/assets/scss" "$THEME_ROOT/assets/js" "$THEME_ROOT/assets/images"
 mkdir -p "$THEME_ROOT/layouts/_default/_markup" "$THEME_ROOT/layouts/partials/ui" "$THEME_ROOT/layouts/partials/icons"
-mkdir -p "$THEME_ROOT/layouts/pages" "$THEME_ROOT/layouts/shortcodes" "$THEME_ROOT/static"
-mkdir -p content/articles content/status content/replies content/reposts content/likes content/bookmarks content/rsvps
+mkdir -p "$THEME_ROOT/layouts/pages" "$THEME_ROOT/layouts/photos" "$THEME_ROOT/layouts/shortcodes" "$THEME_ROOT/static"
+mkdir -p content/articles content/photos content/status content/replies content/reposts content/likes content/bookmarks content/rsvps
 mkdir -p content/pages/about content/pages/contact content/pages/guestbook content/pages/search content/pages/accessibility
 mkdir -p .github/workflows
 
@@ -33,6 +33,7 @@ languageCode = "en-us"
 [permalinks]
   pages = "/:slug/"
   articles = "/articles/:year-:month-:day/:slug/"
+  photos = "/photos/:year-:month-:day/:slug/"
   status = "/status/:year-:month-:day/:contentbasename/"
   replies = "/replies/:year-:month-:day/:contentbasename/"
   reposts = "/reposts/:year-:month-:day/:contentbasename/"
@@ -90,7 +91,7 @@ cat <<'EOF' > "config/_default/params.toml"
 # [Source: 34] Visual Theming
 [theme]
   # Options: "sound", "market", "mountain", "forest", "sunset"
-  colorScheme = "forest"
+  colorScheme = "sunset"
 
 # [Source: 36] Social Media - Dynamic Block
 # Used by generate_icons.sh to fetch SVGs from Simple Icons.
@@ -203,6 +204,12 @@ cat <<'EOF' > "config/_default/menus.toml"
   weight = 300
 
 [[main]]
+  # [New] Photos Content Type
+  name = "Photos"
+  url = "/photos/"
+  weight = 350
+
+[[main]]
   name = "Replies"
   url = "/replies/"
   weight = 400
@@ -273,7 +280,7 @@ cat <<'EOF' > "package.json"
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "devDependencies": {
+  "dependencies": {
     "pagefind": "^1.4.0"
   }
 }
@@ -291,7 +298,7 @@ cat <<'EOF' > "package-lock.json"
       "name": "blog",
       "version": "1.0.0",
       "license": "ISC",
-      "devDependencies": {
+      "dependencies": {
         "pagefind": "^1.4.0"
       }
     },
@@ -302,7 +309,6 @@ cat <<'EOF' > "package-lock.json"
       "cpu": [
         "arm64"
       ],
-      "dev": true,
       "license": "MIT",
       "optional": true,
       "os": [
@@ -316,7 +322,6 @@ cat <<'EOF' > "package-lock.json"
       "cpu": [
         "x64"
       ],
-      "dev": true,
       "license": "MIT",
       "optional": true,
       "os": [
@@ -330,7 +335,6 @@ cat <<'EOF' > "package-lock.json"
       "cpu": [
         "x64"
       ],
-      "dev": true,
       "license": "MIT",
       "optional": true,
       "os": [
@@ -344,7 +348,6 @@ cat <<'EOF' > "package-lock.json"
       "cpu": [
         "arm64"
       ],
-      "dev": true,
       "license": "MIT",
       "optional": true,
       "os": [
@@ -358,7 +361,6 @@ cat <<'EOF' > "package-lock.json"
       "cpu": [
         "x64"
       ],
-      "dev": true,
       "license": "MIT",
       "optional": true,
       "os": [
@@ -372,7 +374,6 @@ cat <<'EOF' > "package-lock.json"
       "cpu": [
         "x64"
       ],
-      "dev": true,
       "license": "MIT",
       "optional": true,
       "os": [
@@ -383,7 +384,6 @@ cat <<'EOF' > "package-lock.json"
       "version": "1.4.0",
       "resolved": "https://registry.npmjs.org/pagefind/-/pagefind-1.4.0.tgz",
       "integrity": "sha512-z2kY1mQlL4J8q5EIsQkLzQjilovKzfNVhX8De6oyE6uHpfFtyBaqUpcl/XzJC/4fjD8vBDyh1zolimIcVrCn9g==",
-      "dev": true,
       "license": "MIT",
       "bin": {
         "pagefind": "lib/runner/bin.cjs"
@@ -414,7 +414,6 @@ node_modules/
 
 # Hugo Cache
 .hugo_build.lock
-package-lock.json
 # Build error log
 errors.txt
 content/styleguide/
@@ -636,7 +635,7 @@ cat <<'EOF' > "new_post.sh"
 if [ -z "$1" ]; then
   echo "Error: Content Type is required."
   echo "Usage: ./new_post.sh [type] \"[optional title]\""
-  echo "Types: articles, status, replies, reposts, likes, bookmarks, rsvps"
+  echo "Types: articles, photos, status, replies, reposts, likes, bookmarks, rsvps"
   exit 1
 fi
 
@@ -649,6 +648,7 @@ TYPE=${TYPE%/}
 # ------------------------------------------------------------------------------
 # LOGIC BLOCK: Validate Title Requirements
 # [Source: 166] Articles & Bookmarks: Title is Required.
+# [Update] Photos: Title is Optional (Snapshot mode).
 # ------------------------------------------------------------------------------
 if [[ "$TYPE" == "articles" || "$TYPE" == "bookmarks" ]]; then
   if [ -z "$TITLE" ]; then
@@ -665,8 +665,6 @@ DIR_NAME=""
 
 if [ -n "$TITLE" ]; then
   # [Source: 166, 168] If Title provided: Use slug-based directory.
-  # Convert title to slug (lowercase, replace spaces/symbols with hyphens)
-  # Standardizing on a simple sed/tr chain for portability.
   SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed -e 's/[^a-z0-9]/-/g' -e 's/-\+/-/g' -e 's/^-\|-$//g')
   DIR_NAME="$SLUG"
 else
@@ -687,7 +685,6 @@ echo "Creating new $TYPE..."
 echo "Path: content/$TARGET_PATH"
 
 # Execute Hugo new command
-# We explicitly set --kind to ensure the correct archetype is used from the theme.
 hugo new content "$TARGET_PATH" --kind "$TYPE"
 
 echo "Done."
@@ -704,7 +701,7 @@ cat <<'EOF' > "generate_icons.sh"
 
 ICON_DIR="themes/Accessible-MD/layouts/partials/icons"
 
-# 1. CLEANUP (The new feature)
+# 1. CLEANUP
 echo "--- Cleaning Icon Directory ---"
 if [ -d "$ICON_DIR" ]; then
     rm -f "$ICON_DIR"/*.svg
@@ -719,6 +716,7 @@ declare -A SYSTEM_ICONS=(
     ["close"]="close"
     ["home"]="home"
     ["articles"]="article"
+    ["photos"]="photo_camera"
     ["status"]="chat_bubble"
     ["replies"]="reply"
     ["reposts"]="repeat"
@@ -2897,6 +2895,28 @@ article.rsvps .context-label strong {
   padding: 2px 6px;
   border-radius: 4px;
 }
+
+/* 7. PHOTOS ("The Gallery Frame") */
+article.photos {
+  border: 2px solid var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface);
+}
+
+article.photos .md-figure {
+  /* Pull the image to the edges of the card for a "bleed" effect on mobile */
+  margin-left: -16px;
+  margin-right: -16px;
+  width: calc(100% + 32px);
+  max-width: none;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+/* Ensure focus visibility remains on links inside */
+article.photos a:focus-visible {
+  outline-offset: -2px; /* Pull outline inside to avoid clipping */
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_utility_pages.scss
@@ -3659,6 +3679,55 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 {{ end }}
 EOF
 
+# File: themes/Accessible-MD/layouts/photos/single.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/photos/single.html"
+{{ define "main" }}
+<article class="single-post h-entry outlined-card photos">
+  
+  {{/* Hidden Author Block for Microformats */}}
+  <div style="display: none;" class="p-author h-card">
+    <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+    <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+  </div>
+
+  <header class="post-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">{{ .Title }}</h1>
+    </div>
+    
+    <div class="post-meta">
+      <div class="meta-item">
+        <span class="meta-icon">{{ partial "icons/event.svg" . }}</span>
+        <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+          {{ .Date.Format "Monday, Jan 2, 2006 at 3:04 PM (MST)" }}
+        </time>
+      </div>
+    </div>
+  </header>
+
+  {{/* The Content (containing the image) */}}
+  {{/* The render-image hook will ensure the img tag has class="u-photo" */}}
+  <div class="e-content">
+    {{ .Content }}
+  </div>
+
+  <footer class="post-footer">
+    {{ partial "syndication.html" . }}
+    {{ if .Params.tags }}
+    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{ end }}
+  </footer>
+</article>
+
+{{ partial "share-buttons.html" . }}
+
+{{ if .Params.show_webmentions | default .Site.Params.webmentions.show_webmentions }}
+  {{ partial "webmentions-card.html" (dict "context" . "description" "Seen something you like? Let me know!") }}
+{{ end }}
+{{ end }}
+EOF
+
 # File: themes/Accessible-MD/layouts/_default/rss.xml
 cat <<'EOF' > "themes/Accessible-MD/layouts/_default/rss.xml"
 <rss version="2.0" 
@@ -3754,7 +3823,11 @@ EOF
 # File: themes/Accessible-MD/layouts/_default/_markup/render-image.html
 cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-image.html"
 {{- $img := .Page.Resources.GetMatch .Destination -}}
+{{/* Priority: 1. Markdown Text, 2. Front Matter Resource Param, 3. Empty */}}
 {{- $alt := .PlainText | default "" -}}
+{{- if and (eq $alt "") $img -}}
+  {{- $alt = $img.Params.alt | default "" -}}
+{{- end -}}
 {{- $caption := .Title | default "" -}}
 
 <figure class="md-figure {{ if not $img }}md-figure-remote{{ end }}">
@@ -3764,8 +3837,9 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-image.html"
     {{- $small := $img.Resize "800x webp" -}}
     {{- $medium := $img.Resize "1200x webp" -}}
     
+    {{/* MICROFORMAT: u-photo class added */}}
     <img 
-      class="md-image"
+      class="md-image u-photo" 
       src="{{ $small.RelPermalink }}" 
       srcset="
         {{ $tiny.RelPermalink }} 480w,
@@ -3780,7 +3854,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/_markup/render-image.html"
   {{- else -}}
     {{/* REMOTE IMAGE FALLBACK */}}
     <img 
-      class="md-image" 
+      class="md-image u-photo" 
       src="{{ .Destination | safeURL }}" 
       alt="{{ $alt }}" 
       title="{{ $caption }}"
@@ -4021,6 +4095,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/ui/chip.html"
 {{ if eq $iconName "bookmarks" }}{{ $vibe = "Bookmark" }}{{ end }}
 {{ if eq $iconName "rsvps" }}{{ $vibe = "RSVP" }}{{ end }}
 {{ if eq $iconName "articles" }}{{ $vibe = "Article" }}{{ end }}
+{{ if eq $iconName "photos" }}{{ $vibe = "Photo" }}{{ end }}
 {{ if eq $iconName "pages" }}{{ $vibe = "Page" }}{{ end }}
 {{ if eq $iconName "categories" }}{{ $vibe = "Category" }}{{ end }}
 {{ if eq $iconName "tags" }}{{ $vibe = "Tag" }}{{ end }}
@@ -4146,7 +4221,9 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/shortcodes/gallery.html"
     {{ $altText := .Params.alt | default .Title | default .Name }}
     
     <a href="{{ .RelPermalink }}" class="gallery-item" target="_blank" aria-label="View full size: {{ $altText }}">
+      {{/* MICROFORMAT: u-photo class added */}}
       <img 
+        class="u-photo"
         src="{{ $thumb.RelPermalink }}" 
         alt="{{ $altText }}" 
         width="{{ $thumb.Width }}" 
@@ -4383,6 +4460,14 @@ draft = true
 summary = ""
 # [Source: 128] Optional: Set to false to hide webmentions for this specific post.
 show_webmentions = true
+
+# [Image Engine]
+# Attach alt text to images here to keep your Markdown clean.
+# [[resources]]
+#   src = "image.jpg"
+#   name = "cover"
+#   [resources.params]
+#     alt = "Description of the image for screen readers"
 +++
 EOF
 
@@ -4397,9 +4482,42 @@ summary = ""
 tags = []
 syndication = []
 show_webmentions = true
+
+# [Image Engine]
+# Attach alt text to images here to keep your Markdown clean.
+# [[resources]]
+#   src = "image.jpg"
+#   name = "cover"
+#   [resources.params]
+#     alt = "Description of the image for screen readers"
 +++
 
 Write your article content here.
+EOF
+
+# File: themes/Accessible-MD/archetypes/photos.md
+cat <<'EOF' > "themes/Accessible-MD/archetypes/photos.md"
++++
+title = "{{ replace .Name "-" " " | title }}"
+date = {{ .Date }}
+lastmod = {{ .Date }}
+draft = false
+summary = ""
+tags = []
+syndication = []
+show_webmentions = true
+
+# [Image Engine]
+# Attach alt text to images here to keep your Markdown clean.
+# [[resources]]
+#   src = "image.jpg"
+#   name = "cover"
+#   [resources.params]
+#     alt = "Description of the image for screen readers"
++++
+
+{{/* The image will be processed by the render hook */}}
+![Description of the photo](image.jpg "Optional Caption")
 EOF
 
 # File: themes/Accessible-MD/archetypes/bookmarks.md
@@ -4494,6 +4612,14 @@ summary = ""
 tags = []
 syndication = []
 show_webmentions = true
+
+# [Image Engine]
+# Attach alt text to images here to keep your Markdown clean.
+# [[resources]]
+#   src = "image.jpg"
+#   name = "cover"
+#   [resources.params]
+#     alt = "Description of the image for screen readers"
 +++
 EOF
 
@@ -4604,6 +4730,18 @@ sort_order: "desc"
 ---
 
 Welcome to my long-form writing. Here you'll find essays, stories, and deep dives that need a bit more space than a quick note. Grab a cup of coffee and settle in.
+EOF
+
+# File: content/photos/_index.md
+cat <<'EOF' > "content/photos/_index.md"
+---
+title: "Photos"
+description: "Visual moments and snapshots."
+sort_by: "date"
+sort_order: "desc"
+---
+
+Welcome to the visual side of Greg's Place. Here you'll find snapshots, textures, and moments I've collected along the way. Some are connected to stories, while others just stand on their own as a brief pause in the stream.
 EOF
 
 # File: content/bookmarks/_index.md
