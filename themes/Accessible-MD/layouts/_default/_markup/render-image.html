@@ -13,7 +13,7 @@
     {{- $small := $img.Resize "800x webp" -}}
     {{- $medium := $img.Resize "1200x webp" -}}
     
-    {{/* MICROFORMAT FIX: Added u-photo class */}}
+    {{/* MICROFORMAT: u-photo applied */}}
     <img 
       class="md-image u-photo" 
       src="{{ $small.RelPermalink }}" 
@@ -29,7 +29,7 @@
     >
   {{- else -}}
     {{/* REMOTE IMAGE FALLBACK */}}
-    {{/* MICROFORMAT FIX: Added u-photo class */}}
+    {{/* MICROFORMAT: u-photo applied */}}
     <img 
       class="md-image u-photo" 
       src="{{ .Destination | safeURL }}" 

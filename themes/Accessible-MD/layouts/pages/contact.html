@@ -1,12 +1,10 @@
 {{ define "main" }}
 <section class="contact-page outlined-card h-entry">
-  {{/* Hidden Metadata for Parsers */}}
   <div style="display: none;">
      <div class="p-author h-card">
        <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
        <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
      </div>
-     {{/* FIX: Add text content to the anchor */}}
      <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
@@ -15,7 +13,6 @@
   <header class="page-header">
     <div class="headline-row">
       {{ partial "ui/chip.html" . }}
-      {{/* Hardcoded P-Name */}}
       <h1 class="p-name">Contact Me</h1>
     </div>
     <p class="p-summary">{{ .Site.Params.contact.intro }}</p>
@@ -27,7 +24,11 @@
   <footer class="post-footer">
     <ul class="tags">
       {{ range .Params.tags }}
-      <li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
+          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+        </a>
+      </li>
       {{ end }}
     </ul>
   </footer>

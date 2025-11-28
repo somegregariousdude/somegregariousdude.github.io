@@ -1,13 +1,11 @@
 {{ define "main" }}
 <article class="single-post h-entry outlined-card photos">
   
-  {{/* METADATA BLOCK: Hidden from view */}}
   <div style="display: none;">
     <div class="p-author h-card">
       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
     </div>
-    {{/* Entry Canonical URL */}}
     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
@@ -27,7 +25,6 @@
     </div>
   </header>
 
-  {{/* The Content (containing the image) */}}
   <div class="e-content">
     {{ .Content }}
   </div>
@@ -35,7 +32,15 @@
   <footer class="post-footer">
     {{ partial "syndication.html" . }}
     {{ if .Params.tags }}
-    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
+          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
     {{ end }}
   </footer>
 </article>

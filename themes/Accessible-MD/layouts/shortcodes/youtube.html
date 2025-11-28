@@ -8,9 +8,14 @@
      aria-label="{{ $title }}"
      title="{{ $title }}">
   
+  {{/* VISUAL: u-photo */}}
   <img src="https://img.youtube.com/vi/{{ $id }}/maxresdefault.jpg" 
+       class="u-photo"
        alt="Video Thumbnail" 
        loading="lazy">
+  
+  {{/* DATA: u-video (Hidden) */}}
+  <a href="https://www.youtube.com/watch?v={{ $id }}" class="u-video" style="display:none;" aria-hidden="true">Watch on YouTube</a>
   
   <div class="play-button" aria-hidden="true"></div>
 </div>
