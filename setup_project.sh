@@ -1657,6 +1657,23 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
     height: 100px;
   }
 }
+
+/* [Patch] Hero Card Metadata Visibility Fix */
+.profile-meta.is-mobile-hidden {
+  display: none;
+}
+.profile-meta.is-desktop-hidden {
+  display: block;
+}
+
+@media (min-width: 769px) {
+  .profile-meta.is-mobile-hidden {
+    display: block;
+  }
+  .profile-meta.is-desktop-hidden {
+    display: none;
+  }
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_images.scss
@@ -3310,6 +3327,12 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/index.html"
         {{ else }}
           <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
         {{ end }}
+        
+        {{/* Location is visible near photo on mobile view */}}
+        <div class="profile-meta is-desktop-hidden">
+          <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
+          <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+        </div>
       </div>
 
       {{/* Text & Links Side */}}
@@ -3317,7 +3340,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/index.html"
         {{/* p-note (bio) is preserved */}}
         <p class="p-note">{{ .Site.Params.author.bio }}</p>
 
-        <div class="profile-meta">
+        <div class="profile-meta is-mobile-hidden">
           <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
           <span class="p-region">{{ .Site.Params.author.location.state }}</span>
         </div>

@@ -19,6 +19,12 @@
         {{ else }}
           <div class="u-photo-placeholder" style="background:#ccc;width:150px;height:150px;border-radius:50%;">?</div>
         {{ end }}
+        
+        {{/* Location is visible near photo on mobile view */}}
+        <div class="profile-meta is-desktop-hidden">
+          <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
+          <span class="p-region">{{ .Site.Params.author.location.state }}</span>
+        </div>
       </div>
 
       {{/* Text & Links Side */}}
@@ -26,7 +32,7 @@
         {{/* p-note (bio) is preserved */}}
         <p class="p-note">{{ .Site.Params.author.bio }}</p>
 
-        <div class="profile-meta">
+        <div class="profile-meta is-mobile-hidden">
           <span class="p-locality">{{ .Site.Params.author.location.city }}</span>,
           <span class="p-region">{{ .Site.Params.author.location.state }}</span>
         </div>

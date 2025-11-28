@@ -694,3 +694,20 @@
     height: 100px;
   }
 }
+
+/* [Patch] Hero Card Metadata Visibility Fix */
+.profile-meta.is-mobile-hidden {
+  display: none;
+}
+.profile-meta.is-desktop-hidden {
+  display: block;
+}
+
+@media (min-width: 769px) {
+  .profile-meta.is-mobile-hidden {
+    display: block;
+  }
+  .profile-meta.is-desktop-hidden {
+    display: none;
+  }
+}
