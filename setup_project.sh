@@ -3577,10 +3577,14 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 {{/* The {{ .Type }} class allows CSS to target specific content types */}}
 <article class="single-post h-entry outlined-card {{ .Type }}">
   
-  <div style="display: none;" class="p-author h-card">
-    <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
-    <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
-    {{/* FIX: Add explicit u-url for the entry */}}
+  {{/* METADATA BLOCK: Hidden from view, visible to parsers */}}
+  <div style="display: none;">
+    {{/* Author Info */}}
+    <div class="p-author h-card">
+      <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+      <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+    </div>
+    {{/* Entry Canonical URL (Must be outside p-author) */}}
     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
@@ -3686,11 +3690,13 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/photos/single.html"
 {{ define "main" }}
 <article class="single-post h-entry outlined-card photos">
   
-  {{/* Hidden Author Block for Microformats */}}
-  <div style="display: none;" class="p-author h-card">
-    <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
-    <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
-    {{/* FIX: Add explicit u-url for the entry */}}
+  {{/* METADATA BLOCK: Hidden from view */}}
+  <div style="display: none;">
+    <div class="p-author h-card">
+      <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+      <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+    </div>
+    {{/* Entry Canonical URL */}}
     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
@@ -3711,7 +3717,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/photos/single.html"
   </header>
 
   {{/* The Content (containing the image) */}}
-  {{/* The render-image hook will ensure the img tag has class="u-photo" */}}
   <div class="e-content">
     {{ .Content }}
   </div>
