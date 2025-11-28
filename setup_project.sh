@@ -3580,6 +3580,8 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
   <div style="display: none;" class="p-author h-card">
     <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
     <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+    {{/* FIX: Add explicit u-url for the entry */}}
+    <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
   <header class="post-header">
@@ -3688,6 +3690,8 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/photos/single.html"
   <div style="display: none;" class="p-author h-card">
     <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
     <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+    {{/* FIX: Add explicit u-url for the entry */}}
+    <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
   <header class="post-header">
@@ -3787,7 +3791,8 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/search.html"
        <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
        <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
      </div>
-     <a href="{{ .Permalink }}" class="u-url"></a>
+     {{/* FIX: Add text content to the anchor */}}
+     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
   </div>
@@ -4370,7 +4375,8 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/contact.html"
        <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
        <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
      </div>
-     <a href="{{ .Permalink }}" class="u-url"></a>
+     {{/* FIX: Add text content to the anchor */}}
+     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
   </div>
@@ -4421,7 +4427,8 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/pages/guestbook.html"
 <section class="guestbook-intro outlined-card h-entry">
   <div style="display: none;">
      <div class="p-author h-card"><a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a></div>
-     <a href="{{ .Permalink }}" class="u-url"></a>
+     {{/* FIX: Add text content to the anchor */}}
+     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
      {{ range .Params.tags }}<span class="p-category">{{ . }}</span>{{ end }}
   </div>

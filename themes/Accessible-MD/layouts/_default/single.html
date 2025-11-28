@@ -5,6 +5,8 @@
   <div style="display: none;" class="p-author h-card">
     <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
     <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+    {{/* FIX: Add explicit u-url for the entry */}}
+    <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
   <header class="post-header">
