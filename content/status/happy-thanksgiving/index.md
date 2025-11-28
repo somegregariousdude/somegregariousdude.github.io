@@ -5,7 +5,7 @@ lastmod = 2025-11-27T19:47:08-08:00
 draft = false
 summary = ""
 tags = ["Thanksgiving", "Holidays"]
-syndication = []
+syndication = ["https://dragonscave.space/@somegregariousdude/115628386334663585"]
 show_webmentions = true
 
 # [Image Engine]
