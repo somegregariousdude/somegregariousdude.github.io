@@ -27,8 +27,8 @@ mkdir -p config/_default
 THEME_ROOT="themes/Accessible-MD"
 mkdir -p "$THEME_ROOT/archetypes" "$THEME_ROOT/assets/scss" "$THEME_ROOT/assets/js" "$THEME_ROOT/assets/images"
 mkdir -p "$THEME_ROOT/layouts/_default/_markup" "$THEME_ROOT/layouts/partials/ui" "$THEME_ROOT/layouts/partials/icons"
-mkdir -p "$THEME_ROOT/layouts/pages" "$THEME_ROOT/layouts/shortcodes" "$THEME_ROOT/static"
-mkdir -p content/articles content/status content/replies content/reposts content/likes content/bookmarks content/rsvps
+mkdir -p "$THEME_ROOT/layouts/pages" "$THEME_ROOT/layouts/photos" "$THEME_ROOT/layouts/shortcodes" "$THEME_ROOT/static"
+mkdir -p content/articles content/photos content/status content/replies content/reposts content/likes content/bookmarks content/rsvps
 mkdir -p content/pages/about content/pages/contact content/pages/guestbook content/pages/search content/pages/accessibility
 mkdir -p .github/workflows
 
@@ -105,6 +105,7 @@ embed_file "themes/Accessible-MD/layouts/_default/baseof.html"
 embed_file "themes/Accessible-MD/layouts/_default/list.html"
 embed_file "themes/Accessible-MD/layouts/_default/list.json"
 embed_file "themes/Accessible-MD/layouts/_default/single.html"
+embed_file "themes/Accessible-MD/layouts/photos/single.html"
 embed_file "themes/Accessible-MD/layouts/_default/rss.xml"
 embed_file "themes/Accessible-MD/layouts/_default/search.html"
 
@@ -136,6 +137,7 @@ embed_file "themes/Accessible-MD/layouts/pages/guestbook.html"
 # --- Archetypes (Content Templates) ---
 embed_file "themes/Accessible-MD/archetypes/default.md"
 embed_file "themes/Accessible-MD/archetypes/articles.md"
+embed_file "themes/Accessible-MD/archetypes/photos.md"
 embed_file "themes/Accessible-MD/archetypes/bookmarks.md"
 embed_file "themes/Accessible-MD/archetypes/likes.md"
 embed_file "themes/Accessible-MD/archetypes/replies.md"
@@ -153,6 +155,7 @@ embed_file "content/pages/search/index.md"
 
 # --- Section Headers (_index.md) ---
 embed_file "content/articles/_index.md"
+embed_file "content/photos/_index.md"
 embed_file "content/bookmarks/_index.md"
 embed_file "content/likes/_index.md"
 embed_file "content/replies/_index.md"

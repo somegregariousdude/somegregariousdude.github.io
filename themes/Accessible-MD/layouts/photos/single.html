@@ -1,0 +1,45 @@
+{{ define "main" }}
+<article class="single-post h-entry outlined-card photos">
+  
+  {{/* Hidden Author Block for Microformats */}}
+  <div style="display: none;" class="p-author h-card">
+    <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
+    <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
+  </div>
+
+  <header class="post-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">{{ .Title }}</h1>
+    </div>
+    
+    <div class="post-meta">
+      <div class="meta-item">
+        <span class="meta-icon">{{ partial "icons/event.svg" . }}</span>
+        <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+          {{ .Date.Format "Monday, Jan 2, 2006 at 3:04 PM (MST)" }}
+        </time>
+      </div>
+    </div>
+  </header>
+
+  {{/* The Content (containing the image) */}}
+  {{/* The render-image hook will ensure the img tag has class="u-photo" */}}
+  <div class="e-content">
+    {{ .Content }}
+  </div>
+
+  <footer class="post-footer">
+    {{ partial "syndication.html" . }}
+    {{ if .Params.tags }}
+    <ul class="tags">{{ range .Params.tags }}<li><a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="p-category">#{{ . }}</a></li>{{ end }}</ul>
+    {{ end }}
+  </footer>
+</article>
+
+{{ partial "share-buttons.html" . }}
+
+{{ if .Params.show_webmentions | default .Site.Params.webmentions.show_webmentions }}
+  {{ partial "webmentions-card.html" (dict "context" . "description" "Seen something you like? Let me know!") }}
+{{ end }}
+{{ end }}

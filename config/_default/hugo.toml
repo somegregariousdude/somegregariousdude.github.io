@@ -11,6 +11,7 @@ languageCode = "en-us"
 [permalinks]
   pages = "/:slug/"
   articles = "/articles/:year-:month-:day/:slug/"
+  photos = "/photos/:year-:month-:day/:slug/"
   status = "/status/:year-:month-:day/:contentbasename/"
   replies = "/replies/:year-:month-:day/:contentbasename/"
   reposts = "/reposts/:year-:month-:day/:contentbasename/"

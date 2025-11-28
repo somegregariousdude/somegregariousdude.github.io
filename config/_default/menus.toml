@@ -26,6 +26,12 @@
   weight = 300
 
 [[main]]
+  # [New] Photos Content Type
+  name = "Photos"
+  url = "/photos/"
+  weight = 350
+
+[[main]]
   name = "Replies"
   url = "/replies/"
   weight = 400

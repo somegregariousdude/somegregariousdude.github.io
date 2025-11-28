@@ -7,7 +7,7 @@
 
 ICON_DIR="themes/Accessible-MD/layouts/partials/icons"
 
-# 1. CLEANUP (The new feature)
+# 1. CLEANUP
 echo "--- Cleaning Icon Directory ---"
 if [ -d "$ICON_DIR" ]; then
     rm -f "$ICON_DIR"/*.svg
@@ -22,6 +22,7 @@ declare -A SYSTEM_ICONS=(
     ["close"]="close"
     ["home"]="home"
     ["articles"]="article"
+    ["photos"]="photo_camera"
     ["status"]="chat_bubble"
     ["replies"]="reply"
     ["reposts"]="repeat"

@@ -1,5 +1,9 @@
 {{- $img := .Page.Resources.GetMatch .Destination -}}
+{{/* Priority: 1. Markdown Text, 2. Front Matter Resource Param, 3. Empty */}}
 {{- $alt := .PlainText | default "" -}}
+{{- if and (eq $alt "") $img -}}
+  {{- $alt = $img.Params.alt | default "" -}}
+{{- end -}}
 {{- $caption := .Title | default "" -}}
 
 <figure class="md-figure {{ if not $img }}md-figure-remote{{ end }}">
@@ -9,8 +13,9 @@
     {{- $small := $img.Resize "800x webp" -}}
     {{- $medium := $img.Resize "1200x webp" -}}
     
+    {{/* MICROFORMAT: u-photo class added */}}
     <img 
-      class="md-image"
+      class="md-image u-photo" 
       src="{{ $small.RelPermalink }}" 
       srcset="
         {{ $tiny.RelPermalink }} 480w,
@@ -25,7 +30,7 @@
   {{- else -}}
     {{/* REMOTE IMAGE FALLBACK */}}
     <img 
-      class="md-image" 
+      class="md-image u-photo" 
       src="{{ .Destination | safeURL }}" 
       alt="{{ $alt }}" 
       title="{{ $caption }}"
