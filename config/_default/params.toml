@@ -20,6 +20,7 @@
 # [NEW] IndieAuth Endpoints
 authorization_endpoint = "https://indieauth.com/auth"
 token_endpoint = "https://tokens.indieauth.com/token"
+micropub = "https://indiekit.simplygregario.us/micropub"
 
 # [Source: 26] Webmention.io Integration
 [webmentions]

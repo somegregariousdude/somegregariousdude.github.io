@@ -76,6 +76,7 @@ cat <<'EOF' > "config/_default/params.toml"
 # [NEW] IndieAuth Endpoints
 authorization_endpoint = "https://indieauth.com/auth"
 token_endpoint = "https://tokens.indieauth.com/token"
+micropub = "https://indiekit.simplygregario.us/micropub"
 
 # [Source: 26] Webmention.io Integration
 [webmentions]
@@ -623,6 +624,17 @@ All settings must include comments explaining their function and default values.
 * **Content Creation:** `./new_post.sh [type] "Title"`
 * **Icons:** `./generate_icons.sh` (Build-time fetch).
 * **Deployment:** GitHub Actions -> Pagefind Indexing -> Pages.
+
+---
+
+## HYBRID ARCHITECTURE (STATIC + DYNAMIC)
+
+* **Hosting:** GitHub Pages (Static Content).
+* **Identity:** IndieAuth.com (RelMeAuth via GitHub/Mastodon).
+* **Publishing Backend:** IndieKit (Node.js on DigitalOcean).
+    * **URL:** `https://indiekit.simplygregario.us`
+    * **Role:** Receives Micropub requests -> Commits Markdown to GitHub.
+    * **Database:** MongoDB Atlas (Stores media metadata & syndication targets).
 EOF
 
 # File: new_post.sh
