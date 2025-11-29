@@ -1,72 +1,52 @@
-# ==============================================================================
-# FILE: config/_default/menus.toml
-# PURPOSE: Main Navigation Structure
-# CONTEXT: Source [48-62]
-# ==============================================================================
-
 [[main]]
   name = "Home"
   url = "/"
   weight = 100
-
 [[main]]
-  # [Source: 52] Optional. Must appear between Home and Articles.
   name = "About"
   url = "/about/"
-  weight = 150
-
+  weight = 200
 [[main]]
   name = "Articles"
   url = "/articles/"
-  weight = 200
-
+  weight = 300
 [[main]]
   name = "Status Updates"
   url = "/status/"
-  weight = 300
-
+  weight = 400
 [[main]]
-  # [New] Photos Content Type
   name = "Photos"
   url = "/photos/"
-  weight = 350
-
+  weight = 500
 [[main]]
   name = "Replies"
   url = "/replies/"
-  weight = 400
-
+  weight = 600
 [[main]]
   name = "Reposts"
   url = "/reposts/"
-  weight = 500
-
+  weight = 700
 [[main]]
   name = "Likes"
   url = "/likes/"
-  weight = 600
-
+  weight = 800
 [[main]]
   name = "Bookmarks"
   url = "/bookmarks/"
-  weight = 700
-
+  weight = 900
 [[main]]
   name = "RSVPs"
   url = "/rsvps/"
-  weight = 800
-
+  weight = 1000
 [[main]]
   name = "Guestbook"
   url = "/guestbook/"
-  weight = 900
-
+  weight = 1100
 [[main]]
   name = "Contact"
   url = "/contact/"
-  weight = 1000
-
+  weight = 1200
 [[main]]
   name = "Search"
   url = "/search/"
-  weight = 1100
+  weight = 1300

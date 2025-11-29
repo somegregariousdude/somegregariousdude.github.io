@@ -13,8 +13,10 @@
   
   <div class="post-feed">
     {{ range .Paginator.Pages }}
+      {{ $isNote := false }}{{ if or (in .Params.tags "Note") (in .Params.tags "Thought") (in .Params.tags "Journal") }}{{ $isNote = true }}{{ end }}
+      {{ $isNote := false }}{{ if or (in .Params.tags "Note") (in .Params.tags "Thought") (in .Params.tags "Journal") }}{{ $isNote = true }}{{ end }}
       {{/* Add .Type class for CSS targeting */}}
-      <article class="feed-item outlined-card h-entry {{ .Type }}">
+      <article class="feed-item outlined-card h-entry {{ .Type }} {{ if $isNote }}is-note{{ end }}">
         <div style="display: none;" class="p-author h-card">
            <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
         </div>

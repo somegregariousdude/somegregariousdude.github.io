@@ -163,6 +163,19 @@ embed_file "content/reposts/_index.md"
 embed_file "content/rsvps/_index.md"
 embed_file "content/status/_index.md"
 
+# --- Style Guide Content ---
+embed_file "content/styleguide/_index.md"
+embed_file "content/styleguide/test-article/index.md"
+embed_file "content/styleguide/test-bookmark/index.md"
+embed_file "content/styleguide/test-like/index.md"
+embed_file "content/styleguide/test-photo/index.md"
+embed_file "content/styleguide/test-photo/cover.jpg"
+embed_file "content/styleguide/test-reply/index.md"
+embed_file "content/styleguide/test-repost/index.md"
+embed_file "content/styleguide/test-rsvp/index.md"
+embed_file "content/styleguide/test-status/index.md"
+embed_file "content/styleguide/test-status-note/index.md"
+
 # ==============================================================================
 # 4. FOOTER
 # ==============================================================================

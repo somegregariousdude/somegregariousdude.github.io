@@ -12,6 +12,10 @@
   --md-sys-color-on-surface-dark: #E6E1E5;
   --md-sys-color-outline-dark: #938F99;
   --md-sys-color-outline-variant-dark: #49454F;
+  
+  /* MD3 Derived Container Tokens (Notes & Highlights) */ 
+  --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-secondary) 20%, var(--md-sys-color-surface)); 
+  --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface);
 }
 
 /* ==========================================================================
@@ -40,6 +44,10 @@
     --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
     --md-sys-color-outline: var(--md-sys-color-outline-dark);
     --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
+  
+  /* MD3 Derived Container Tokens (Notes & Highlights) */ 
+  --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-secondary) 20%, var(--md-sys-color-surface)); 
+  --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface);
     
     --md-sys-color-primary: #B0C4DE;
     --md-sys-color-secondary: #A7C7C7;
