@@ -60,12 +60,16 @@ cat <<'EOF' > "config/_default/params.toml"
 # CONTEXT: Source [20-47]
 # ==============================================================================
 
+# [CRITICAL] IndieAuth Endpoints
+# These must be at the TOP so they belong to the root Params object.
+authorization_endpoint = "https://indieauth.com/auth"
+token_endpoint = "https://tokens.indieauth.com/token"
+micropub = "https://indiekit.simplygregario.us/micropub"
+
 # [Source: 21] Author Metadata for H-Card and SEO
 [author]
   name = "Gregory Lopez"
-  # [Source: 23] Short plain-text bio for H-Card meta tags.
   bio = "I'm a gay, blind, middle-aged guy from the Pacific Northwest. As an Apple and Linux fan, I enjoy tinkering with tech and coding. Audiobooks, podcasts, and retro media from the 1970s to the early 2000s are my jam. I also love good food, drinks, and laughter with friends, plus a little cannabis to keep things mellow."
-  # [Source: 24] Root-relative path to profile photo.
   photo = "images/profile_photo.jpg"
 
   [author.location]
@@ -73,34 +77,23 @@ cat <<'EOF' > "config/_default/params.toml"
     state = "Washington"
     country = "USA"
 
-# [NEW] IndieAuth Endpoints
-authorization_endpoint = "https://indieauth.com/auth"
-token_endpoint = "https://tokens.indieauth.com/token"
-micropub = "https://indiekit.simplygregario.us/micropub"
-
 # [Source: 26] Webmention.io Integration
 [webmentions]
   enable = true
-  # [Source: 28] Global Default. Can be overridden in Frontmatter.
   show_webmentions = true
-  # [Source: 29] Must match the specific account name used on webmention.io.
   username = "simplygregario.us"
   guestbookIntro = "Greetings... Think of this page as a virtual guestbook lying on a desk with a pen beside it, inviting visitors like you to sign it and leave a message."
 
 # [Source: 31] Contact Form Settings
 [contact]
-  # [Source: 32] Formspree or similar URL
   formAction = "https://formspree.io/f/xblwegvw"
   intro = "Have a question or just want to say hi? Send me a message!"
 
 # [Source: 34] Visual Theming
 [theme]
-  # Options: "sound", "market", "mountain", "forest", "sunset"
   colorScheme = "sunset"
 
-# [Source: 36] Social Media - Dynamic Block
-# Used by generate_icons.sh to fetch SVGs from Simple Icons.
-
+# [Source: 36] Social Media
 [[social]]
   name = "BlueSky"
   handle = "@somegregariousdude.bsky.social"
@@ -149,7 +142,8 @@ micropub = "https://indiekit.simplygregario.us/micropub"
   url = "https://youtube.com/@somegregariousdude"
   rel = "nofollow"
   icon = "youtube"
-# [Source: 45] Instant Messaging - Dynamic Block
+
+# [Source: 45] Instant Messaging
 [[im]]
   name = "Matrix"
   handle = "@gregarious:4d2.org"
@@ -172,7 +166,7 @@ micropub = "https://indiekit.simplygregario.us/micropub"
   icon = "signal"
   
   [[im]]
-  name = "SimpleX"
+  name = "Simplex Chat"
   handle = "Gregory Lopez"
   url = "https.smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
   rel = "nofollow"
