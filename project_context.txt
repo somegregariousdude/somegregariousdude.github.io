@@ -96,11 +96,3 @@ All settings must include comments explaining their function and default values.
 
 ---
 
-## HYBRID ARCHITECTURE (STATIC + DYNAMIC)
-
-* **Hosting:** GitHub Pages (Static Content).
-* **Identity:** IndieAuth.com (RelMeAuth via GitHub/Mastodon).
-* **Publishing Backend:** IndieKit (Node.js on DigitalOcean).
-    * **URL:** `https://indiekit.simplygregario.us`
-    * **Role:** Receives Micropub requests -> Commits Markdown to GitHub.
-    * **Database:** MongoDB Atlas (Stores media metadata & syndication targets).

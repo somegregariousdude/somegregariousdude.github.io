@@ -64,7 +64,6 @@ cat <<'EOF' > "config/_default/params.toml"
 # These must be at the TOP so they belong to the root Params object.
 authorization_endpoint = "https://indieauth.com/auth"
 token_endpoint = "https://tokens.indieauth.com/token"
-micropub = "https://indiekit.simplygregario.us/micropub"
 
 # [Source: 21] Author Metadata for H-Card and SEO
 [author]
@@ -601,14 +600,6 @@ All settings must include comments explaining their function and default values.
 
 ---
 
-## HYBRID ARCHITECTURE (STATIC + DYNAMIC)
-
-* **Hosting:** GitHub Pages (Static Content).
-* **Identity:** IndieAuth.com (RelMeAuth via GitHub/Mastodon).
-* **Publishing Backend:** IndieKit (Node.js on DigitalOcean).
-    * **URL:** `https://indiekit.simplygregario.us`
-    * **Role:** Receives Micropub requests -> Commits Markdown to GitHub.
-    * **Database:** MongoDB Atlas (Stores media metadata & syndication targets).
 EOF
 
 # File: new_post.sh
