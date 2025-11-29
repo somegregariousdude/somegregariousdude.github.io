@@ -34,14 +34,14 @@ token_endpoint = "https://tokens.indieauth.com/token"
 
 # [Source: 34] Visual Theming
 [theme]
-  colorScheme = "sunset"
+  colorScheme = "market"
 
 # [Source: 36] Social Media
 [[social]]
   name = "BlueSky"
   handle = "@somegregariousdude.bsky.social"
   url = "https://bsky.app/profile/somegregariousdude.bsky.social"
-  rel = "me"
+  rel = "nofollow"
   icon = "bluesky"
 
 [[social]]
@@ -109,7 +109,7 @@ token_endpoint = "https://tokens.indieauth.com/token"
   icon = "signal"
   
   [[im]]
-  name = "Simplex Chat"
+  name = "SimpleX"
   handle = "Gregory Lopez"
   url = "https.smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
   rel = "nofollow"
