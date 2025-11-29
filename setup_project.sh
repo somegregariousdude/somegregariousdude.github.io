@@ -888,7 +888,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # [Source: 177] NodeJS (LTS)
+          node-version: '22' # [UPDATED] Matches Production Server (LTS)
           cache: 'npm'
 
       - name: Install Dependencies
@@ -899,9 +899,6 @@ jobs:
         with:
           hugo-version: '0.152.2' # [Source: 177] Pinned to match local environment
           extended: true
-
-      # [Note] Icon Generation is now handled locally. 
-      # We assume icons are committed to the repository.
 
       - name: Build with Hugo
         # [Source: 181] Garbage Collection and Minification enabled
@@ -923,12 +920,24 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
-    # [Fix] Only deploy when pushing to main. Skips deployment on Pull Requests.
+    # Only deploy when pushing to main. Skips deployment on Pull Requests.
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4 # [Source: 183]
+
+  # [NEW] Webmention Sender Job
+  # This runs ONLY after a successful deployment to 'main'
+  send-webmentions:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Trigger Webmention.app
+        # Pings the service to scan your RSS feed for new links to notify
+        run: |
+          curl -X POST "https://webmention.app/check/?url=https://simplygregario.us/index.xml&token=${{ secrets.WEBMENTION_TOKEN }}"
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_base.scss
