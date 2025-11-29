@@ -98,3 +98,68 @@ article.photos .md-figure {
 article.photos a:focus-visible {
   outline-offset: -2px; /* Pull outline inside to avoid clipping */
 }
+
+/* [NEW] 8. NOTES ("The Post-it") */
+article.notes {
+  /* Uses Secondary Container for a soft, distinct tint (e.g. Lavender/Teal) */
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border: none;
+  
+  /* Unique shape: Top rounded, bottom square-ish */
+  border-radius: 16px 16px 4px 4px;
+}
+
+/* Ensure hover state doesn't break the immersion */
+article.notes .outlined-card:hover {
+  background-color: var(--md-sys-color-secondary-container);
+  filter: brightness(0.98); /* Subtle dim instead of color shift */
+}
+
+/* [UPDATED] 1. STATUS UPDATES ("The Note Card") */
+/* Default: Neutral / Surface Variant */
+article.status {
+  background-color: var(--md-sys-color-surface-variant);
+  border: none;
+  border-radius: 16px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+article.status .outlined-card:hover {
+  background-color: var(--md-sys-color-surface-variant); 
+}
+
+/* [NEW] Status Variant: "The Note" */
+/* Triggered by tags: "Note", "Thought", "Journal" */
+article.status.is-note {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-radius: 16px 16px 4px 4px; /* Unique shape */
+}
+article.status.is-note .outlined-card:hover {
+  background-color: var(--md-sys-color-secondary-container);
+  filter: brightness(0.98);
+}
+
+/* [UPDATED] 1. STATUS UPDATES ("The Note Card") */
+/* Default: Neutral / Surface Variant */
+article.status {
+  background-color: var(--md-sys-color-surface-variant);
+  border: none;
+  border-radius: 16px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+article.status .outlined-card:hover {
+  background-color: var(--md-sys-color-surface-variant); 
+}
+
+/* [NEW] Status Variant: "The Note" */
+/* Triggered by tags: "Note", "Thought", "Journal" */
+article.status.is-note {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-radius: 16px 16px 4px 4px; /* Unique shape */
+}
+article.status.is-note .outlined-card:hover {
+  background-color: var(--md-sys-color-secondary-container);
+  filter: brightness(0.98);
+}

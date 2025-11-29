@@ -1,6 +1,8 @@
 {{ define "main" }}
+{{ $isNote := false }}{{ if or (in .Params.tags "Note") (in .Params.tags "Thought") (in .Params.tags "Journal") }}{{ $isNote = true }}{{ end }}
+{{ $isNote := false }}{{ if or (in .Params.tags "Note") (in .Params.tags "Thought") (in .Params.tags "Journal") }}{{ $isNote = true }}{{ end }}
 {{/* The {{ .Type }} class allows CSS to target specific content types */}}
-<article class="single-post h-entry outlined-card {{ .Type }}">
+<article class="single-post h-entry outlined-card {{ .Type }} {{ if $isNote }}is-note{{ end }}">
   
   {{/* METADATA BLOCK: Hidden */}}
   <div style="display: none;">

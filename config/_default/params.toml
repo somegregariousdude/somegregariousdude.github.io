@@ -116,7 +116,7 @@ micropub = "https://indiekit.simplygregario.us/micropub"
   icon = "signal"
   
   [[im]]
-  name = "Simplex Chat"
+  name = "SimpleX"
   handle = "Gregory Lopez"
   url = "https.smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
   rel = "nofollow"
