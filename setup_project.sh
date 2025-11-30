@@ -1672,6 +1672,14 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   border-radius: 50%;
   border: 1px solid rgba(0,0,0,0.1); /* Subtle definition */
 }
+
+/* [Patch] Lighthouse Contrast Fix (Theme Aware) */
+.theme-picker-label {
+  /* Use Primary Color for high contrast + theme harmony */
+  color: var(--md-sys-color-primary) !important;
+  font-weight: 600; 
+  opacity: 1; /* Remove opacity to ensure sharp contrast ratio */
+}
 EOF
 
 # File: themes/Accessible-MD/assets/scss/_images.scss
@@ -2004,6 +2012,25 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_layout.scss"
   padding-top: 16px;
   /* Default: Solid line for standard "Page" feel */
   border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* [Patch] Lighthouse Touch Target Fix */
+/* Enforces Android/WCAG recommended minimum touch size of 48x48px */
+.main-nav a,
+.footer-nav a {
+  display: flex;
+  align-items: center;
+  min-height: 48px; 
+  padding: 0 16px; /* Horizontal breathing room */
+  box-sizing: border-box; /* Ensure padding doesn't break layout width */
+}
+
+@media (min-width: 769px) {
+  /* Relax slightly on desktop to conserve vertical space, but keep it accessible */
+  .main-nav a,
+  .footer-nav a {
+    min-height: 44px;
+  }
 }
 EOF
 

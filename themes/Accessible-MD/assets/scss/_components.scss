@@ -721,3 +721,11 @@
   border-radius: 50%;
   border: 1px solid rgba(0,0,0,0.1); /* Subtle definition */
 }
+
+/* [Patch] Lighthouse Contrast Fix (Theme Aware) */
+.theme-picker-label {
+  /* Use Primary Color for high contrast + theme harmony */
+  color: var(--md-sys-color-primary) !important;
+  font-weight: 600; 
+  opacity: 1; /* Remove opacity to ensure sharp contrast ratio */
+}
