@@ -16,6 +16,11 @@
   /* MD3 Derived Container Tokens (Notes & Highlights) */ 
   --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-secondary) 20%, var(--md-sys-color-surface)); 
   --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface);
+
+  /* [FIX] MD3 Derived Surface Variant Tokens (Standard Status Cards) */
+  /* Mixes 8% of Primary into Surface for a subtle tinted neutral */
+  --md-sys-color-surface-variant: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface));
+  --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface);
 }
 
 /* ==========================================================================
@@ -45,9 +50,12 @@
     --md-sys-color-outline: var(--md-sys-color-outline-dark);
     --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
   
-  /* MD3 Derived Container Tokens (Notes & Highlights) */ 
-  --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-secondary) 20%, var(--md-sys-color-surface)); 
-  --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface);
+    /* Recalculate Derived Tokens for Dark Mode */ 
+    --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-secondary) 20%, var(--md-sys-color-surface)); 
+    --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface);
+    
+    /* [FIX] Dark Mode Variant Calculation */
+    --md-sys-color-surface-variant: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface));
     
     --md-sys-color-primary: #B0C4DE;
     --md-sys-color-secondary: #A7C7C7;

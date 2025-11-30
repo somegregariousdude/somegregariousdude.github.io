@@ -4,18 +4,27 @@
   {{ partial "head.html" . }}
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
-
   {{ partial "header.html" . }}
 
-  <main id="main-content" role="main" class="container">
+  <main id="main-content" class="main-container">
     {{ block "main" . }}{{ end }}
   </main>
 
   {{ partial "footer.html" . }}
 
-  {{/* BUNDLE: Webmentions + YouTube + Menu + Copy Code */}}
-  {{ $js := slice (resources.Get "js/webmentions.js") (resources.Get "js/youtube-lite.js") (resources.Get "js/menu.js") (resources.Get "js/copy-code.js") (resources.Get "js/share.js") (resources.Get "js/share.js") (resources.Get "js/share.js") | resources.Concat "js/main.js" | resources.Minify | resources.Fingerprint }}
-  <script src="{{ $js.RelPermalink }}" defer></script>
+  {{/* Toast Notification Container */}}
+  <div id="toast-container" class="md-toast" role="status" aria-live="polite"></div>
+
+  {{/* JS Modules */}}
+  {{ $menu := resources.Get "js/menu.js" }}
+  {{ $lite := resources.Get "js/youtube-lite.js" }}
+  {{ $copy := resources.Get "js/copy-code.js" }}
+  {{ $share := resources.Get "js/share.js" }}
+  {{ $webmentions := resources.Get "js/webmentions.js" }}
+  {{/* NEW: Theme Switcher */}}
+  {{ $themes := resources.Get "js/theme-switcher.js" }}
+  
+  {{ $js := slice $menu $lite $copy $share $webmentions $themes | resources.Concat "js/bundle.js" | resources.Minify }}
+  <script src="{{ $js.Permalink }}" defer></script>
 </body>
 </html>

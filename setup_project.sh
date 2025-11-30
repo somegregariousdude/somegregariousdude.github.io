@@ -90,14 +90,14 @@ token_endpoint = "https://tokens.indieauth.com/token"
 
 # [Source: 34] Visual Theming
 [theme]
-  colorScheme = "sunset"
+  colorScheme = "market"
 
 # [Source: 36] Social Media
 [[social]]
   name = "BlueSky"
   handle = "@somegregariousdude.bsky.social"
   url = "https://bsky.app/profile/somegregariousdude.bsky.social"
-  rel = "me"
+  rel = "nofollow"
   icon = "bluesky"
 
 [[social]]
@@ -165,7 +165,7 @@ token_endpoint = "https://tokens.indieauth.com/token"
   icon = "signal"
   
   [[im]]
-  name = "Simplex Chat"
+  name = "SimpleX"
   handle = "Gregory Lopez"
   url = "https.smp15.simplex.im/a#2XKhZFdQoRskGLNVIpe4rU28lzDmBScikeImDMbPJXc"
   rel = "nofollow"
@@ -949,6 +949,9 @@ EOF
 
 # File: themes/Accessible-MD/assets/scss/_components.scss
 cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
+/* COMPONENT STYLES */
+/* (Keeping all existing styles, just patching Syndication & Chips) */
+
 .outlined-card {
   background-color: var(--md-sys-color-surface);
   border: 1px solid var(--md-sys-color-outline-variant);
@@ -959,10 +962,10 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
 
 .outlined-card:hover {
   border-color: var(--md-sys-color-outline);
-  background-color: rgba(var(--md-sys-color-primary), 0.05); /* Faked opacity */
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
 }
 
-/* Chips [Source: 111] */
+/* Chips */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -971,7 +974,7 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   padding: 4px 8px;
   font-size: 0.875rem;
   margin-bottom: 8px;
-  gap: 8px; /* Space between icon and text */
+  gap: 8px;
 }
 
 .chip-icon svg, .brand-icon svg {
@@ -993,10 +996,9 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   text-decoration: none;
 }
 
-/* Webmentions [Refactored for Phase 02i] */
+/* Webmentions */
 .webmentions-container {
-  margin-top: 24px; /* Gap between Post Card and Mentions Card */
-  /* Old border styles removed since it is now a card */
+  margin-top: 24px;
 }
 
 /* Header Layouts */
@@ -1054,9 +1056,9 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   border-radius: 50%;
 }
 
-/* [Patch] MD3 Search Bar (Pagefind Override) */
+/* [Patch] MD3 Search Bar */
 :root {
-  --pagefind-ui-border-radius: 24px; /* Pill Shape */
+  --pagefind-ui-border-radius: 24px;
   --pagefind-ui-font: 'Noto Sans', sans-serif;
   --pagefind-ui-primary: var(--md-sys-color-primary);
   --pagefind-ui-text: var(--md-sys-color-on-surface);
@@ -1065,7 +1067,7 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
 }
 
 .pagefind-ui__search-input {
-  border-radius: 28px !important; /* Force Pill Shape */
+  border-radius: 28px !important;
   padding-left: 24px !important;
   padding-right: 24px !important;
   border: 1px solid var(--md-sys-color-outline) !important;
@@ -1080,7 +1082,6 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
 }
 
 .pagefind-ui__drawer {
-  /* Ensure dropdown results match our theme */
   background-color: var(--md-sys-color-surface) !important;
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-sys-shape-corner-medium);
@@ -1096,88 +1097,58 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   @include state-layer(var(--md-sys-color-primary));
 }
 
-/* Ensure the chip icon stays colored correctly under the layer */
 .chip:hover {
-  background-color: transparent; /* Remove old hover */
-}
-
-/* [Patch] MD3 State Layers */
-.feed-item {
-  @include state-layer;
-}
-
-.chip {
-  @include state-layer(var(--md-sys-color-primary));
-}
-
-/* Ensure the chip icon stays colored correctly under the layer */
-.chip:hover {
-  background-color: transparent; /* Remove old hover */
+  background-color: transparent;
 }
 
 /* [Patch] Social Link State Layers */
 .social-link {
-  /* Add breathing room for the hover effect */
   padding: 8px 12px; 
   border-radius: 8px;
-  margin: -8px -12px; /* Negative margin prevents layout shift */
-  
-  /* Apply the MD3 interaction */
+  margin: -8px -12px; 
   @include state-layer(var(--md-sys-color-primary));
 }
 
-/* [Patch] Code Block Copy Button - MD3 Interaction */
+/* [Patch] Code Block Copy Button */
 .copy-code-btn {
-  /* Ensure it has the Pill/Circle shape */
   border-radius: 50%;
   border: 1px solid var(--md-sys-color-outline);
-  
-  /* Apply the State Layer Mixin */
   @include state-layer(var(--md-sys-color-primary));
-  
-  /* Clean up transition */
   transition: opacity 0.2s var(--md-sys-motion-easing-standard), background-color 0.2s;
 }
 
 .copy-code-btn:hover {
-  /* Remove the old flat background, rely on State Layer tint */
   background-color: transparent; 
   border-color: var(--md-sys-color-primary);
 }
 
 /* [Patch] Search Results Elevation */
 .pagefind-ui__drawer {
-  /* Level 2: Floating menu */
   @include elevation(2);
 }
 
-/* [Patch] Pagefind Results Polish (MD3 List Item Style) */
-
-/* The Dropdown Container */
+/* [Patch] Pagefind Results Polish */
 .pagefind-ui__drawer {
   background-color: var(--md-sys-color-surface) !important;
   border: 1px solid var(--md-sys-color-outline-variant) !important;
   border-radius: 12px !important;
-  box-shadow: none !important; /* We use our own Elevation mixin elsewhere */
+  box-shadow: none !important;
   padding: 8px !important;
   margin-top: 8px !important;
 }
 
-/* Individual Result Item */
 .pagefind-ui__result {
   border: none !important;
-  border-radius: 8px !important; /* Inner radius */
+  border-radius: 8px !important;
   padding: 12px !important;
   margin-bottom: 4px !important;
   transition: background-color 0.2s var(--md-sys-motion-easing-standard);
   
-  /* Use CSS nesting for interaction */
   &:hover, &:focus-within {
-    background-color: rgba(var(--md-sys-color-primary), 0.08) !important; /* State Layer */
+    background-color: rgba(var(--md-sys-color-primary), 0.08) !important;
   }
 }
 
-/* The Result Image (Thumbnail) */
 .pagefind-ui__result-thumb {
   border-radius: 8px !important;
   width: 64px !important;
@@ -1186,7 +1157,6 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   background-color: var(--md-sys-color-outline-variant);
 }
 
-/* Typography Overrides */
 .pagefind-ui__result-title {
   font-family: 'Noto Serif', serif !important;
   font-weight: 600 !important;
@@ -1201,8 +1171,6 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   margin-top: 4px !important;
 }
 
-/* The "Mark" (Highlighting text matches) */
-/* We replace the default yellow with a Theme-appropriate highlight */
 .pagefind-ui__result-excerpt mark {
   background-color: rgba(var(--md-sys-color-tertiary), 0.3) !important;
   color: inherit !important;
@@ -1211,7 +1179,6 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   font-weight: 700;
 }
 
-/* The "Clear" Button in the Search Input */
 .pagefind-ui__suppressed {
   color: var(--md-sys-color-on-surface) !important;
   opacity: 0.7;
@@ -1220,36 +1187,32 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   background: var(--md-sys-color-surface) !important;
   color: var(--md-sys-color-primary) !important;
   border: 1px solid var(--md-sys-color-outline) !important;
-  border-radius: 20px !important; /* Pill button */
+  border-radius: 20px !important;
   margin-top: 12px;
 }
 
-/* [Patch] MD3 Snackbar (Toast) */
+/* [Patch] MD3 Snackbar */
 .md-toast {
-  visibility: hidden; /* Hide from DOM when inactive */
+  visibility: hidden;
   min-width: 250px;
-  max-width: 90vw; /* Mobile safety */
-  background-color: var(--md-sys-color-on-surface); /* Inverse Background */
-  color: var(--md-sys-color-surface); /* Inverse Text */
+  max-width: 90vw;
+  background-color: var(--md-sys-color-on-surface);
+  color: var(--md-sys-color-surface);
   text-align: center;
-  border-radius: 4px; /* MD3 Spec for single-line */
+  border-radius: 4px;
   padding: 14px 16px;
   position: fixed;
-  z-index: 2000; /* Above everything, including Drawer */
+  z-index: 2000;
   left: 50%;
-  bottom: 24px; /* Resting position */
-  transform: translateX(-50%) translateY(100%); /* Start slightly down */
+  bottom: 24px;
+  transform: translateX(-50%) translateY(100%);
   font-family: 'Noto Sans', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
-  
-  /* Motion */
   transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
               opacity 0.3s linear, 
               visibility 0s linear 0.3s;
   opacity: 0;
-  
-  /* Shadow for lift */
   box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 
               0 6px 10px 0 rgba(0,0,0,0.14), 
               0 1px 18px 0 rgba(0,0,0,0.12);
@@ -1258,66 +1221,26 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
 .md-toast.show {
   visibility: visible;
   opacity: 1;
-  transform: translateX(-50%) translateY(0); /* Slide up to position */
+  transform: translateX(-50%) translateY(0);
   transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
               opacity 0.3s linear, 
               visibility 0s linear 0s;
 }
 
-/* [Patch] Fix Generic Card Hover (MD3 Strictness) */
-/* Static cards should NOT react to hover. Only interactive ones (feed-item) should. */
+/* [Patch] Fix Generic Card Hover */
 .outlined-card:hover {
-  background-color: var(--md-sys-color-surface); /* Reset to base */
-  border-color: var(--md-sys-color-outline-variant); /* Reset to base */
+  background-color: var(--md-sys-color-surface);
+  border-color: var(--md-sys-color-outline-variant);
 }
 
-/* Re-apply interaction ONLY for Feed Items (which have State Layers) */
 .feed-item:hover {
-  /* The State Layer mixin handles the tint, so we just ensure the border stays distinct */
   border-color: var(--md-sys-color-outline);
 }
 
-/* [Patch] Webmention Layout (MD3 List Item) */
+/* [Patch] Webmention Layout */
 .mention {
   margin-bottom: 1rem;
   padding: 16px;
-  /* Use a cleaner layout for comments */
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 16px;
-  align-items: start;
-}
-
-.mention-author {
-  /* Force the author block to just be the image context */
-  grid-column: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.mention-author img.u-photo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; /* Circle Avatar */
-  object-fit: cover;
-  border: 1px solid var(--md-sys-color-outline-variant);
-}
-
-/* The name and content live in the second column */
-.mention-content-wrapper {
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-}
-
-/* We need to target the generated HTML structure. 
-   Currently: .mention-author contains the link/name.
-   We might need to adjust this via CSS since we can't easily change the JS structure 
-   without breaking the script.
-   
-   Workaround: Flexbox the whole card.
-*/
-.mention {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -1331,6 +1254,14 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   font-weight: 600;
   font-size: 1rem;
   color: var(--md-sys-color-on-surface);
+}
+
+.mention-author img.u-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .mention-author a {
@@ -1348,7 +1279,6 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   font-size: 1rem;
   line-height: 1.5;
   color: var(--md-sys-color-on-surface);
-  /* Indent slightly to align with text above? No, keep flush left on mobile. */
 }
 
 .mention time {
@@ -1407,9 +1337,9 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
 .webmention-copy-field {
   display: inline-flex;
   align-items: center;
-  background-color: var(--md-sys-color-surface); /* Contrast against card */
+  background-color: var(--md-sys-color-surface);
   border: 1px solid var(--md-sys-color-outline);
-  border-radius: 24px; /* Pill */
+  border-radius: 24px;
   padding: 4px 4px 4px 16px;
   max-width: 100%;
 }
@@ -1422,7 +1352,7 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px; /* Truncate long URLs on mobile */
+  max-width: 200px;
 }
 
 .copy-btn {
@@ -1445,8 +1375,7 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   fill: currentColor;
 }
 
-/* [Patch] MD3 Context Blocks (IndieWeb) */
-
+/* [Patch] MD3 Context Blocks */
 .context-container {
   display: flex;
   flex-direction: column;
@@ -1459,12 +1388,9 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  border-radius: 12px; /* MD3 Medium Shape */
-  
-  /* MD3 Tonal Surface: Tinted background, no outline */
+  border-radius: 12px;
   background-color: rgba(var(--md-sys-color-primary), 0.08);
   color: var(--md-sys-color-on-surface);
-  
   font-family: 'Noto Sans', sans-serif;
   font-size: 0.95rem;
 }
@@ -1489,17 +1415,12 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  
-  /* Add State Layer for interaction */
   padding: 4px 8px;
   border-radius: 4px;
-  margin-left: auto; /* Push to right if we want, or keep inline */
+  margin-left: auto;
   @include state-layer(var(--md-sys-color-primary));
 }
 
-/* Specific Tints for different types (Optional: kept uniform for now to match MD3 system) */
-
-/* List View Mini-Context */
 .context-mini {
   display: flex;
   align-items: center;
@@ -1524,11 +1445,9 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   border-bottom: 1px dotted currentColor;
 }
 
-/* [Patch] Syndication (POSSE) Styles */
+/* [Patch] Syndication Styles (CLEANUP) */
+/* We remove the border/padding here, as .post-footer handles it now */
 .syndication-container {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--md-sys-color-outline-variant);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1548,26 +1467,21 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   gap: 8px;
 }
 
-/* Ensure syndication chips look like standard chips but maybe smaller/distinct */
 .chip.u-syndication {
   @include state-layer(var(--md-sys-color-secondary));
   border-color: var(--md-sys-color-outline-variant);
 }
 
 /* [Patch] MD3 Hero Card & Chip Styles */
-
-/* 1. Profile Hero Card (md-hero-card) */
 .md-hero-card {
-  /* Elevation: Lift it slightly */
   @include elevation(1);
-  /* Use Surface Container High for a distinct background tint */
   background-color: var(--md-sys-color-surface-container-high) !important;
-  border-radius: 20px; /* Softer, friendlier corners */
+  border-radius: 20px;
 }
 
 .hero-content-wrapper {
   display: grid;
-  grid-template-columns: 200px 1fr; /* Image width | Content width */
+  grid-template-columns: 200px 1fr;
   gap: 32px;
   align-items: start;
 }
@@ -1578,8 +1492,7 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
 }
 
 .hero-avatar-area h1 {
-  /* H1 is visible here but text-only on mobile */
-  font-size: 2rem; /* Display Small size */
+  font-size: 2rem;
   margin-bottom: 12px;
 }
 
@@ -1588,28 +1501,24 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   padding-top: 12px;
 }
 
-/* 2. MD3 Assist Chips for Social Links (Replaces List) */
 .social-chips-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
-  list-style: none; /* Remove list item dots */
+  list-style: none;
 }
 
 .social-chip {
-  /* MD3 Assist Chip Styling */
   display: inline-flex;
   align-items: center;
-  border-radius: 20px; /* Pill Shape */
+  border-radius: 20px;
   padding: 6px 12px;
   border: 1px solid var(--md-sys-color-outline-variant);
-  background-color: var(--md-sys-color-surface); /* Inner Surface */
+  background-color: var(--md-sys-color-surface);
   text-decoration: none;
   font-size: 0.9rem;
   color: var(--md-sys-color-on-surface);
-  
-  /* Apply state layer for interaction */
   @include state-layer(var(--md-sys-color-primary));
 }
 
@@ -1619,15 +1528,13 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
 }
 
 .social-chip:hover {
-  background-color: var(--md-sys-color-surface) !important; /* Reset component hover */
+  background-color: var(--md-sys-color-surface) !important;
   border-color: var(--md-sys-color-outline);
 }
 
-
-/* 3. Tablet/Mobile Adjustments */
 @media (max-width: 768px) {
   .hero-content-wrapper {
-    grid-template-columns: 1fr; /* Stacked */
+    grid-template-columns: 1fr;
     gap: 16px;
   }
   .hero-avatar-area {
@@ -1638,7 +1545,7 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
     gap: 16px;
   }
   .hero-avatar-area h1 {
-    display: none; /* Hide H1 visually, keep in DOM for microformats */
+    display: none;
   }
   .u-photo {
     width: 100px;
@@ -1646,7 +1553,6 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   }
 }
 
-/* [Patch] Hero Card Metadata Visibility Fix */
 .profile-meta.is-mobile-hidden {
   display: none;
 }
@@ -1661,6 +1567,110 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_components.scss"
   .profile-meta.is-desktop-hidden {
     display: none;
   }
+}
+
+/* [New] Theme Switcher UI */
+.theme-picker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.theme-picker-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--md-sys-color-outline);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.theme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Override default chip styles for the toggle buttons */
+.theme-btn.chip {
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.theme-btn.chip:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Active State (Aria-Pressed) */
+.theme-btn.chip[aria-pressed="true"] {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: transparent;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1); /* Subtle definition */
+}
+
+/* [New] Theme Switcher UI */
+.theme-picker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.theme-picker-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--md-sys-color-outline);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.theme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Override default chip styles for the toggle buttons */
+.theme-btn.chip {
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.theme-btn.chip:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Active State (Aria-Pressed) */
+.theme-btn.chip[aria-pressed="true"] {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: transparent;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1); /* Subtle definition */
 }
 EOF
 
@@ -1986,6 +1996,14 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_layout.scss"
   background-color: rgba(var(--md-sys-color-primary), 0.12); 
   color: var(--md-sys-color-primary); /* Primary text on Tinted Primary background */
   font-weight: 700;
+}
+
+/* [Patch] Base Post Footer (Articles, Pages, Photos) */
+.post-footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  /* Default: Solid line for standard "Page" feel */
+  border-top: 1px solid var(--md-sys-color-outline-variant);
 }
 EOF
 
@@ -2542,6 +2560,11 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_variables.scss"
   /* MD3 Derived Container Tokens (Notes & Highlights) */ 
   --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-secondary) 20%, var(--md-sys-color-surface)); 
   --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface);
+
+  /* [FIX] MD3 Derived Surface Variant Tokens (Standard Status Cards) */
+  /* Mixes 8% of Primary into Surface for a subtle tinted neutral */
+  --md-sys-color-surface-variant: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface));
+  --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface);
 }
 
 /* ==========================================================================
@@ -2571,9 +2594,12 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_variables.scss"
     --md-sys-color-outline: var(--md-sys-color-outline-dark);
     --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
   
-  /* MD3 Derived Container Tokens (Notes & Highlights) */ 
-  --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-secondary) 20%, var(--md-sys-color-surface)); 
-  --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface);
+    /* Recalculate Derived Tokens for Dark Mode */ 
+    --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-secondary) 20%, var(--md-sys-color-surface)); 
+    --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface);
+    
+    /* [FIX] Dark Mode Variant Calculation */
+    --md-sys-color-surface-variant: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface));
     
     --md-sys-color-primary: #B0C4DE;
     --md-sys-color-secondary: #A7C7C7;
@@ -2818,14 +2844,27 @@ cat <<'EOF' > "themes/Accessible-MD/assets/scss/_content_types.scss"
 /* MD3 Content Type Variations */
 
 /* 1. STATUS UPDATES ("The Note Card") */
+/* Default: Neutral / Surface Variant */
 article.status {
-  background-color: var(--md-sys-color-surface-variant); /* Tinted Background */
+  background-color: var(--md-sys-color-surface-variant);
   border: none;
   border-radius: 16px;
   color: var(--md-sys-color-on-surface-variant);
 }
 article.status .outlined-card:hover {
   background-color: var(--md-sys-color-surface-variant); 
+}
+
+/* [NEW] Status Variant: "The Note" */
+/* Triggered by tags: "Note", "Thought", "Journal" */
+article.status.is-note {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-radius: 16px 16px 4px 4px; /* Unique shape */
+}
+article.status.is-note .outlined-card:hover {
+  background-color: var(--md-sys-color-secondary-container);
+  filter: brightness(0.98);
 }
 
 /* 2. BOOKMARKS ("The Reference") */
@@ -2916,69 +2955,24 @@ article.photos a:focus-visible {
   outline-offset: -2px; /* Pull outline inside to avoid clipping */
 }
 
-/* [NEW] 8. NOTES ("The Post-it") */
-article.notes {
-  /* Uses Secondary Container for a soft, distinct tint (e.g. Lavender/Teal) */
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-  border: none;
-  
-  /* Unique shape: Top rounded, bottom square-ish */
-  border-radius: 16px 16px 4px 4px;
+/* [Patch] Footer Overrides to Maintain Card Metaphors */
+
+/* Bookmarks: The "Coupon" look needs a dashed internal divider */
+article.bookmarks .post-footer {
+  border-top-style: dashed;
+  border-top-color: var(--md-sys-color-outline);
 }
 
-/* Ensure hover state doesn't break the immersion */
-article.notes .outlined-card:hover {
-  background-color: var(--md-sys-color-secondary-container);
-  filter: brightness(0.98); /* Subtle dim instead of color shift */
+/* Status: The "Note Card" needs a subtle divider to avoid cutting the color block */
+article.status .post-footer {
+  border-top-color: rgba(var(--md-sys-color-on-surface-variant), 0.12);
 }
 
-/* [UPDATED] 1. STATUS UPDATES ("The Note Card") */
-/* Default: Neutral / Surface Variant */
-article.status {
-  background-color: var(--md-sys-color-surface-variant);
-  border: none;
-  border-radius: 16px;
-  color: var(--md-sys-color-on-surface-variant);
-}
-article.status .outlined-card:hover {
-  background-color: var(--md-sys-color-surface-variant); 
-}
-
-/* [NEW] Status Variant: "The Note" */
-/* Triggered by tags: "Note", "Thought", "Journal" */
-article.status.is-note {
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-  border-radius: 16px 16px 4px 4px; /* Unique shape */
-}
-article.status.is-note .outlined-card:hover {
-  background-color: var(--md-sys-color-secondary-container);
-  filter: brightness(0.98);
-}
-
-/* [UPDATED] 1. STATUS UPDATES ("The Note Card") */
-/* Default: Neutral / Surface Variant */
-article.status {
-  background-color: var(--md-sys-color-surface-variant);
-  border: none;
-  border-radius: 16px;
-  color: var(--md-sys-color-on-surface-variant);
-}
-article.status .outlined-card:hover {
-  background-color: var(--md-sys-color-surface-variant); 
-}
-
-/* [NEW] Status Variant: "The Note" */
-/* Triggered by tags: "Note", "Thought", "Journal" */
-article.status.is-note {
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-  border-radius: 16px 16px 4px 4px; /* Unique shape */
-}
-article.status.is-note .outlined-card:hover {
-  background-color: var(--md-sys-color-secondary-container);
-  filter: brightness(0.98);
+/* Likes: The "Pill" shape cannot have a straight line inside it. Spacing only. */
+article.likes .post-footer {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 16px;
 }
 EOF
 
@@ -3387,6 +3381,43 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 EOF
 
+# File: themes/Accessible-MD/assets/js/theme-switcher.js
+cat <<'EOF' > "themes/Accessible-MD/assets/js/theme-switcher.js"
+document.addEventListener('DOMContentLoaded', () => {
+  const themeButtons = document.querySelectorAll('.theme-btn');
+  if (!themeButtons.length) return;
+
+  // 1. Initialize ARIA state based on current active theme
+  // We check the HTML tag, default to 'sound' if missing.
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'sound';
+  
+  themeButtons.forEach(btn => {
+    if (btn.dataset.value === currentTheme) {
+      btn.setAttribute('aria-pressed', 'true');
+    } else {
+      btn.setAttribute('aria-pressed', 'false');
+    }
+
+    // 2. Add Click Listeners
+    btn.addEventListener('click', (e) => {
+      const selectedTheme = e.currentTarget.dataset.value;
+      const validThemes = ['sound', 'market', 'mountain', 'forest', 'sunset'];
+
+      // Security: Whitelist check
+      if (!validThemes.includes(selectedTheme)) return;
+
+      // Apply Logic
+      document.documentElement.setAttribute('data-theme', selectedTheme);
+      localStorage.setItem('greg_theme', selectedTheme);
+
+      // Update UI State
+      themeButtons.forEach(b => b.setAttribute('aria-pressed', 'false'));
+      e.currentTarget.setAttribute('aria-pressed', 'true');
+    });
+  });
+});
+EOF
+
 # File: themes/Accessible-MD/layouts/index.html
 cat <<'EOF' > "themes/Accessible-MD/layouts/index.html"
 {{ define "main" }}
@@ -3545,19 +3576,28 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/baseof.html"
   {{ partial "head.html" . }}
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
-
   {{ partial "header.html" . }}
 
-  <main id="main-content" role="main" class="container">
+  <main id="main-content" class="main-container">
     {{ block "main" . }}{{ end }}
   </main>
 
   {{ partial "footer.html" . }}
 
-  {{/* BUNDLE: Webmentions + YouTube + Menu + Copy Code */}}
-  {{ $js := slice (resources.Get "js/webmentions.js") (resources.Get "js/youtube-lite.js") (resources.Get "js/menu.js") (resources.Get "js/copy-code.js") (resources.Get "js/share.js") (resources.Get "js/share.js") (resources.Get "js/share.js") | resources.Concat "js/main.js" | resources.Minify | resources.Fingerprint }}
-  <script src="{{ $js.RelPermalink }}" defer></script>
+  {{/* Toast Notification Container */}}
+  <div id="toast-container" class="md-toast" role="status" aria-live="polite"></div>
+
+  {{/* JS Modules */}}
+  {{ $menu := resources.Get "js/menu.js" }}
+  {{ $lite := resources.Get "js/youtube-lite.js" }}
+  {{ $copy := resources.Get "js/copy-code.js" }}
+  {{ $share := resources.Get "js/share.js" }}
+  {{ $webmentions := resources.Get "js/webmentions.js" }}
+  {{/* NEW: Theme Switcher */}}
+  {{ $themes := resources.Get "js/theme-switcher.js" }}
+  
+  {{ $js := slice $menu $lite $copy $share $webmentions $themes | resources.Concat "js/bundle.js" | resources.Minify }}
+  <script src="{{ $js.Permalink }}" defer></script>
 </body>
 </html>
 EOF
@@ -3640,8 +3680,7 @@ EOF
 cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 {{ define "main" }}
 {{ $isNote := false }}{{ if or (in .Params.tags "Note") (in .Params.tags "Thought") (in .Params.tags "Journal") }}{{ $isNote = true }}{{ end }}
-{{ $isNote := false }}{{ if or (in .Params.tags "Note") (in .Params.tags "Thought") (in .Params.tags "Journal") }}{{ $isNote = true }}{{ end }}
-{{/* The {{ .Type }} class allows CSS to target specific content types */}}
+
 <article class="single-post h-entry outlined-card {{ .Type }} {{ if $isNote }}is-note{{ end }}">
   
   {{/* METADATA BLOCK: Hidden */}}
@@ -3650,7 +3689,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
       <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
     </div>
-    {{/* FIX: Strict u-url */}}
     <a href="{{ .Permalink }}" class="u-url">Permalink</a>
   </div>
 
@@ -3660,7 +3698,6 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
       <h1 class="p-name">{{ .Title }}</h1>
     </div>
     
-    {{/* QoL Metadata */}}
     <div class="post-meta">
       <div class="meta-item">
         <span class="meta-icon">{{ partial "icons/event.svg" . }}</span>
@@ -3683,7 +3720,7 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
     </div>
   </header>
 
-  {{/* Context Blocks */}}
+  {{/* Context Blocks (Replies, RSVPs, etc) */}}
   <div class="context-container">
     {{ if .Params.reply_to }}
     <div class="context-block reply-context">
@@ -3724,16 +3761,17 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/_default/single.html"
 
   <div class="e-content">{{ .Content }}</div>
 
+  {{/* WRAPPED FOOTER FOR VISUAL SEPARATION */}}
   <footer class="post-footer">
     {{ partial "syndication.html" . }}
 
     {{ if .Params.tags }}
-    {{/* FIX: Clean p-category (no visual #) */}}
     <ul class="tags">
       {{ range .Params.tags }}
       <li>
         <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
-          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+          {{/* [ACCESSIBILITY FIX] Removed aria-hidden="true" */}}
+          <span>#</span><span class="p-category">{{ . }}</span>
         </a>
       </li>
       {{ end }}
@@ -3812,6 +3850,43 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/photos/single.html"
 {{ if .Params.show_webmentions | default .Site.Params.webmentions.show_webmentions }}
   {{ partial "webmentions-card.html" (dict "context" . "description" "Seen something you like? Let me know!") }}
 {{ end }}
+{{ end }}
+EOF
+
+# File: themes/Accessible-MD/layouts/pages/single.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/pages/single.html"
+{{ define "main" }}
+<article class="single-post h-entry outlined-card pages">
+  
+  {{/* Simple Header for Pages */}}
+  <header class="post-header">
+    <div class="headline-row">
+      {{ partial "ui/chip.html" . }}
+      <h1 class="p-name">{{ .Title }}</h1>
+    </div>
+  </header>
+
+  <div class="e-content">{{ .Content }}</div>
+
+  {{/* Pages usually don't have syndication, but they MIGHT have tags (e.g. Accessibility) */}}
+  {{ if .Params.tags }}
+  <footer class="post-footer">
+    <ul class="tags">
+      {{ range .Params.tags }}
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
+          {{/* [ACCESSIBILITY FIX] */}}
+          <span>#</span><span class="p-category">{{ . }}</span>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+  </footer>
+  {{ end }}
+</article>
+
+{{/* Pages usually don't show webmentions or share buttons by default in this design, 
+     but we leave them out to keep pages clean unless requested. */}}
 {{ end }}
 EOF
 
@@ -3992,25 +4067,36 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/head.html"
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
-{{ hugo.Generator }}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+{{/* CSS Loading (Modern Hugo Syntax) */}}
+{{ $options := (dict "targetPath" "css/style.css" "outputStyle" "compressed") }}
+{{/* FIX: resources.ToCSS -> css.Sass */}}
+{{ $style := resources.Get "scss/main.scss" | css.Sass $options }}
+<link rel="stylesheet" href="{{ $style.Permalink }}">
 
-{{/* INDIEWEB DISCOVERY */}}
-{{ with .Site.Params.webmentions.username }}
-<link rel="webmention" href="https://webmention.io/{{ . }}/webmention" />
-<link rel="pingback" href="https://webmention.io/{{ . }}/xmlrpc" />
-{{ end }}
-{{ if .Site.Params.authorization_endpoint }}<link rel="authorization_endpoint" href="{{ .Site.Params.authorization_endpoint }}">{{ end }}
-{{ if .Site.Params.token_endpoint }}<link rel="token_endpoint" href="{{ .Site.Params.token_endpoint }}">{{ end }}
-{{ if .Site.Params.micropub }}<link rel="micropub" href="{{ .Site.Params.micropub }}">{{ end }}
+{{/* THEME ENGINE: Blocking Script for Immediate Paint */}}
+<script>
+  (function() {
+    try {
+      const validThemes = ['sound', 'market', 'mountain', 'forest', 'sunset'];
+      const savedTheme = localStorage.getItem('greg_theme');
+      // Only apply if the value is strictly in our allowlist
+      if (validThemes.includes(savedTheme)) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    } catch (e) {
+      // Fail silently (Privacy settings might block LocalStorage)
+    }
+  })();
+</script>
 
-{{ $opts := dict "transpiler" "libsass" "targetPath" "css/style.css" }}
-{{ $style := resources.Get "scss/main.scss" | css.Sass $opts | resources.Minify | resources.Fingerprint }}
-<link rel="stylesheet" href="{{ $style.RelPermalink }}">
-{{ partial "social-meta.html" . }}
+<meta name="generator" content="Hugo {{ hugo.Version }}" />
+{{/* IndieWeb Metadata */}}
+<link rel="webmention" href="https://webmention.io/{{ .Site.Params.webmentions.username }}/webmention" />
+<link rel="pingback" href="https://webmention.io/{{ .Site.Params.webmentions.username }}/xmlrpc" />
+<link rel="authorization_endpoint" href="https://indieauth.com/auth">
+<link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+<link rel="me" href="https://github.com/somegregariousdude" />
 EOF
 
 # File: themes/Accessible-MD/layouts/partials/header.html
@@ -4042,24 +4128,27 @@ EOF
 
 # File: themes/Accessible-MD/layouts/partials/footer.html
 cat <<'EOF' > "themes/Accessible-MD/layouts/partials/footer.html"
-<footer role="contentinfo" class="site-footer">
-  <div class="container">
-    <p>&copy; {{ now.Year }} {{ .Site.Params.author.name }}</p>
-    <p>
-      Content licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
-      <span aria-hidden="true" style="margin: 0 8px;">|</span>
-      <a href="/accessibility/">Accessibility</a>
-      
-      {{/* DEV ONLY LINK */}}
-      {{ if hugo.IsServer }}
-      <span aria-hidden="true" style="margin: 0 8px;">|</span>
-      <a href="/styleguide/" style="color: var(--md-sys-color-tertiary);">⚠️ Style Guide</a>
-      {{ end }}
+<footer class="site-footer">
+  <div class="footer-content">
+    
+    {{/* Theme Switcher Location */}}
+    {{ partial "ui/theme-picker.html" . }}
+
+    <div class="footer-divider"></div>
+
+    <nav class="footer-nav">
+      <ul>
+        {{/* Utility Links Only */}}
+        <li><a href="/pages/accessibility/">Accessibility</a></li>
+        <li><a href="/index.xml">RSS</a></li>
+        <li><a href="/index.json">JSON</a></li>
+      </ul>
+    </nav>
+    <p class="copyright">
+      &copy; {{ now.Year }} {{ .Site.Params.author.name }}. 
+      Built with <a href="https://gohugo.io">Hugo</a> &amp; Accessible-MD.
     </p>
   </div>
-  
-  {{/* MD3 Snackbar Container (Live Region) */}}
-  <div id="global-toast" class="md-toast" role="status" aria-live="polite"></div>
 </footer>
 EOF
 
@@ -4216,6 +4305,46 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/ui/social-link.html"
     <span class="brand-handle" style="color: var(--md-sys-color-on-surface); opacity: 0.8; margin-left: 4px;">{{ .handle }}</span>
   </a>
 </li>
+EOF
+
+# File: themes/Accessible-MD/layouts/partials/ui/theme-picker.html
+cat <<'EOF' > "themes/Accessible-MD/layouts/partials/ui/theme-picker.html"
+<div class="theme-picker-container">
+  <p class="theme-picker-label" id="theme-label">Color Scheme:</p>
+  <div class="theme-chips" role="group" aria-labelledby="theme-label">
+    
+    {{/* 1. SOUND (Default) - Blue */}}
+    <button class="theme-btn chip" data-value="sound" aria-pressed="false">
+      <span class="color-dot" style="background-color: #4A5D8A;"></span>
+      Sound
+    </button>
+
+    {{/* 2. MARKET - Red/Brown */}}
+    <button class="theme-btn chip" data-value="market" aria-pressed="false">
+      <span class="color-dot" style="background-color: #C62828;"></span>
+      Market
+    </button>
+
+    {{/* 3. MOUNTAIN - Slate/Cyan */}}
+    <button class="theme-btn chip" data-value="mountain" aria-pressed="false">
+      <span class="color-dot" style="background-color: #455A64;"></span>
+      Mountain
+    </button>
+
+    {{/* 4. FOREST - Green */}}
+    <button class="theme-btn chip" data-value="forest" aria-pressed="false">
+      <span class="color-dot" style="background-color: #1B5E20;"></span>
+      Forest
+    </button>
+
+    {{/* 5. SUNSET - Purple/Pink */}}
+    <button class="theme-btn chip" data-value="sunset" aria-pressed="false">
+      <span class="color-dot" style="background-color: #880E4F;"></span>
+      Sunset
+    </button>
+
+  </div>
+</div>
 EOF
 
 # File: themes/Accessible-MD/layouts/partials/webmentions-card.html

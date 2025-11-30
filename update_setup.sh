@@ -96,6 +96,8 @@ embed_file "themes/Accessible-MD/assets/js/menu.js"
 embed_file "themes/Accessible-MD/assets/js/share.js"
 embed_file "themes/Accessible-MD/assets/js/webmentions.js"
 embed_file "themes/Accessible-MD/assets/js/youtube-lite.js"
+# [NEW] Theme Switcher Logic
+embed_file "themes/Accessible-MD/assets/js/theme-switcher.js"
 
 # --- Theme Layouts (HTML) ---
 embed_file "themes/Accessible-MD/layouts/index.html"
@@ -106,6 +108,8 @@ embed_file "themes/Accessible-MD/layouts/_default/list.html"
 embed_file "themes/Accessible-MD/layouts/_default/list.json"
 embed_file "themes/Accessible-MD/layouts/_default/single.html"
 embed_file "themes/Accessible-MD/layouts/photos/single.html"
+# [NEW] Dedicated Page Layout (created for tag fix)
+embed_file "themes/Accessible-MD/layouts/pages/single.html"
 embed_file "themes/Accessible-MD/layouts/_default/rss.xml"
 embed_file "themes/Accessible-MD/layouts/_default/search.html"
 
@@ -122,6 +126,8 @@ embed_file "themes/Accessible-MD/layouts/partials/social-meta.html"
 embed_file "themes/Accessible-MD/layouts/partials/share-buttons.html"
 embed_file "themes/Accessible-MD/layouts/partials/ui/chip.html"
 embed_file "themes/Accessible-MD/layouts/partials/ui/social-link.html"
+# [NEW] Theme Picker UI
+embed_file "themes/Accessible-MD/layouts/partials/ui/theme-picker.html"
 embed_file "themes/Accessible-MD/layouts/partials/webmentions-card.html"
 embed_file "themes/Accessible-MD/layouts/partials/syndication.html"
 
