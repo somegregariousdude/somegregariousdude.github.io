@@ -3,9 +3,9 @@ title = "I Built a Fort Knox for My Thoughts: The Over-Engineered History of 'Ac
 date = 2025-11-30T14:00:00-08:00
 lastmod = 2025-11-30T15:07:00-08:00
 summary = "I told myself I’d just 'build a blog' when I started this. Two weeks (and one '80's rock playlist) later, I have a fully accessible, stylish digital home I can proudly call my own."
-tags = ["WebDev", "Accessibility", "IndieWeb", "MaterialDesign", "Privacy"]
+tags = ["WebDev", "Accessibility", "IndieWeb", "MaterialDesign", "Privacy", "A11Y"]
 show_webmentions = true
-syndication = []
+syndication = ["https://dragonscave.space/@somegregariousdude/115641294043231483"]
 +++
 
 It started with a simple, dangerous thought: *"I just want a place to write about burgers and 80s sci-fi."*
