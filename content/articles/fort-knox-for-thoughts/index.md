@@ -1,6 +1,7 @@
 +++
 title = "I Built a Fort Knox for My Thoughts: The Over-Engineered History of 'Accessible-MD'"
 date = 2025-11-30T14:00:00-08:00
+lastmod = 2025-11-30T15:07:00-08:00
 summary = "I told myself I’d just 'build a blog' when I started this. Two weeks (and one '80's rock playlist) later, I have a fully accessible, stylish digital home I can proudly call my own."
 tags = ["WebDev", "Accessibility", "IndieWeb", "MaterialDesign", "Privacy"]
 show_webmentions = true
@@ -11,7 +12,7 @@ It started with a simple, dangerous thought: *"I just want a place to write abou
 
 In a normal world, I would have installed WordPress, picked a template, and been writing about *RoboCop* by lunch. But this is not a normal world, and I am apparently not a normal developer.
 
-Instead of writing content, I spent the last two weeks building a military-grade, WCAG 2.2 AA compliant fortress using nothing but raw HTML, SCSS, and a 500-line shell script that I guard with my life—all while blasting AC/DC at a volume that probably concerned my neighbors.
+Instead of writing content, I spent the last two weeks building a military-grade, WCAG 2.2 AA compliant fortress using nothing but raw HTML, SCSS, vanilla JavaScript and [Hugo](https://gohugo.io), while using the help of Google's Gemini 3 Pro to smooth over the rough patches — all while blasting AC/DC at a volume that probably concerned my neighbors.
 
 Welcome to **Accessible-MD**. It’s over-engineered. It’s obsessive. And it has a Lighthouse score that embarrasses billion-dollar tech companies.
 
