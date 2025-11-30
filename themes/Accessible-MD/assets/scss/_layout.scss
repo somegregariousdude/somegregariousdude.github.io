@@ -266,3 +266,22 @@
   /* Default: Solid line for standard "Page" feel */
   border-top: 1px solid var(--md-sys-color-outline-variant);
 }
+
+/* [Patch] Lighthouse Touch Target Fix */
+/* Enforces Android/WCAG recommended minimum touch size of 48x48px */
+.main-nav a,
+.footer-nav a {
+  display: flex;
+  align-items: center;
+  min-height: 48px; 
+  padding: 0 16px; /* Horizontal breathing room */
+  box-sizing: border-box; /* Ensure padding doesn't break layout width */
+}
+
+@media (min-width: 769px) {
+  /* Relax slightly on desktop to conserve vertical space, but keep it accessible */
+  .main-nav a,
+  .footer-nav a {
+    min-height: 44px;
+  }
+}
