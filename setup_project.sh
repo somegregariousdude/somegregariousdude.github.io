@@ -4139,7 +4139,8 @@ cat <<'EOF' > "themes/Accessible-MD/layouts/partials/footer.html"
     <nav class="footer-nav">
       <ul>
         {{/* Utility Links Only */}}
-        <li><a href="/pages/accessibility/">Accessibility</a></li>
+        {{/* FIX: URL corrected to /accessibility/ to match permalink config */}}
+        <li><a href="/accessibility/">Accessibility</a></li>
         <li><a href="/index.xml">RSS</a></li>
         <li><a href="/index.json">JSON</a></li>
       </ul>
