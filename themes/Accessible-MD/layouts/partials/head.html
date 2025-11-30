@@ -1,22 +1,33 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
-{{ hugo.Generator }}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+{{/* CSS Loading (Modern Hugo Syntax) */}}
+{{ $options := (dict "targetPath" "css/style.css" "outputStyle" "compressed") }}
+{{/* FIX: resources.ToCSS -> css.Sass */}}
+{{ $style := resources.Get "scss/main.scss" | css.Sass $options }}
+<link rel="stylesheet" href="{{ $style.Permalink }}">
 
-{{/* INDIEWEB DISCOVERY */}}
-{{ with .Site.Params.webmentions.username }}
-<link rel="webmention" href="https://webmention.io/{{ . }}/webmention" />
-<link rel="pingback" href="https://webmention.io/{{ . }}/xmlrpc" />
-{{ end }}
-{{ if .Site.Params.authorization_endpoint }}<link rel="authorization_endpoint" href="{{ .Site.Params.authorization_endpoint }}">{{ end }}
-{{ if .Site.Params.token_endpoint }}<link rel="token_endpoint" href="{{ .Site.Params.token_endpoint }}">{{ end }}
-{{ if .Site.Params.micropub }}<link rel="micropub" href="{{ .Site.Params.micropub }}">{{ end }}
+{{/* THEME ENGINE: Blocking Script for Immediate Paint */}}
+<script>
+  (function() {
+    try {
+      const validThemes = ['sound', 'market', 'mountain', 'forest', 'sunset'];
+      const savedTheme = localStorage.getItem('greg_theme');
+      // Only apply if the value is strictly in our allowlist
+      if (validThemes.includes(savedTheme)) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    } catch (e) {
+      // Fail silently (Privacy settings might block LocalStorage)
+    }
+  })();
+</script>
 
-{{ $opts := dict "transpiler" "libsass" "targetPath" "css/style.css" }}
-{{ $style := resources.Get "scss/main.scss" | css.Sass $opts | resources.Minify | resources.Fingerprint }}
-<link rel="stylesheet" href="{{ $style.RelPermalink }}">
-{{ partial "social-meta.html" . }}
+<meta name="generator" content="Hugo {{ hugo.Version }}" />
+{{/* IndieWeb Metadata */}}
+<link rel="webmention" href="https://webmention.io/{{ .Site.Params.webmentions.username }}/webmention" />
+<link rel="pingback" href="https://webmention.io/{{ .Site.Params.webmentions.username }}/xmlrpc" />
+<link rel="authorization_endpoint" href="https://indieauth.com/auth">
+<link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+<link rel="me" href="https://github.com/somegregariousdude" />

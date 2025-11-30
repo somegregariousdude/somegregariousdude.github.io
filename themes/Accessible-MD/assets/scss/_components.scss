@@ -1,3 +1,6 @@
+/* COMPONENT STYLES */
+/* (Keeping all existing styles, just patching Syndication & Chips) */
+
 .outlined-card {
   background-color: var(--md-sys-color-surface);
   border: 1px solid var(--md-sys-color-outline-variant);
@@ -8,10 +11,10 @@
 
 .outlined-card:hover {
   border-color: var(--md-sys-color-outline);
-  background-color: rgba(var(--md-sys-color-primary), 0.05); /* Faked opacity */
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
 }
 
-/* Chips [Source: 111] */
+/* Chips */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -20,7 +23,7 @@
   padding: 4px 8px;
   font-size: 0.875rem;
   margin-bottom: 8px;
-  gap: 8px; /* Space between icon and text */
+  gap: 8px;
 }
 
 .chip-icon svg, .brand-icon svg {
@@ -42,10 +45,9 @@
   text-decoration: none;
 }
 
-/* Webmentions [Refactored for Phase 02i] */
+/* Webmentions */
 .webmentions-container {
-  margin-top: 24px; /* Gap between Post Card and Mentions Card */
-  /* Old border styles removed since it is now a card */
+  margin-top: 24px;
 }
 
 /* Header Layouts */
@@ -103,9 +105,9 @@
   border-radius: 50%;
 }
 
-/* [Patch] MD3 Search Bar (Pagefind Override) */
+/* [Patch] MD3 Search Bar */
 :root {
-  --pagefind-ui-border-radius: 24px; /* Pill Shape */
+  --pagefind-ui-border-radius: 24px;
   --pagefind-ui-font: 'Noto Sans', sans-serif;
   --pagefind-ui-primary: var(--md-sys-color-primary);
   --pagefind-ui-text: var(--md-sys-color-on-surface);
@@ -114,7 +116,7 @@
 }
 
 .pagefind-ui__search-input {
-  border-radius: 28px !important; /* Force Pill Shape */
+  border-radius: 28px !important;
   padding-left: 24px !important;
   padding-right: 24px !important;
   border: 1px solid var(--md-sys-color-outline) !important;
@@ -129,7 +131,6 @@
 }
 
 .pagefind-ui__drawer {
-  /* Ensure dropdown results match our theme */
   background-color: var(--md-sys-color-surface) !important;
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-sys-shape-corner-medium);
@@ -145,88 +146,58 @@
   @include state-layer(var(--md-sys-color-primary));
 }
 
-/* Ensure the chip icon stays colored correctly under the layer */
 .chip:hover {
-  background-color: transparent; /* Remove old hover */
-}
-
-/* [Patch] MD3 State Layers */
-.feed-item {
-  @include state-layer;
-}
-
-.chip {
-  @include state-layer(var(--md-sys-color-primary));
-}
-
-/* Ensure the chip icon stays colored correctly under the layer */
-.chip:hover {
-  background-color: transparent; /* Remove old hover */
+  background-color: transparent;
 }
 
 /* [Patch] Social Link State Layers */
 .social-link {
-  /* Add breathing room for the hover effect */
   padding: 8px 12px; 
   border-radius: 8px;
-  margin: -8px -12px; /* Negative margin prevents layout shift */
-  
-  /* Apply the MD3 interaction */
+  margin: -8px -12px; 
   @include state-layer(var(--md-sys-color-primary));
 }
 
-/* [Patch] Code Block Copy Button - MD3 Interaction */
+/* [Patch] Code Block Copy Button */
 .copy-code-btn {
-  /* Ensure it has the Pill/Circle shape */
   border-radius: 50%;
   border: 1px solid var(--md-sys-color-outline);
-  
-  /* Apply the State Layer Mixin */
   @include state-layer(var(--md-sys-color-primary));
-  
-  /* Clean up transition */
   transition: opacity 0.2s var(--md-sys-motion-easing-standard), background-color 0.2s;
 }
 
 .copy-code-btn:hover {
-  /* Remove the old flat background, rely on State Layer tint */
   background-color: transparent; 
   border-color: var(--md-sys-color-primary);
 }
 
 /* [Patch] Search Results Elevation */
 .pagefind-ui__drawer {
-  /* Level 2: Floating menu */
   @include elevation(2);
 }
 
-/* [Patch] Pagefind Results Polish (MD3 List Item Style) */
-
-/* The Dropdown Container */
+/* [Patch] Pagefind Results Polish */
 .pagefind-ui__drawer {
   background-color: var(--md-sys-color-surface) !important;
   border: 1px solid var(--md-sys-color-outline-variant) !important;
   border-radius: 12px !important;
-  box-shadow: none !important; /* We use our own Elevation mixin elsewhere */
+  box-shadow: none !important;
   padding: 8px !important;
   margin-top: 8px !important;
 }
 
-/* Individual Result Item */
 .pagefind-ui__result {
   border: none !important;
-  border-radius: 8px !important; /* Inner radius */
+  border-radius: 8px !important;
   padding: 12px !important;
   margin-bottom: 4px !important;
   transition: background-color 0.2s var(--md-sys-motion-easing-standard);
   
-  /* Use CSS nesting for interaction */
   &:hover, &:focus-within {
-    background-color: rgba(var(--md-sys-color-primary), 0.08) !important; /* State Layer */
+    background-color: rgba(var(--md-sys-color-primary), 0.08) !important;
   }
 }
 
-/* The Result Image (Thumbnail) */
 .pagefind-ui__result-thumb {
   border-radius: 8px !important;
   width: 64px !important;
@@ -235,7 +206,6 @@
   background-color: var(--md-sys-color-outline-variant);
 }
 
-/* Typography Overrides */
 .pagefind-ui__result-title {
   font-family: 'Noto Serif', serif !important;
   font-weight: 600 !important;
@@ -250,8 +220,6 @@
   margin-top: 4px !important;
 }
 
-/* The "Mark" (Highlighting text matches) */
-/* We replace the default yellow with a Theme-appropriate highlight */
 .pagefind-ui__result-excerpt mark {
   background-color: rgba(var(--md-sys-color-tertiary), 0.3) !important;
   color: inherit !important;
@@ -260,7 +228,6 @@
   font-weight: 700;
 }
 
-/* The "Clear" Button in the Search Input */
 .pagefind-ui__suppressed {
   color: var(--md-sys-color-on-surface) !important;
   opacity: 0.7;
@@ -269,36 +236,32 @@
   background: var(--md-sys-color-surface) !important;
   color: var(--md-sys-color-primary) !important;
   border: 1px solid var(--md-sys-color-outline) !important;
-  border-radius: 20px !important; /* Pill button */
+  border-radius: 20px !important;
   margin-top: 12px;
 }
 
-/* [Patch] MD3 Snackbar (Toast) */
+/* [Patch] MD3 Snackbar */
 .md-toast {
-  visibility: hidden; /* Hide from DOM when inactive */
+  visibility: hidden;
   min-width: 250px;
-  max-width: 90vw; /* Mobile safety */
-  background-color: var(--md-sys-color-on-surface); /* Inverse Background */
-  color: var(--md-sys-color-surface); /* Inverse Text */
+  max-width: 90vw;
+  background-color: var(--md-sys-color-on-surface);
+  color: var(--md-sys-color-surface);
   text-align: center;
-  border-radius: 4px; /* MD3 Spec for single-line */
+  border-radius: 4px;
   padding: 14px 16px;
   position: fixed;
-  z-index: 2000; /* Above everything, including Drawer */
+  z-index: 2000;
   left: 50%;
-  bottom: 24px; /* Resting position */
-  transform: translateX(-50%) translateY(100%); /* Start slightly down */
+  bottom: 24px;
+  transform: translateX(-50%) translateY(100%);
   font-family: 'Noto Sans', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
-  
-  /* Motion */
   transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
               opacity 0.3s linear, 
               visibility 0s linear 0.3s;
   opacity: 0;
-  
-  /* Shadow for lift */
   box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 
               0 6px 10px 0 rgba(0,0,0,0.14), 
               0 1px 18px 0 rgba(0,0,0,0.12);
@@ -307,66 +270,26 @@
 .md-toast.show {
   visibility: visible;
   opacity: 1;
-  transform: translateX(-50%) translateY(0); /* Slide up to position */
+  transform: translateX(-50%) translateY(0);
   transition: transform 0.3s var(--md-sys-motion-easing-emphasized), 
               opacity 0.3s linear, 
               visibility 0s linear 0s;
 }
 
-/* [Patch] Fix Generic Card Hover (MD3 Strictness) */
-/* Static cards should NOT react to hover. Only interactive ones (feed-item) should. */
+/* [Patch] Fix Generic Card Hover */
 .outlined-card:hover {
-  background-color: var(--md-sys-color-surface); /* Reset to base */
-  border-color: var(--md-sys-color-outline-variant); /* Reset to base */
+  background-color: var(--md-sys-color-surface);
+  border-color: var(--md-sys-color-outline-variant);
 }
 
-/* Re-apply interaction ONLY for Feed Items (which have State Layers) */
 .feed-item:hover {
-  /* The State Layer mixin handles the tint, so we just ensure the border stays distinct */
   border-color: var(--md-sys-color-outline);
 }
 
-/* [Patch] Webmention Layout (MD3 List Item) */
+/* [Patch] Webmention Layout */
 .mention {
   margin-bottom: 1rem;
   padding: 16px;
-  /* Use a cleaner layout for comments */
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 16px;
-  align-items: start;
-}
-
-.mention-author {
-  /* Force the author block to just be the image context */
-  grid-column: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.mention-author img.u-photo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; /* Circle Avatar */
-  object-fit: cover;
-  border: 1px solid var(--md-sys-color-outline-variant);
-}
-
-/* The name and content live in the second column */
-.mention-content-wrapper {
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-}
-
-/* We need to target the generated HTML structure. 
-   Currently: .mention-author contains the link/name.
-   We might need to adjust this via CSS since we can't easily change the JS structure 
-   without breaking the script.
-   
-   Workaround: Flexbox the whole card.
-*/
-.mention {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -380,6 +303,14 @@
   font-weight: 600;
   font-size: 1rem;
   color: var(--md-sys-color-on-surface);
+}
+
+.mention-author img.u-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .mention-author a {
@@ -397,7 +328,6 @@
   font-size: 1rem;
   line-height: 1.5;
   color: var(--md-sys-color-on-surface);
-  /* Indent slightly to align with text above? No, keep flush left on mobile. */
 }
 
 .mention time {
@@ -456,9 +386,9 @@
 .webmention-copy-field {
   display: inline-flex;
   align-items: center;
-  background-color: var(--md-sys-color-surface); /* Contrast against card */
+  background-color: var(--md-sys-color-surface);
   border: 1px solid var(--md-sys-color-outline);
-  border-radius: 24px; /* Pill */
+  border-radius: 24px;
   padding: 4px 4px 4px 16px;
   max-width: 100%;
 }
@@ -471,7 +401,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px; /* Truncate long URLs on mobile */
+  max-width: 200px;
 }
 
 .copy-btn {
@@ -494,8 +424,7 @@
   fill: currentColor;
 }
 
-/* [Patch] MD3 Context Blocks (IndieWeb) */
-
+/* [Patch] MD3 Context Blocks */
 .context-container {
   display: flex;
   flex-direction: column;
@@ -508,12 +437,9 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  border-radius: 12px; /* MD3 Medium Shape */
-  
-  /* MD3 Tonal Surface: Tinted background, no outline */
+  border-radius: 12px;
   background-color: rgba(var(--md-sys-color-primary), 0.08);
   color: var(--md-sys-color-on-surface);
-  
   font-family: 'Noto Sans', sans-serif;
   font-size: 0.95rem;
 }
@@ -538,17 +464,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  
-  /* Add State Layer for interaction */
   padding: 4px 8px;
   border-radius: 4px;
-  margin-left: auto; /* Push to right if we want, or keep inline */
+  margin-left: auto;
   @include state-layer(var(--md-sys-color-primary));
 }
 
-/* Specific Tints for different types (Optional: kept uniform for now to match MD3 system) */
-
-/* List View Mini-Context */
 .context-mini {
   display: flex;
   align-items: center;
@@ -573,11 +494,9 @@
   border-bottom: 1px dotted currentColor;
 }
 
-/* [Patch] Syndication (POSSE) Styles */
+/* [Patch] Syndication Styles (CLEANUP) */
+/* We remove the border/padding here, as .post-footer handles it now */
 .syndication-container {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--md-sys-color-outline-variant);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -597,26 +516,21 @@
   gap: 8px;
 }
 
-/* Ensure syndication chips look like standard chips but maybe smaller/distinct */
 .chip.u-syndication {
   @include state-layer(var(--md-sys-color-secondary));
   border-color: var(--md-sys-color-outline-variant);
 }
 
 /* [Patch] MD3 Hero Card & Chip Styles */
-
-/* 1. Profile Hero Card (md-hero-card) */
 .md-hero-card {
-  /* Elevation: Lift it slightly */
   @include elevation(1);
-  /* Use Surface Container High for a distinct background tint */
   background-color: var(--md-sys-color-surface-container-high) !important;
-  border-radius: 20px; /* Softer, friendlier corners */
+  border-radius: 20px;
 }
 
 .hero-content-wrapper {
   display: grid;
-  grid-template-columns: 200px 1fr; /* Image width | Content width */
+  grid-template-columns: 200px 1fr;
   gap: 32px;
   align-items: start;
 }
@@ -627,8 +541,7 @@
 }
 
 .hero-avatar-area h1 {
-  /* H1 is visible here but text-only on mobile */
-  font-size: 2rem; /* Display Small size */
+  font-size: 2rem;
   margin-bottom: 12px;
 }
 
@@ -637,28 +550,24 @@
   padding-top: 12px;
 }
 
-/* 2. MD3 Assist Chips for Social Links (Replaces List) */
 .social-chips-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
-  list-style: none; /* Remove list item dots */
+  list-style: none;
 }
 
 .social-chip {
-  /* MD3 Assist Chip Styling */
   display: inline-flex;
   align-items: center;
-  border-radius: 20px; /* Pill Shape */
+  border-radius: 20px;
   padding: 6px 12px;
   border: 1px solid var(--md-sys-color-outline-variant);
-  background-color: var(--md-sys-color-surface); /* Inner Surface */
+  background-color: var(--md-sys-color-surface);
   text-decoration: none;
   font-size: 0.9rem;
   color: var(--md-sys-color-on-surface);
-  
-  /* Apply state layer for interaction */
   @include state-layer(var(--md-sys-color-primary));
 }
 
@@ -668,15 +577,13 @@
 }
 
 .social-chip:hover {
-  background-color: var(--md-sys-color-surface) !important; /* Reset component hover */
+  background-color: var(--md-sys-color-surface) !important;
   border-color: var(--md-sys-color-outline);
 }
 
-
-/* 3. Tablet/Mobile Adjustments */
 @media (max-width: 768px) {
   .hero-content-wrapper {
-    grid-template-columns: 1fr; /* Stacked */
+    grid-template-columns: 1fr;
     gap: 16px;
   }
   .hero-avatar-area {
@@ -687,7 +594,7 @@
     gap: 16px;
   }
   .hero-avatar-area h1 {
-    display: none; /* Hide H1 visually, keep in DOM for microformats */
+    display: none;
   }
   .u-photo {
     width: 100px;
@@ -695,7 +602,6 @@
   }
 }
 
-/* [Patch] Hero Card Metadata Visibility Fix */
 .profile-meta.is-mobile-hidden {
   display: none;
 }
@@ -710,4 +616,108 @@
   .profile-meta.is-desktop-hidden {
     display: none;
   }
+}
+
+/* [New] Theme Switcher UI */
+.theme-picker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.theme-picker-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--md-sys-color-outline);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.theme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Override default chip styles for the toggle buttons */
+.theme-btn.chip {
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.theme-btn.chip:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Active State (Aria-Pressed) */
+.theme-btn.chip[aria-pressed="true"] {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: transparent;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1); /* Subtle definition */
+}
+
+/* [New] Theme Switcher UI */
+.theme-picker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.theme-picker-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--md-sys-color-outline);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.theme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Override default chip styles for the toggle buttons */
+.theme-btn.chip {
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.theme-btn.chip:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.05);
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Active State (Aria-Pressed) */
+.theme-btn.chip[aria-pressed="true"] {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: transparent;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1); /* Subtle definition */
 }

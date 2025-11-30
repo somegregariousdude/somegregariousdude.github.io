@@ -1,15 +1,7 @@
 {{ define "main" }}
-<article class="single-post h-entry outlined-card manifesto">
+<article class="single-post h-entry outlined-card pages">
   
-  <div style="display: none;" class="metadata-machine-only">
-    <div class="p-author h-card">
-      <a href="{{ .Site.BaseURL }}" class="u-url p-name">{{ .Site.Params.author.name }}</a>
-      <img src="{{ .Site.Params.author.photo | absURL }}" class="u-photo" alt="{{ .Site.Params.author.name }}">
-    </div>
-    <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date }}</time>
-    <a href="{{ .Permalink }}" class="u-url">Permalink</a>
-  </div>
-
+  {{/* Simple Header for Pages */}}
   <header class="post-header">
     <div class="headline-row">
       {{ partial "ui/chip.html" . }}
@@ -17,36 +9,25 @@
     </div>
   </header>
 
-  <div class="e-content">
-    {{ .Content }}
-  </div>
+  <div class="e-content">{{ .Content }}</div>
 
+  {{/* Pages usually don't have syndication, but they MIGHT have tags (e.g. Accessibility) */}}
+  {{ if .Params.tags }}
   <footer class="post-footer">
-    {{ partial "syndication.html" . }}
-
-    {{ if .Params.tags }}
     <ul class="tags">
       {{ range .Params.tags }}
       <li>
         <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" rel="tag">
-          <span aria-hidden="true">#</span><span class="p-category">{{ . }}</span>
+          {{/* [ACCESSIBILITY FIX] */}}
+          <span>#</span><span class="p-category">{{ . }}</span>
         </a>
       </li>
       {{ end }}
     </ul>
-    {{ end }}
   </footer>
+  {{ end }}
 </article>
 
-{{ partial "share-buttons.html" . }}
-
-{{ $show := .Params.show_webmentions }}
-{{ if eq $show nil }}
-  {{ $show = .Site.Params.webmentions.show_webmentions }}
-{{ end }}
-
-{{ if $show }}
-  {{ partial "webmentions-card.html" (dict "context" . "description" "Feedback on this page? Mention it on your site!") }}
-{{ end }}
-
+{{/* Pages usually don't show webmentions or share buttons by default in this design, 
+     but we leave them out to keep pages clean unless requested. */}}
 {{ end }}
