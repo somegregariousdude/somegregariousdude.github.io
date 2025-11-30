@@ -1,7 +1,7 @@
 +++
 title = "I Built a Fort Knox for My Thoughts: The Over-Engineered History of 'Accessible-MD'"
 date = 2025-11-30T14:00:00-08:00
-lastmod: 2025-11-30T15:07:00-008:00
+lastmod = 2025-11-30T15:07:00-08:00
 summary = "I told myself I’d just 'build a blog' when I started this. Two weeks (and one '80's rock playlist) later, I have a fully accessible, stylish digital home I can proudly call my own."
 tags = ["WebDev", "Accessibility", "IndieWeb", "MaterialDesign", "Privacy"]
 show_webmentions = true
